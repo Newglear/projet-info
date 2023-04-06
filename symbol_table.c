@@ -4,13 +4,15 @@
 #include <string.h>
 
 
-symbol_table symbol_table_init() {
+symbol_table* symbol_table_init() {
+    symbol_table* tp = malloc(sizeof(symbol_table));
     symbol_table table = {
             .symbol_table = malloc(sizeof(void*)*TABLE_ALLOC_BLOCK),
             .size = 0,
             .allocated_size = TABLE_ALLOC_BLOCK
     };
-    return table;
+    *tp = table;
+    return tp;
 }
 
 void free_symbol_table_entry(symbol_table_entry** entry) {

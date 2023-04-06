@@ -27,7 +27,7 @@ struct {
 
 
 void free_symbol_table_entry(symbol_table_entry** entry);
-symbol_table symbol_table_init();
+symbol_table* symbol_table_init();
 void free_symbol_table(symbol_table** table);
 void symbol_table_push(symbol_table* table, symbol_table_entry* entry); //push a symbol to the table
 symbol_table_entry* symbol_table_pop(symbol_table* table); // pop a symbol from the table

@@ -1,6 +1,7 @@
 %{
 #include <stdio.h>     /* C declarations used in actions */
 #include <stdlib.h>
+#include "symbol_table.h"
 int yylex (void);
 void yyerror (const char *);
 %}
@@ -54,24 +55,24 @@ void yyerror (const char *);
 %left tCOMMA
 
 %%
-start: expression {printf("SUCCESS !\n");}
+start: expression {symbol_table_print(table);printf("SUCCESS !\n");}
 	;
 
-final_expression : variable_definition //{printf("var def \n");}
+final_expression : variable_definition 
            | variable_assignement
-           | print_statement //{printf("print  \n");}
+           | print_statement 
            | if_statement
-           | while_statement //{printf("while  \n");}
+           | while_statement 
 		   | function_call
 		   | return_expr
 		   | function_definition
 	;
 
-expression : variable_definition //{printf("var def \n");}
+expression : variable_definition 
            | variable_assignement  
-           | print_statement //{printf("print  \n");}
+           | print_statement
            | if_statement
-           | while_statement //{printf("while  \n");}
+           | while_statement 
 		   | function_call
 		   | function_definition
 		   | final_expression expression
@@ -107,11 +108,11 @@ return_expr : tRETURN value tSEMI
 variable_definition: tINT variable_definition_content tSEMI //{printf("def de variable \n");}
     ;                 
 
-variable_definition_content : tID tASSIGN value 
-							| variable_definition_content tCOMMA variable_definition_content 
-							| tID 
+variable_definition_content : tID tASSIGN value {symbol_table_entry* e = symbol_table_entry_init($1,1,INT,symbol,0,0); symbol_table_push(table,e)}
+							//| variable_definition_content tCOMMA variable_definition_content 
+							| tID {symbol_table_push(table, symbol_table_entry_init($1,0,INT,symbol,0,0))}
 				   
-variable_assignement: tID tASSIGN value tSEMI //{printf("Var Assign \n");}
+variable_assignement: tID tASSIGN value tSEMI {symbol_table_entry* e =  symbol_table_get_by_symbol($1,table);e->is_initialised = 1; }
     ;
 
 print_statement : tPRINT tLPAR tRPAR tSEMI 
@@ -163,6 +164,7 @@ void yyerror (const char *s) {
 }
 
 int main (void) {
+	symbol_table* table = symbol_table_init();
 	yyparse();
 }
 
