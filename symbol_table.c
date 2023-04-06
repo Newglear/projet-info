@@ -135,3 +135,17 @@ void symbol_table_print(symbol_table* table) {
     }
     printf("]\n");
 }
+
+symbol_table_entry* symbol_table_entry_init(char* name, char is_init, enum variable_type variable_type, int offset, int scope) {
+    char* symbol = malloc(sizeof(char)*strlen(name));
+    symbol_table_entry s = {
+            .symbol = symbol,
+            .is_initialised = is_init,
+            .variable_type = variable_type,
+            .offset = offset,
+            .scope = scope
+    };
+    symbol_table_entry* sp = malloc(sizeof(symbol_table_entry));
+    *sp = s;
+    return sp;
+}
