@@ -1,0 +1,111 @@
+#include "symbol_table.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+
+symbol_table symbol_table_init(){
+    symbol_table table = {
+            .symbol_table = malloc(sizeof(void*)*TABLE_ALLOC_BLOCK),
+            .size = 0,
+            .allocated_size = TABLE_ALLOC_BLOCK
+    };
+    return table;
+}
+
+void free_symbol_table_entry(symbol_table_entry** entry) {
+    if (entry == NULL) {
+        printf("table not initialised %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    if (*entry == NULL) {
+        printf("table not initialised %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    free((*entry));
+    *entry = NULL;
+}
+
+void free_symbol_table(symbol_table** table) {
+    if(table == NULL) {
+        printf("table not initialised %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    if (*table == NULL) {
+        printf("table not initialised %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    for (int i = 0; i < (*table)->size; i++) {
+        symbol_table_entry** entry = (*table)->symbol_table + i*sizeof(symbol_table_entry);
+        free_symbol_table_entry(entry);
+    }
+    free((*table)->symbol_table);
+    table = NULL;
+}
+
+//push a symbol to the table
+void symbol_table_push(symbol_table* table, symbol_table_entry* entry) {
+    if (table == NULL) {
+        printf("table not initialised %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    if (table->size < table->allocated_size) {
+        table->symbol_table[table->size] = entry;
+        table->size++;
+    } else {
+        void* p = realloc(table->symbol_table, table->allocated_size + TABLE_ALLOC_BLOCK);
+        if(p == NULL) {
+            printf("realloc failed %s\n", __PRETTY_FUNCTION__ );
+            exit(-1);
+        }
+        table->symbol_table = p;
+        table->allocated_size = table->allocated_size + TABLE_ALLOC_BLOCK;
+        table->symbol_table[table->size] = entry;
+    }
+}
+
+// pop a symbol from the table
+symbol_table_entry* symbol_table_pop(symbol_table* table){
+
+    if (!table){  // check if the table is initialized
+        printf("Table not initialized %s \n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    unsigned int index = table->size -1;
+    if (!table->size){  // check if the table is initialized
+        printf("No element in the table %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    symbol_table_entry* elem = table->symbol_table[index];
+    table->symbol_table[index] = NULL;
+    table->size--;
+    return elem;
+}
+
+symbol_table_entry* symbol_table_get(int index, symbol_table* table){ // indexes start from 0 don't forget :p
+    if (!table){  // check if the table is initialized
+        printf("Table not initialized %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    if(index >= table->size){
+        printf("Index out of range\n");
+        exit(-1);
+    }
+    return table->symbol_table[index];
+}
+
+void symbol_entry_print(symbol_table_entry* entry) {
+    printf("{symbol: %s,is_initialised %d,variable_type: %d, offset: %d, scope: %d}\n", entry->symbol, entry->is_initialised, entry->variable_type, entry->offset, entry->scope);
+}
+
+void symbol_table_print(symbol_table* table) {
+    if (!table) {
+        printf("Table not initialized in %s\n", __PRETTY_FUNCTION__);
+        exit(-1);
+    }
+    printf("[\n");
+    for (int i = 0; i < table->size; ++i) {
+        symbol_table_entry *entry = table->symbol_table[i];
+        symbol_entry_print(entry);
+    }
+    printf("]\n");
+}
