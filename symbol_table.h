@@ -32,6 +32,10 @@ void free_symbol_table(symbol_table** table);
 void symbol_table_push(symbol_table* table, symbol_table_entry* entry); //push a symbol to the table
 symbol_table_entry* symbol_table_pop(symbol_table* table); // pop a symbol from the table
 symbol_table_entry* symbol_table_get(int index, symbol_table* table);
+symbol_table_entry* symbol_table_get_by_symbol(char* symbol, symbol_table* table);
+
+symbol_table_entry* symbol_table_entry_init(char* name, int value, enum variable_type variable_type, int offset, int scope);
+
 
 void symbol_table_print(symbol_table* table);
 void symbol_entry_print(symbol_table_entry* entry);

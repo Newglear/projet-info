@@ -1,9 +1,10 @@
 #include "symbol_table.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 
-symbol_table symbol_table_init(){
+symbol_table symbol_table_init() {
     symbol_table table = {
             .symbol_table = malloc(sizeof(void*)*TABLE_ALLOC_BLOCK),
             .size = 0,
@@ -64,7 +65,7 @@ void symbol_table_push(symbol_table* table, symbol_table_entry* entry) {
 }
 
 // pop a symbol from the table
-symbol_table_entry* symbol_table_pop(symbol_table* table){
+symbol_table_entry* symbol_table_pop(symbol_table* table) {
 
     if (!table){  // check if the table is initialized
         printf("Table not initialized %s \n", __PRETTY_FUNCTION__ );
@@ -81,7 +82,7 @@ symbol_table_entry* symbol_table_pop(symbol_table* table){
     return elem;
 }
 
-symbol_table_entry* symbol_table_get(int index, symbol_table* table){ // indexes start from 0 don't forget :p
+symbol_table_entry* symbol_table_get(int index, symbol_table* table) { // indexes start from 0 don't forget :p
     if (!table){  // check if the table is initialized
         printf("Table not initialized %s\n", __PRETTY_FUNCTION__ );
         exit(-1);
@@ -92,6 +93,31 @@ symbol_table_entry* symbol_table_get(int index, symbol_table* table){ // indexes
     }
     return table->symbol_table[index];
 }
+
+/**
+ * Returns the element matching the symbol name or NULL if the element is not found
+ * @param symbol
+ * @param table
+ * @return symbol_table* | NULL
+ */
+symbol_table_entry* symbol_table_get_by_symbol(char* symbol, symbol_table* table) {
+    if (!table) {
+        printf("Table not initialized %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    if(!symbol) {
+        printf("Symbol not initialized in %s \n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    for (int i = 0; i < table->size; ++i) {
+        symbol_table_entry* entry = table->symbol_table[i];
+        if (strcmp(entry->symbol, symbol) == 0) {
+            return entry;
+        }
+    }
+    return NULL;
+}
+
 
 void symbol_entry_print(symbol_table_entry* entry) {
     printf("{symbol: %s,is_initialised %d,variable_type: %d, offset: %d, scope: %d}\n", entry->symbol, entry->is_initialised, entry->variable_type, entry->offset, entry->scope);

@@ -15,9 +15,11 @@ int main(){
     symbol_table_print(&table);
     symbol_table_entry* t = symbol_table_get(0,&table);
     symbol_entry_print(t);
+
+    printf("Found: ");
+    symbol_entry_print(symbol_table_get_by_symbol("a",&table));
+
     symbol_table_entry* b = symbol_table_get(1,&table);
     symbol_entry_print(b);
-
-
     // TODO: FREE
 }
