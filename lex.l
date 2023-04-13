@@ -4,6 +4,7 @@
 
 %{
 #include "bison.tab.h"
+#include <string.h>
 %}
 %%
 "//".*                  /* skip everything in a line comment */
@@ -51,7 +52,7 @@
 [0-9]+                  {return tNB;}
 
  /* keywords not clearly mentionned */
-[A-Za-z][A-Za-z0-9]*    {return tID;}
+[A-Za-z][A-Za-z0-9]*    {/*printf("%s\n",yytext);*/strcpy(yylval.id,yytext);return tID;}
 
 [ \t\n]+                /* skip blankspace and tab */
 

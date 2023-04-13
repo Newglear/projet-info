@@ -4,6 +4,7 @@
 #include <string.h>
 
 
+
 symbol_table* symbol_table_init() {
     symbol_table* tp = malloc(sizeof(symbol_table));
     symbol_table table = {
@@ -140,6 +141,7 @@ void symbol_table_print(symbol_table* table) {
 
 symbol_table_entry* symbol_table_entry_init(char* name, char is_init, enum variable_type variable_type, int offset, int scope) {
     char* symbol = malloc(sizeof(char)*strlen(name));
+    strcpy(symbol, name);
     symbol_table_entry s = {
             .symbol = symbol,
             .is_initialised = is_init,
@@ -150,4 +152,25 @@ symbol_table_entry* symbol_table_entry_init(char* name, char is_init, enum varia
     symbol_table_entry* sp = malloc(sizeof(symbol_table_entry));
     *sp = s;
     return sp;
+}
+
+
+void pop_scope(int* scope,int* offset, symbol_table* table){
+    if (!table) {
+        printf("Table not initialized in %s\n", __PRETTY_FUNCTION__);
+        exit(-1);
+    }
+    symbol_table_entry* element = symbol_table_get(table->size-1,table);
+
+    while(element->scope == *scope){
+        printf("POP! \n");
+        symbol_entry_print(element);
+        symbol_table_pop(table);
+        element = symbol_table_get(table->size-1,table);
+        *offset-=INT_SIZE;
+    }
+
+    (*scope)--;
+
+
 }

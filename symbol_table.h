@@ -3,6 +3,7 @@
 #define SYMBOL_TABLE_H
 
 #define TABLE_ALLOC_BLOCK 1024
+#define  INT_SIZE 4
 
 union u_symbol_table_entry {
     char *name;
@@ -39,6 +40,9 @@ symbol_table_entry* symbol_table_entry_init(char* name, char is_init, enum varia
 
 void symbol_table_print(symbol_table* table);
 void symbol_entry_print(symbol_table_entry* entry);
+
+ 
+void pop_scope(int* scope,int* offset, symbol_table* table);
 
 #endif
 

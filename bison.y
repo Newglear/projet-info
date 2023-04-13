@@ -2,6 +2,7 @@
 #include <stdio.h>     /* C declarations used in actions */
 #include <stdlib.h>
 #include "symbol_table.h"
+#define INT_SIZE 4
 int yylex (void);
 void yyerror (const char *);
 
@@ -12,9 +13,11 @@ void yyerror (const char *);
 %code 
 {
 	symbol_table* symbolTable ;
+	int scope;
+	int offset;
 }
 
-%union {char* id;int val;}         /* Yacc definitions */
+%union {char id[32];int val;}         /* Yacc definitions */
 
 /*first element to parse*/
 %start start
@@ -89,18 +92,17 @@ expression : variable_definition
 	;
 
 function_argument_definition: %empty
-							| tINT tID //{printf("aaaaaaaaaaaaaaaaaaaarg\n");}
+							| tINT tID {symbol_table_entry* e = symbol_table_entry_init($2,1,INT,offset,scope);symbol_table_push(symbolTable,e);offset += INT_SIZE;} 
 							| tVOID
 							| function_argument_definition tCOMMA function_argument_definition
     ;
 
 // TODO: function definition without expression
-function_definition : tINT tID tLPAR function_argument_definition tRPAR tLBRACE expression tRBRACE 
-					| tVOID tID tLPAR function_argument_definition tRPAR tLBRACE expression tRBRACE
+function_definition : tINT tID  tLPAR {scope++;} function_argument_definition tRPAR tLBRACE expression tRBRACE {pop_scope(&scope,&offset,symbolTable);}
+					| tVOID tID tLPAR {scope++;} function_argument_definition tRPAR tLBRACE expression tRBRACE {pop_scope(&scope,&offset,symbolTable);}
     ;
 
 function_args: %empty
-			| value //{printf("single value\n");}
 		    | value tCOMMA function_args //{printf("multiple value\n");}
     ;
 
@@ -117,11 +119,11 @@ return_expr : tRETURN value tSEMI
 variable_definition: tINT variable_definition_content tSEMI //{printf("def de variable \n");}
     ;                 
 
-variable_definition_content : tID tASSIGN value {symbol_table_push(symbolTable,symbol_table_entry_init($1,1,INT,0,0));}
+variable_definition_content : tID tASSIGN value {symbol_table_entry* e = symbol_table_entry_init($1,1,INT,offset,scope);symbol_table_push(symbolTable,e);offset += INT_SIZE;}
 							//| variable_definition_content tCOMMA variable_definition_content 
-							| tID {/*:symbol_table_push(table, symbol_table_entry_init($1,0,INT,symbol,0,0));*/}
+							| tID {symbol_table_entry* e = symbol_table_entry_init($1,0,INT,offset,scope);symbol_table_push(symbolTable,e);offset += INT_SIZE;}
 				   
-variable_assignement: tID tASSIGN value tSEMI {/*symbol_table_entry* e = symbol_table_get_by_symbol($1,table);e->is_initialised = 1;*/ }
+variable_assignement: tID tASSIGN value tSEMI {symbol_table_entry* e = symbol_table_get_by_symbol($1,symbolTable);e->is_initialised = 1;}
     ;
 
 print_statement : tPRINT tLPAR tRPAR tSEMI 
@@ -158,12 +160,12 @@ value : tNB //{printf("num\n");}
 	  | tID //{printf("ID \n");}
     ;
 
-if_statement : tIF tLPAR value tRPAR tLBRACE expression tRBRACE
-        	 | tIF tLPAR value tRPAR tLBRACE expression tRBRACE tELSE tLBRACE expression tRBRACE
-			 | tIF tLPAR value tRPAR tLBRACE expression tRBRACE tELSE if_statement
+if_statement : tIF tLPAR value tRPAR tLBRACE {scope++;} expression tRBRACE {pop_scope(&scope,&offset,symbolTable);}
+			 | tIF tLPAR value tRPAR tLBRACE {scope++;} expression tRBRACE {pop_scope(&scope,&offset,symbolTable);} tELSE tLBRACE {scope++;} expression tRBRACE {pop_scope(&scope,&offset,symbolTable);}
+			 | tIF tLPAR value tRPAR tLBRACE {scope++;} expression tRBRACE {pop_scope(&scope,&offset,symbolTable);} tELSE if_statement
     ;
                 
-while_statement : tWHILE tLPAR value tRPAR tLBRACE expression tRBRACE
+while_statement : tWHILE tLPAR value tRPAR tLBRACE {scope++;} expression tRBRACE {pop_scope(&scope,&offset,symbolTable);}
     ;
 
 %%                     /* C code */
@@ -175,8 +177,10 @@ void yyerror (const char *s) {
 }
 
 int main (void) {
-	printf("Début du bison");
+	printf("Début du bison\n");
 	symbolTable = symbol_table_init();
+	scope = 0;
+	offset = 0;
 	yyparse();
 }
 
