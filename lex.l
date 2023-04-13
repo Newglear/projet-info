@@ -3,7 +3,7 @@
 %option nounput
 
 %{
-#include "y.tab.h"
+#include "bison.tab.h"
 %}
 %%
 "//".*                  /* skip everything in a line comment */

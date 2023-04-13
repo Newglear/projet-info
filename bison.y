@@ -4,7 +4,15 @@
 #include "symbol_table.h"
 int yylex (void);
 void yyerror (const char *);
+
+
 %}
+
+
+%code 
+{
+	symbol_table* symbolTable ;
+}
 
 %union {char* id;int val;}         /* Yacc definitions */
 
@@ -109,7 +117,7 @@ return_expr : tRETURN value tSEMI
 variable_definition: tINT variable_definition_content tSEMI //{printf("def de variable \n");}
     ;                 
 
-variable_definition_content : tID tASSIGN value {symbol_table_push(symbolTable,symbol_table_entry_init($1,1,INT,symbol,0,0));}
+variable_definition_content : tID tASSIGN value {symbol_table_push(symbolTable,symbol_table_entry_init($1,1,INT,0,0));}
 							//| variable_definition_content tCOMMA variable_definition_content 
 							| tID {/*:symbol_table_push(table, symbol_table_entry_init($1,0,INT,symbol,0,0));*/}
 				   
@@ -168,7 +176,7 @@ void yyerror (const char *s) {
 
 int main (void) {
 	printf("Début du bison");
-	symbol_table* symbolTable = symbol_table_init();
+	symbolTable = symbol_table_init();
 	yyparse();
 }
 

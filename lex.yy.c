@@ -491,10 +491,10 @@ int yy_flex_debug = 0;
 #define YY_MORE_ADJ 0
 #define YY_RESTORE_YY_MORE_OFFSET
 char *yytext;
-#line 1 "./lex.l"
+#line 1 "lex.l"
 #define YY_NO_INPUT 1
-#line 6 "./lex.l"
-#include "y.tab.h"
+#line 6 "lex.l"
+#include "bison.tab.h"
 #line 499 "lex.yy.c"
 #line 500 "lex.yy.c"
 
@@ -711,7 +711,7 @@ YY_DECL
 		}
 
 	{
-#line 8 "./lex.l"
+#line 8 "lex.l"
 
 #line 717 "lex.yy.c"
 
@@ -772,186 +772,186 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 9 "./lex.l"
+#line 9 "lex.l"
 /* skip everything in a line comment */
 	YY_BREAK
 case 2:
 /* rule 2 can match eol */
 YY_RULE_SETUP
-#line 10 "./lex.l"
+#line 10 "lex.l"
 /* skip everything in a block comment */
 	YY_BREAK
 /* keywords */
 case 3:
 YY_RULE_SETUP
-#line 13 "./lex.l"
+#line 13 "lex.l"
 {return tVOID;}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 14 "./lex.l"
+#line 14 "lex.l"
 {return tINT;}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 15 "./lex.l"
+#line 15 "lex.l"
 {return tIF;}
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 16 "./lex.l"
+#line 16 "lex.l"
 {return tPRINT;}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 17 "./lex.l"
+#line 17 "lex.l"
 {return tELSE;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 18 "./lex.l"
+#line 18 "lex.l"
 {return tWHILE;} 
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 19 "./lex.l"
+#line 19 "lex.l"
 {return tRETURN;}
 	YY_BREAK
 /* operations with 2 symbols */
 case 10:
 YY_RULE_SETUP
-#line 22 "./lex.l"
+#line 22 "lex.l"
 {return tEQ;}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 23 "./lex.l"
+#line 23 "lex.l"
 {return tLE;}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 24 "./lex.l"
+#line 24 "lex.l"
 {return tGE;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 25 "./lex.l"
+#line 25 "lex.l"
 {return tNE;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 26 "./lex.l"
+#line 26 "lex.l"
 {return tAND;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 27 "./lex.l"
+#line 27 "lex.l"
 {return tOR;}
 	YY_BREAK
 /* operations with 1 symbols */
 case 16:
 YY_RULE_SETUP
-#line 30 "./lex.l"
+#line 30 "lex.l"
 {return tASSIGN;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 31 "./lex.l"
+#line 31 "lex.l"
 {return tADD;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 32 "./lex.l"
+#line 32 "lex.l"
 {return tSUB;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 33 "./lex.l"
+#line 33 "lex.l"
 {return tMUL;}       
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 34 "./lex.l"
+#line 34 "lex.l"
 {return tDIV;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 35 "./lex.l"
+#line 35 "lex.l"
 {return tGT;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 36 "./lex.l"
+#line 36 "lex.l"
 {return tLT;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 37 "./lex.l"
+#line 37 "lex.l"
 {return tNOT;}
 	YY_BREAK
 /* syntax */
 case 24:
 YY_RULE_SETUP
-#line 40 "./lex.l"
+#line 40 "lex.l"
 {return tLPAR;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 41 "./lex.l"
+#line 41 "lex.l"
 {return tRPAR;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
-#line 42 "./lex.l"
+#line 42 "lex.l"
 {return tLBRACE;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
-#line 43 "./lex.l"
+#line 43 "lex.l"
 {return tRBRACE;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
-#line 44 "./lex.l"
+#line 44 "lex.l"
 {return tSEMI;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
-#line 45 "./lex.l"
+#line 45 "lex.l"
 {return tCOMMA;}
 	YY_BREAK
 /* Hexadecimal numbers and Integers */
 case 30:
 YY_RULE_SETUP
-#line 49 "./lex.l"
+#line 49 "lex.l"
 {return tNB;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
-#line 51 "./lex.l"
+#line 51 "lex.l"
 {return tNB;}
 	YY_BREAK
 /* keywords not clearly mentionned */
 case 32:
 YY_RULE_SETUP
-#line 54 "./lex.l"
+#line 54 "lex.l"
 {return tID;}
 	YY_BREAK
 case 33:
 /* rule 33 can match eol */
 YY_RULE_SETUP
-#line 56 "./lex.l"
+#line 56 "lex.l"
 /* skip blankspace and tab */
 	YY_BREAK
 /* the rest is considered as errors */
 case 34:
 YY_RULE_SETUP
-#line 59 "./lex.l"
+#line 59 "lex.l"
 {return tERROR;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
-#line 60 "./lex.l"
+#line 60 "lex.l"
 ECHO;
 	YY_BREAK
 #line 958 "lex.yy.c"
@@ -1922,7 +1922,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 60 "./lex.l"
+#line 60 "lex.l"
 
   
 /*** Code Section ***/
