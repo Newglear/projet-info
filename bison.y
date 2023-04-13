@@ -6,7 +6,7 @@ int yylex (void);
 void yyerror (const char *);
 %}
 
-%union {char* id;}         /* Yacc definitions */
+%union {char* id;int val;}         /* Yacc definitions */
 
 /*first element to parse*/
 %start start
@@ -45,17 +45,18 @@ void yyerror (const char *);
 %token tRBRACE
 %token tSEMI
 %token tCOMMA  
-%token tID
+%token <id> tID
 %token tNB
 
 %token tERROR
 
+%type <id> variable_assignement
 /*conflit shift reduce*/
 %left tADD tSUB tMUL tDIV tLT tLE tEQ tNE tGE tGT tAND tOR tNOT
 %left tCOMMA
 
 %%
-start: expression {symbol_table_print(table);printf("SUCCESS !\n");}
+start: expression {symbol_table_print(symbolTable);printf("SUCCESS !\n");}
 	;
 
 final_expression : variable_definition 
@@ -108,11 +109,11 @@ return_expr : tRETURN value tSEMI
 variable_definition: tINT variable_definition_content tSEMI //{printf("def de variable \n");}
     ;                 
 
-variable_definition_content : tID tASSIGN value {symbol_table_entry* e = symbol_table_entry_init($1,1,INT,symbol,0,0); symbol_table_push(table,e)}
+variable_definition_content : tID tASSIGN value {symbol_table_push(symbolTable,symbol_table_entry_init($1,1,INT,symbol,0,0));}
 							//| variable_definition_content tCOMMA variable_definition_content 
-							| tID {symbol_table_push(table, symbol_table_entry_init($1,0,INT,symbol,0,0))}
+							| tID {/*:symbol_table_push(table, symbol_table_entry_init($1,0,INT,symbol,0,0));*/}
 				   
-variable_assignement: tID tASSIGN value tSEMI {symbol_table_entry* e =  symbol_table_get_by_symbol($1,table);e->is_initialised = 1; }
+variable_assignement: tID tASSIGN value tSEMI {/*symbol_table_entry* e = symbol_table_get_by_symbol($1,table);e->is_initialised = 1;*/ }
     ;
 
 print_statement : tPRINT tLPAR tRPAR tSEMI 
@@ -132,6 +133,8 @@ symbol: tADD
 	| tAND
 	| tOR
 	;
+
+
 
 final_value: tNB //{printf("num\n");}
       | function_call_int
@@ -164,7 +167,8 @@ void yyerror (const char *s) {
 }
 
 int main (void) {
-	symbol_table* table = symbol_table_init();
+	printf("Début du bison");
+	symbol_table* symbolTable = symbol_table_init();
 	yyparse();
 }
 
