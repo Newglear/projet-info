@@ -4,7 +4,7 @@ BISON=bison.y
 LEX=lex.l
 
 BIN=main
-
+OUT=main
 
 OBJ=bison.tab.o lex.yy.o symbol_table.o
 
@@ -25,7 +25,7 @@ lex.yy.c: $(LEX)
 
 
 $(BIN): $(OBJ)
-	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -o main
+	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -o $(OUT)
 
 
 
@@ -40,7 +40,7 @@ $(BIN): $(OBJ)
 # gcc lex.yy.c bison.tab.c -o parser
 # gcc -o symbol_table symbol_table.c 
 clean: 
-	rm bison.tab.c bison.tab.h lex.yy.c
+	rm bison.tab.c bison.tab.h lex.yy.c *.o
 test:
 	gcc -o main test_symboltable.c symbol_table.c
 	./main
