@@ -74,7 +74,7 @@ void yyerror (const char *);
 %left tCOMMA
 
 %%
-start: expression {symbol_table_print(symbolTable);printf("SUCCESS !\n");fclose(out_file);}
+start: expression {symbol_table_print(symbolTable);symbol_table_print(functionTable);printf("SUCCESS !\n");fclose(out_file);}
 	;
 
 final_expression : variable_definition 
@@ -115,8 +115,9 @@ function_argument_definition: %empty
     ;
 
 // TODO: function definition without expression
-function_definition : tINT tID  tLPAR {scope++;} function_argument_definition tRPAR tLBRACE function_body tRBRACE {pop_scope(&scope,&offset,symbolTable);}
-					| tVOID tID tLPAR {scope++;} function_argument_definition tRPAR tLBRACE function_body tRBRACE {pop_scope(&scope,&offset,symbolTable);}
+function_definition : tINT tID  tLPAR {scope++;write_assembly_single($2,out_file);} function_argument_definition tRPAR tLBRACE function_body tRBRACE {pop_scope(&scope,&offset,symbolTable); symbol_table_push(functionTable,symbol_table_entry_init($2, 1,INT, 0,0));} // Gestion du write asm quand ?
+
+					| tVOID tID tLPAR {scope++;write_assembly_single($2,out_file);} function_argument_definition tRPAR tLBRACE function_body tRBRACE {pop_scope(&scope,&offset,symbolTable); symbol_table_push(functionTable,symbol_table_entry_init($2, 1,VOID, 0,0));}
     ;
 
 function_args: %empty

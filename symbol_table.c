@@ -190,6 +190,12 @@ void write_assembly(char* instruction, int arg1_offset,int arg2_offset, FILE* fi
     strcat(str,addr);
     fwrite(str,sizeof(char),strlen(str),file);
 }
+void write_assembly_single(char* instruction,FILE* file){
+    char str[MAX_SIZE_STR]= "__";
+    strcat(str,instruction);
+    strcat(str,"__ :\n");
+    fwrite(str,sizeof(char),strlen(str),file);
+}
 
 void write_assembly_3(char* instruction, int arg1_offset,int arg2_offset,int arg3_offset, FILE* file){
     char str[MAX_SIZE_STR]= "";
