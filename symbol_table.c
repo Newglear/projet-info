@@ -178,3 +178,14 @@ void push_element(symbol_table* table,char* name, char is_init, enum variable_ty
     symbol_table_push(table,e);
     *offset += INT_SIZE;
 }
+
+void write_assembly(char* instruction, int arg1_offset,int arg2_offset, FILE* file){
+    char str[MAX_SIZE_STR]= "";
+    char addr[MAX_SIZE_STR]= "";
+    strcat(str,instruction);
+    sprintf(addr," %d ",arg1_offset); 
+    strcat(str,addr); 
+    sprintf(addr," %d;\n",arg2_offset); 
+    strcat(str,addr);
+    fwrite(str,sizeof(char),strlen(str),file);
+}

@@ -3,8 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "symbol_table.h"
-#define INT_SIZE 4
-#define MAX_SIZE_STR 420
+
 int yylex (void);
 void yyerror (const char *);
 
@@ -138,7 +137,7 @@ return_expr : tRETURN value tSEMI
 variable_definition: tINT variable_definition_content tSEMI 
     ;                 
 
-variable_definition_content : tID tASSIGN value {char str[MAX_SIZE_STR] = "COP ";char addr[MAX_SIZE_STR]; sprintf(addr," %d ",offset); strcat(str,addr); sprintf(addr," %d;\n",$3); strcat(str,addr);fwrite(str,sizeof(char),strlen(str),out_file);push_element(symbolTable,$1,1,INT,&offset,scope);} // Copy the value from a to b 
+variable_definition_content : tID tASSIGN value {write_assembly("COP",offset,$3,out_file);push_element(symbolTable,$1,1,INT,&offset,scope);} // Copy the value from a to b 
 							| tID { push_element(symbolTable,$1,0,INT,&offset,scope);}
 				   
 variable_assignement: tID tASSIGN value tSEMI {symbol_table_entry* e = symbol_table_get_by_symbol($1,symbolTable);e->is_initialised = 1;}
