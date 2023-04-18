@@ -189,3 +189,49 @@ void write_assembly(char* instruction, int arg1_offset,int arg2_offset, FILE* fi
     strcat(str,addr);
     fwrite(str,sizeof(char),strlen(str),file);
 }
+
+void flow_control_push(char* word,symbol_table* table, int scope, FILE* file) {
+    static unsigned int flow_control_counter = 0;
+    char str[MAX_SIZE_STR] = "";
+    char tmp[MAX_SIZE_STR] = "";
+    if (!table) {
+        printf("Table not initialized in %s\n", __PRETTY_FUNCTION__);
+        exit(-1);
+    }
+    if(!word) {
+        printf("Word not initialized in %s \n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+
+    strcat(str,"__");
+    strcat(str, word);
+    sprintf(tmp,"_%d", flow_control_counter++);
+    strcat(str, tmp);
+    strcat(str, "__:\n");
+
+    symbol_table_entry* e = symbol_table_entry_init(str, 0, 0, 0, scope);
+    symbol_table_push(table,e);
+
+    fwrite(str,sizeof(char),strlen(str),file);
+}
+
+// TODO pop last of corect type???
+void flow_control_get(symbol_table* table, FILE* file) {
+    if (!table) {
+        printf("Table not initialized in %s\n", __PRETTY_FUNCTION__);
+        exit(-1);
+    }
+    // TODO
+    symbol_table_entry* e = symbol_table_get(table->size-1,table);
+    fwrite(e->symbol,sizeof(char),strlen(e->symbol),file);
+}
+
+void flow_control_pop(symbol_table* table,int* scope, FILE* file) {
+    if (!table) {
+        printf("Table not initialized in %s\n", __PRETTY_FUNCTION__);
+        exit(-1);
+    }
+    (*scope)--;
+    flow_control_get(table,file);
+    symbol_table_pop(table);
+}

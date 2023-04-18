@@ -16,6 +16,7 @@ void yyerror (const char *);
 	FILE* out_file = NULL;
 	symbol_table* symbolTable ;
 	symbol_table* functionTable;
+	symbol_table* flowControlTable;
 	int scope;
 	int offset;
 	int temp_cnt; 
@@ -177,7 +178,7 @@ value : tNB { $$ = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(st
 	  | tID {$$ = symbol_table_get_by_symbol($1,symbolTable)->offset ; }
     ;
 
-if_statement : tIF tLPAR value tRPAR tLBRACE {scope++;} expression tRBRACE {pop_scope(&scope,&offset,symbolTable);}
+if_statement : tIF tLPAR value tRPAR tLBRACE {flow_control_push("IF",flowControlTable, scope, out_file);scope++;} expression tRBRACE {flow_control_pop(flowControlTable,&scope, out_file); pop_scope(&scope,&offset,symbolTable);}
 			 | tIF tLPAR value tRPAR tLBRACE {scope++;} expression tRBRACE {pop_scope(&scope,&offset,symbolTable);} tELSE tLBRACE {scope++;} expression tRBRACE {pop_scope(&scope,&offset,symbolTable);}
 			 | tIF tLPAR value tRPAR tLBRACE {scope++;} expression tRBRACE {pop_scope(&scope,&offset,symbolTable);} tELSE if_statement
     ;
@@ -203,6 +204,7 @@ int main (int argc, char* argv[] ) {
 
 	symbolTable = symbol_table_init();
 	functionTable = symbol_table_init();
+	flowControlTable = symbol_table_init();
 	scope = 0;
 	offset = 0;
 	temp_cnt = 0;
