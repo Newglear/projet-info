@@ -92,7 +92,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 25 "bison.y"
+#line 24 "bison.y"
 char id[32];int val;
 
 #line 99 "bison.tab.h"

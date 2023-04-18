@@ -73,14 +73,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include "symbol_table.h"
-#define INT_SIZE 4
-#define MAX_SIZE_STR 420
+
 int yylex (void);
 void yyerror (const char *);
 
 
 
-#line 84 "bison.tab.c"
+#line 83 "bison.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -177,7 +176,7 @@ typedef enum yysymbol_kind_t yysymbol_kind_t;
 
 
 /* Unqualified %code blocks.  */
-#line 16 "bison.y"
+#line 15 "bison.y"
 
 	FILE* out_file = NULL;
 	symbol_table* symbolTable ;
@@ -186,7 +185,7 @@ typedef enum yysymbol_kind_t yysymbol_kind_t;
 	int offset;
 	int temp_cnt; 
 
-#line 190 "bison.tab.c"
+#line 189 "bison.tab.c"
 
 #ifdef short
 # undef short
@@ -570,15 +569,15 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    79,    79,    82,    83,    84,    85,    86,    87,    88,
-      89,    92,    93,    94,    95,    96,    97,    98,    99,   100,
-     103,   104,   105,   106,   107,   108,   109,   110,   113,   114,
-     115,   116,   120,   120,   121,   121,   124,   125,   128,   129,
-     132,   133,   135,   138,   141,   142,   144,   147,   148,   151,
-     152,   153,   154,   155,   156,   157,   158,   159,   160,   161,
-     162,   167,   168,   169,   170,   174,   175,   176,   177,   178,
-     181,   181,   182,   182,   182,   182,   183,   183,   183,   186,
-     186
+       0,    78,    78,    81,    82,    83,    84,    85,    86,    87,
+      88,    91,    92,    93,    94,    95,    96,    97,    98,    99,
+     102,   103,   104,   105,   106,   107,   108,   109,   112,   113,
+     114,   115,   119,   119,   120,   120,   123,   124,   127,   128,
+     131,   132,   134,   137,   140,   141,   143,   146,   147,   150,
+     151,   152,   153,   154,   155,   156,   157,   158,   159,   160,
+     161,   166,   167,   168,   169,   173,   174,   175,   176,   177,
+     180,   180,   181,   181,   181,   181,   182,   182,   182,   185,
+     185
 };
 #endif
 
@@ -1230,163 +1229,163 @@ yyreduce:
   switch (yyn)
     {
   case 2: /* start: expression  */
-#line 79 "bison.y"
+#line 78 "bison.y"
                   {symbol_table_print(symbolTable);printf("SUCCESS !\n");fclose(out_file);}
-#line 1236 "bison.tab.c"
+#line 1235 "bison.tab.c"
     break;
 
   case 29: /* function_argument_definition: tINT tID  */
-#line 114 "bison.y"
+#line 113 "bison.y"
                                    { push_element(symbolTable,(yyvsp[0].id),1,INT,&offset,scope);}
-#line 1242 "bison.tab.c"
+#line 1241 "bison.tab.c"
     break;
 
   case 32: /* $@1: %empty  */
-#line 120 "bison.y"
+#line 119 "bison.y"
                                       {scope++;}
-#line 1248 "bison.tab.c"
+#line 1247 "bison.tab.c"
     break;
 
   case 33: /* function_definition: tINT tID tLPAR $@1 function_argument_definition tRPAR tLBRACE function_body tRBRACE  */
-#line 120 "bison.y"
+#line 119 "bison.y"
                                                                                                                   {pop_scope(&scope,&offset,symbolTable);}
-#line 1254 "bison.tab.c"
+#line 1253 "bison.tab.c"
     break;
 
   case 34: /* $@2: %empty  */
-#line 121 "bison.y"
+#line 120 "bison.y"
                                                           {scope++;}
-#line 1260 "bison.tab.c"
+#line 1259 "bison.tab.c"
     break;
 
   case 35: /* function_definition: tVOID tID tLPAR $@2 function_argument_definition tRPAR tLBRACE function_body tRBRACE  */
-#line 121 "bison.y"
+#line 120 "bison.y"
                                                                                                                                       {pop_scope(&scope,&offset,symbolTable);}
-#line 1266 "bison.tab.c"
+#line 1265 "bison.tab.c"
     break;
 
   case 44: /* variable_definition_content: tID tASSIGN value  */
-#line 141 "bison.y"
-                                                {char str[MAX_SIZE_STR] = "COP ";char addr[MAX_SIZE_STR]; sprintf(addr," %d ",offset); strcat(str,addr); sprintf(addr," %d;\n",(yyvsp[0].val)); strcat(str,addr);fwrite(str,sizeof(char),strlen(str),out_file);push_element(symbolTable,(yyvsp[-2].id),1,INT,&offset,scope);}
-#line 1272 "bison.tab.c"
+#line 140 "bison.y"
+                                                {write_assembly("COP",offset,(yyvsp[0].val),out_file);push_element(symbolTable,(yyvsp[-2].id),1,INT,&offset,scope);}
+#line 1271 "bison.tab.c"
     break;
 
   case 45: /* variable_definition_content: tID  */
-#line 142 "bison.y"
+#line 141 "bison.y"
                                                               { push_element(symbolTable,(yyvsp[0].id),0,INT,&offset,scope);}
-#line 1278 "bison.tab.c"
+#line 1277 "bison.tab.c"
     break;
 
   case 46: /* variable_assignement: tID tASSIGN value tSEMI  */
-#line 144 "bison.y"
-                                              {symbol_table_entry* e = symbol_table_get_by_symbol((yyvsp[-3].id),symbolTable);e->is_initialised = 1;}
-#line 1284 "bison.tab.c"
+#line 143 "bison.y"
+                                              {symbol_table_entry* e = symbol_table_get_by_symbol((yyvsp[-3].id),symbolTable);e->is_initialised = 1; push_element(symbolTable,(yyvsp[-3].id),1,INT,&offset,scope);}
+#line 1283 "bison.tab.c"
     break;
 
   case 61: /* final_value: tNB  */
-#line 167 "bison.y"
-                 { (yyval.val) = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope); }
-#line 1290 "bison.tab.c"
+#line 166 "bison.y"
+                 {(yyval.val) = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); write_assembly("AFC", offset -INT_SIZE , (yyvsp[0].val), out_file); push_element(symbolTable,str,1,INT, &offset,scope); }
+#line 1289 "bison.tab.c"
     break;
 
   case 63: /* final_value: tNOT final_value  */
-#line 169 "bison.y"
+#line 168 "bison.y"
                              { (yyval.val) = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope); }
-#line 1296 "bison.tab.c"
+#line 1295 "bison.tab.c"
     break;
 
   case 64: /* final_value: tID  */
-#line 170 "bison.y"
+#line 169 "bison.y"
                  {(yyval.val) = symbol_table_get_by_symbol((yyvsp[0].id),symbolTable)->offset ; }
-#line 1302 "bison.tab.c"
+#line 1301 "bison.tab.c"
     break;
 
   case 65: /* value: tNB  */
-#line 174 "bison.y"
-            {  (yyval.val) = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope);}
-#line 1308 "bison.tab.c"
+#line 173 "bison.y"
+            { (yyval.val) = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope); write_assembly("AFC", offset - INT_SIZE, (yyvsp[0].val), out_file);}
+#line 1307 "bison.tab.c"
     break;
 
   case 67: /* value: final_value symbol value  */
-#line 176 "bison.y"
+#line 175 "bison.y"
                                      {printf("OP(%d %s %d) \n",(yyvsp[-2].val),(yyvsp[-1].id),(yyvsp[0].val));}
-#line 1314 "bison.tab.c"
+#line 1313 "bison.tab.c"
     break;
 
   case 68: /* value: tNOT value  */
-#line 177 "bison.y"
+#line 176 "bison.y"
                         { (yyval.val) = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope);}
-#line 1320 "bison.tab.c"
+#line 1319 "bison.tab.c"
     break;
 
   case 69: /* value: tID  */
-#line 178 "bison.y"
+#line 177 "bison.y"
                 {(yyval.val) = symbol_table_get_by_symbol((yyvsp[0].id),symbolTable)->offset ; }
-#line 1326 "bison.tab.c"
+#line 1325 "bison.tab.c"
     break;
 
   case 70: /* $@3: %empty  */
-#line 181 "bison.y"
+#line 180 "bison.y"
                                              {scope++;}
-#line 1332 "bison.tab.c"
+#line 1331 "bison.tab.c"
     break;
 
   case 71: /* if_statement: tIF tLPAR value tRPAR tLBRACE $@3 expression tRBRACE  */
-#line 181 "bison.y"
+#line 180 "bison.y"
                                                                            {pop_scope(&scope,&offset,symbolTable);}
-#line 1338 "bison.tab.c"
+#line 1337 "bison.tab.c"
     break;
 
   case 72: /* $@4: %empty  */
-#line 182 "bison.y"
+#line 181 "bison.y"
                                                          {scope++;}
-#line 1344 "bison.tab.c"
+#line 1343 "bison.tab.c"
     break;
 
   case 73: /* $@5: %empty  */
-#line 182 "bison.y"
+#line 181 "bison.y"
                                                                                        {pop_scope(&scope,&offset,symbolTable);}
-#line 1350 "bison.tab.c"
+#line 1349 "bison.tab.c"
     break;
 
   case 74: /* $@6: %empty  */
-#line 182 "bison.y"
+#line 181 "bison.y"
                                                                                                                                               {scope++;}
-#line 1356 "bison.tab.c"
+#line 1355 "bison.tab.c"
     break;
 
   case 75: /* if_statement: tIF tLPAR value tRPAR tLBRACE $@4 expression tRBRACE $@5 tELSE tLBRACE $@6 expression tRBRACE  */
-#line 182 "bison.y"
+#line 181 "bison.y"
                                                                                                                                                                             {pop_scope(&scope,&offset,symbolTable);}
-#line 1362 "bison.tab.c"
+#line 1361 "bison.tab.c"
     break;
 
   case 76: /* $@7: %empty  */
-#line 183 "bison.y"
+#line 182 "bison.y"
                                                          {scope++;}
-#line 1368 "bison.tab.c"
+#line 1367 "bison.tab.c"
     break;
 
   case 77: /* $@8: %empty  */
-#line 183 "bison.y"
+#line 182 "bison.y"
                                                                                        {pop_scope(&scope,&offset,symbolTable);}
-#line 1374 "bison.tab.c"
+#line 1373 "bison.tab.c"
     break;
 
   case 79: /* $@9: %empty  */
-#line 186 "bison.y"
+#line 185 "bison.y"
                                                    {scope++;}
-#line 1380 "bison.tab.c"
+#line 1379 "bison.tab.c"
     break;
 
   case 80: /* while_statement: tWHILE tLPAR value tRPAR tLBRACE $@9 expression tRBRACE  */
-#line 186 "bison.y"
+#line 185 "bison.y"
                                                                                  {pop_scope(&scope,&offset,symbolTable);}
-#line 1386 "bison.tab.c"
+#line 1385 "bison.tab.c"
     break;
 
 
-#line 1390 "bison.tab.c"
+#line 1389 "bison.tab.c"
 
       default: break;
     }
@@ -1579,7 +1578,7 @@ yyreturnlab:
   return yyresult;
 }
 
-#line 189 "bison.y"
+#line 188 "bison.y"
                      /* C code */
 
 

@@ -139,7 +139,7 @@ variable_definition: tINT variable_definition_content tSEMI
 variable_definition_content : tID tASSIGN value {write_assembly("COP",offset,$3,out_file);push_element(symbolTable,$1,1,INT,&offset,scope);} // Copy the value from a to b 
 							| tID { push_element(symbolTable,$1,0,INT,&offset,scope);}
 				   
-variable_assignement: tID tASSIGN value tSEMI {symbol_table_entry* e = symbol_table_get_by_symbol($1,symbolTable);e->is_initialised = 1;}
+variable_assignement: tID tASSIGN value tSEMI {symbol_table_entry* e = symbol_table_get_by_symbol($1,symbolTable);e->is_initialised = 1; push_element(symbolTable,$1,1,INT,&offset,scope);}
     ;
 
 print_statement : tPRINT tLPAR tRPAR tSEMI 
@@ -162,14 +162,14 @@ symbol: tADD {strcpy($$,"ADD");}
 
 
 
-final_value: tNB { $$ = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope); }
+final_value: tNB {$$ = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); write_assembly("AFC", offset -INT_SIZE , $1, out_file); push_element(symbolTable,str,1,INT, &offset,scope); }
       | function_call_int 
 	  | tNOT final_value { $$ = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope); }
 	  | tID  {$$ = symbol_table_get_by_symbol($1,symbolTable)->offset ; }
     ;
 
 // Value that can be assign to a variable or in function arguments
-value : tNB {  $$ = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope);} // AFC
+value : tNB { $$ = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope); write_assembly("AFC", offset - INT_SIZE, $1, out_file);} // AFC
       | function_call_int
 	  | final_value symbol value {printf("OP(%d %s %d) \n",$1,$2,$3);write_assembly_3($2,$1,$1,$3,out_file);}
 	  | tNOT value	{ $$ = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope);}

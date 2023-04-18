@@ -48,9 +48,9 @@
 
 
  /* Hexadecimal numbers and Integers */
-"0x"[0-9]+              {strcpy(yylval.id,yytext); return tNB;}
+"0x"[0-9]+              {yylval.val = atoi(yytext); return tNB;} // TODO
 
-[0-9]+                  {strcpy(yylval.id,yytext); return tNB;}
+[0-9]+                  {yylval.val = atoi(yytext); return tNB;}
 
  /* keywords not clearly mentionned */
 [A-Za-z][A-Za-z0-9]*    {/*printf("%s\n",yytext);*/strcpy(yylval.id,yytext);return tID;}
