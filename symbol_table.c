@@ -68,7 +68,7 @@ void symbol_table_push(symbol_table* table, symbol_table_entry* entry) {
 }
 
 // pop a symbol from the table
-symbol_table_entry* symbol_table_pop(symbol_table* table) {
+symbol_table_entry* symbol_table_pop(symbol_table* table,int* offset) {
 
     if (!table){  // check if the table is initialized
         printf("Table not initialized %s \n", __PRETTY_FUNCTION__ );
@@ -82,6 +82,7 @@ symbol_table_entry* symbol_table_pop(symbol_table* table) {
     symbol_table_entry* elem = table->symbol_table[index];
     table->symbol_table[index] = NULL;
     table->size--;
+    *offset -= INT_SIZE; 
     return elem;
 }
 
@@ -165,7 +166,7 @@ void pop_scope(int* scope,int* offset, symbol_table* table){
     while(element->scope == *scope){
         printf("POP! \n");
         symbol_entry_print(element);
-        symbol_table_pop(table);
+        symbol_table_pop(table,offset);
         element = symbol_table_get(table->size-1,table);
         *offset-=INT_SIZE;
     }
