@@ -69,7 +69,6 @@ void yyerror (const char *);
 %type <id> symbol
 %type <val> final_value
 %type <val> value
-
 /*conflit shift reduce*/
 %left tADD tSUB tMUL tDIV tLT tLE tEQ tNE tGE tGT tAND tOR tNOT
 %left tCOMMA
@@ -147,15 +146,15 @@ print_statement : tPRINT tLPAR tRPAR tSEMI
 				| tPRINT tLPAR value tRPAR tSEMI
 				;
 
-symbol: tADD //{$$ = "ADD";}
-	| tSUB	 //{$$ = "SUB";}
-	| tMUL   //{$$ = "MUL";}
-	| tDIV   //{$$ = "DIV";}
+symbol: tADD {strcpy($$,"ADD");}
+	| tSUB	 {strcpy($$,"SUB");}
+	| tMUL   {strcpy($$,"MUL");}
+	| tDIV   {strcpy($$,"DIV");}
 	| tLE
 	| tGE
 	| tGT
 	| tNE
-	| tEQ
+	| tEQ {strcpy($$,"EQUAL");}
 	| tLT
 	| tAND
 	| tOR
@@ -172,7 +171,7 @@ final_value: tNB { $$ = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strc
 // Value that can be assign to a variable or in function arguments
 value : tNB {  $$ = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope);} // AFC
       | function_call_int
-	  | final_value symbol value {printf("OP(%d %s %d) \n",$1,$2,$3);}
+	  | final_value symbol value {printf("OP(%d %s %d) \n",$1,$2,$3);write_assembly_3($2,$1,$1,$3,out_file);}
 	  | tNOT value	{ $$ = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope);}
 	  | tID {$$ = symbol_table_get_by_symbol($1,symbolTable)->offset ; }
     ;

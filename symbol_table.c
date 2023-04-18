@@ -183,9 +183,22 @@ void write_assembly(char* instruction, int arg1_offset,int arg2_offset, FILE* fi
     char str[MAX_SIZE_STR]= "";
     char addr[MAX_SIZE_STR]= "";
     strcat(str,instruction);
-    sprintf(addr," %d ",arg1_offset); 
+    sprintf(addr," %d,",arg1_offset); 
     strcat(str,addr); 
-    sprintf(addr," %d;\n",arg2_offset); 
+    sprintf(addr," %d\n",arg2_offset); 
+    strcat(str,addr);
+    fwrite(str,sizeof(char),strlen(str),file);
+}
+
+void write_assembly_3(char* instruction, int arg1_offset,int arg2_offset,int arg3_offset, FILE* file){
+    char str[MAX_SIZE_STR]= "";
+    char addr[MAX_SIZE_STR]= "";
+    strcat(str,instruction);
+    sprintf(addr," %d,",arg1_offset); 
+    strcat(str,addr); 
+    sprintf(addr," %d,",arg2_offset); 
+    strcat(str,addr);
+    sprintf(addr," %d\n",arg3_offset); 
     strcat(str,addr);
     fwrite(str,sizeof(char),strlen(str),file);
 }

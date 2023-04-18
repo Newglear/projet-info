@@ -46,5 +46,6 @@ void symbol_entry_print(symbol_table_entry* entry);
 void pop_scope(int* scope,int* offset, symbol_table* table);
 void push_element(symbol_table* table,char* name, char is_init, enum variable_type variable_type, int* offset, int scope);
 void write_assembly(char* instruction, int arg1_offset,int arg2_offset, FILE* file);
+void write_assembly_3(char* instruction, int arg1_offset,int arg2_offset,int arg3_offset, FILE* file);
 #endif
 
