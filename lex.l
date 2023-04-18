@@ -2,6 +2,7 @@
 %option noinput
 %option nounput
 
+
 %{
 #include "bison.tab.h"
 #include <string.h>
@@ -11,45 +12,45 @@
 "/\*"(.|\n)*"\*/"       /* skip everything in a block comment */
 
  /* keywords */
-"void"                  {return tVOID;}
-"int"                   {return tINT;}
-"if"                    {return tIF;}
-"print"                 {return tPRINT;}
-"else"                  {return tELSE;}
-"while"                 {return tWHILE;} 
-"return"                {return tRETURN;}
+"void"                  {strcpy(yylval.id,yytext); return tVOID;}
+"int"                   {strcpy(yylval.id,yytext); return tINT;}
+"if"                    {strcpy(yylval.id,yytext); return tIF;}
+"print"                 {strcpy(yylval.id,yytext); return tPRINT;}
+"else"                  {strcpy(yylval.id,yytext); return tELSE;}
+"while"                 {strcpy(yylval.id,yytext); return tWHILE;} 
+"return"                {strcpy(yylval.id,yytext); return tRETURN;}
 
  /* operations with 2 symbols */
-"=="                    {return tEQ;}
-"<="                    {return tLE;}
-">="                    {return tGE;}
-"!="                    {return tNE;}
-"&&"                    {return tAND;}
-"||"                    {return tOR;}
+"=="                    {strcpy(yylval.id,yytext); return tEQ;}
+"<="                    {strcpy(yylval.id,yytext); return tLE;}
+">="                    {strcpy(yylval.id,yytext); return tGE;}
+"!="                    {strcpy(yylval.id,yytext); return tNE;}
+"&&"                    {strcpy(yylval.id,yytext); return tAND;}
+"||"                    {strcpy(yylval.id,yytext); return tOR;}
 
  /* operations with 1 symbols */
-"="                     {return tASSIGN;}
-"+"                     {return tADD;}
-"-"                     {return tSUB;}
-"*"                     {return tMUL;}       
-"/"                     {return tDIV;}
-">"                     {return tGT;}
-"<"                     {return tLT;}
-"!"                     {return tNOT;}
+"="                     {strcpy(yylval.id,yytext); return tASSIGN;}
+"+"                     {strcpy(yylval.id,yytext); return tADD;}
+"-"                     {strcpy(yylval.id,yytext); return tSUB;}
+"*"                     {strcpy(yylval.id,yytext); return tMUL;}       
+"/"                     {strcpy(yylval.id,yytext); return tDIV;}
+">"                     {strcpy(yylval.id,yytext); return tGT;}
+"<"                     {strcpy(yylval.id,yytext); return tLT;}
+"!"                     {strcpy(yylval.id,yytext); return tNOT;}
 
  /* syntax */
-"("                     {return tLPAR;}
-")"                     {return tRPAR;}
-"{"                     {return tLBRACE;}
-"}"                     {return tRBRACE;}
-";"                     {return tSEMI;}
-","                     {return tCOMMA;}
+"("                     {strcpy(yylval.id,yytext); return tLPAR;}
+")"                     {strcpy(yylval.id,yytext); return tRPAR;}
+"{"                     {strcpy(yylval.id,yytext); return tLBRACE;}
+"}"                     {strcpy(yylval.id,yytext); return tRBRACE;}
+";"                     {strcpy(yylval.id,yytext); return tSEMI;}
+","                     {strcpy(yylval.id,yytext); return tCOMMA;}
 
 
  /* Hexadecimal numbers and Integers */
-"0x"[0-9]+              {return tNB;}
+"0x"[0-9]+              {strcpy(yylval.id,yytext); return tNB;}
 
-[0-9]+                  {return tNB;}
+[0-9]+                  {strcpy(yylval.id,yytext); return tNB;}
 
  /* keywords not clearly mentionned */
 [A-Za-z][A-Za-z0-9]*    {/*printf("%s\n",yytext);*/strcpy(yylval.id,yytext);return tID;}

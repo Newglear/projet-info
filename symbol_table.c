@@ -171,6 +171,10 @@ void pop_scope(int* scope,int* offset, symbol_table* table){
     }
 
     (*scope)--;
+}
 
-
+void push_element(symbol_table* table,char* name, char is_init, enum variable_type variable_type, int* offset, int scope){
+    symbol_table_entry* e = symbol_table_entry_init(name,is_init,variable_type,*offset,scope);
+    symbol_table_push(table,e);
+    *offset += INT_SIZE;
 }

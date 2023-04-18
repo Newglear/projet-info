@@ -1,8 +1,10 @@
 %{
 #include <stdio.h>     /* C declarations used in actions */
 #include <stdlib.h>
+#include <string.h>
 #include "symbol_table.h"
 #define INT_SIZE 4
+#define MAX_SIZE_STR 420
 int yylex (void);
 void yyerror (const char *);
 
@@ -12,9 +14,12 @@ void yyerror (const char *);
 
 %code 
 {
+	FILE* out_file = NULL;
 	symbol_table* symbolTable ;
+	symbol_table* functionTable;
 	int scope;
 	int offset;
+	int temp_cnt; 
 }
 
 %union {char id[32];int val;}         /* Yacc definitions */
@@ -57,17 +62,21 @@ void yyerror (const char *);
 %token tSEMI
 %token tCOMMA  
 %token <id> tID
-%token tNB
+%token <val>tNB
 
 %token tERROR
 
 %type <id> variable_assignement
+%type <id> symbol
+%type <val> final_value
+%type <val> value
+
 /*conflit shift reduce*/
 %left tADD tSUB tMUL tDIV tLT tLE tEQ tNE tGE tGT tAND tOR tNOT
 %left tCOMMA
 
 %%
-start: expression {symbol_table_print(symbolTable);printf("SUCCESS !\n");}
+start: expression {symbol_table_print(symbolTable);printf("SUCCESS !\n");fclose(out_file);}
 	;
 
 final_expression : variable_definition 
@@ -91,19 +100,29 @@ expression : variable_definition
 		   | return_expr
 	;
 
+function_body : variable_definition 
+           | variable_assignement  
+           | print_statement
+           | if_statement
+           | while_statement 
+		   | function_call
+		   | final_expression expression
+		   | return_expr
+	;
+
 function_argument_definition: %empty
-							| tINT tID {symbol_table_entry* e = symbol_table_entry_init($2,1,INT,offset,scope);symbol_table_push(symbolTable,e);offset += INT_SIZE;} 
-							| tVOID
-							| function_argument_definition tCOMMA function_argument_definition
+			| tINT tID { push_element(symbolTable,$2,1,INT,&offset,scope);}
+			| tVOID
+			| function_argument_definition tCOMMA function_argument_definition
     ;
 
 // TODO: function definition without expression
-function_definition : tINT tID  tLPAR {scope++;} function_argument_definition tRPAR tLBRACE expression tRBRACE {pop_scope(&scope,&offset,symbolTable);}
-					| tVOID tID tLPAR {scope++;} function_argument_definition tRPAR tLBRACE expression tRBRACE {pop_scope(&scope,&offset,symbolTable);}
+function_definition : tINT tID  tLPAR {scope++;} function_argument_definition tRPAR tLBRACE function_body tRBRACE {pop_scope(&scope,&offset,symbolTable);}
+					| tVOID tID tLPAR {scope++;} function_argument_definition tRPAR tLBRACE function_body tRBRACE {pop_scope(&scope,&offset,symbolTable);}
     ;
 
 function_args: %empty
-		    | value tCOMMA function_args //{printf("multiple value\n");}
+		    | value tCOMMA function_args
     ;
 
 function_call : function_call_void
@@ -116,12 +135,11 @@ function_call_int : tID tLPAR function_args tRPAR
 return_expr : tRETURN value tSEMI
     ;
 
-variable_definition: tINT variable_definition_content tSEMI //{printf("def de variable \n");}
+variable_definition: tINT variable_definition_content tSEMI 
     ;                 
 
-variable_definition_content : tID tASSIGN value {symbol_table_entry* e = symbol_table_entry_init($1,1,INT,offset,scope);symbol_table_push(symbolTable,e);offset += INT_SIZE;}
-							//| variable_definition_content tCOMMA variable_definition_content 
-							| tID {symbol_table_entry* e = symbol_table_entry_init($1,0,INT,offset,scope);symbol_table_push(symbolTable,e);offset += INT_SIZE;}
+variable_definition_content : tID tASSIGN value {char str[MAX_SIZE_STR] = "COP ";char addr[MAX_SIZE_STR]; sprintf(addr," %d ",offset); strcat(str,addr); sprintf(addr," %d;\n",$3); strcat(str,addr);fwrite(str,sizeof(char),strlen(str),out_file);push_element(symbolTable,$1,1,INT,&offset,scope);} // Copy the value from a to b 
+							| tID { push_element(symbolTable,$1,0,INT,&offset,scope);}
 				   
 variable_assignement: tID tASSIGN value tSEMI {symbol_table_entry* e = symbol_table_get_by_symbol($1,symbolTable);e->is_initialised = 1;}
     ;
@@ -130,10 +148,10 @@ print_statement : tPRINT tLPAR tRPAR tSEMI
 				| tPRINT tLPAR value tRPAR tSEMI
 				;
 
-symbol: tADD
-	| tSUB	
-	| tMUL
-	| tDIV
+symbol: tADD //{$$ = "ADD";}
+	| tSUB	 //{$$ = "SUB";}
+	| tMUL   //{$$ = "MUL";}
+	| tDIV   //{$$ = "DIV";}
 	| tLE
 	| tGE
 	| tGT
@@ -146,18 +164,18 @@ symbol: tADD
 
 
 
-final_value: tNB //{printf("num\n");}
-      | function_call_int
-	  | tNOT final_value	
-	  | tID //{printf("ID \n");}
+final_value: tNB { $$ = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope); }
+      | function_call_int 
+	  | tNOT final_value { $$ = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope); }
+	  | tID  {$$ = symbol_table_get_by_symbol($1,symbolTable)->offset ; }
     ;
 
 // Value that can be assign to a variable or in function arguments
-value : tNB //{printf("num\n");}
+value : tNB {  $$ = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope);} // AFC
       | function_call_int
-	  | final_value symbol value
-	  | tNOT value	
-	  | tID //{printf("ID \n");}
+	  | final_value symbol value {printf("OP(%d %s %d) \n",$1,$2,$3);}
+	  | tNOT value	{ $$ = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope);}
+	  | tID {$$ = symbol_table_get_by_symbol($1,symbolTable)->offset ; }
     ;
 
 if_statement : tIF tLPAR value tRPAR tLBRACE {scope++;} expression tRBRACE {pop_scope(&scope,&offset,symbolTable);}
@@ -176,11 +194,19 @@ void yyerror (const char *s) {
 	exit(1);
 }
 
-int main (void) {
-	printf("Début du bison\n");
+int main (int argc, char* argv[] ) {
+	if(argc<2){
+		printf("Not enough output files \n");
+		exit(-1);
+	}
+
+	out_file = fopen(argv[1],"w");
+
 	symbolTable = symbol_table_init();
+	functionTable = symbol_table_init();
 	scope = 0;
 	offset = 0;
+	temp_cnt = 0;
 	yyparse();
 }
 
