@@ -2,3 +2,4 @@ bison.tab.c
 bison.tab.h
 *.o
 main
+bison.output
