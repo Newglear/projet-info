@@ -179,7 +179,7 @@ void push_element(symbol_table* table,char* name, char is_init, enum variable_ty
     *offset += INT_SIZE;
 }
 
-void write_assembly(char* instruction, int arg1_offset,int arg2_offset, FILE* file){
+void write_assembly(char* instruction, int arg1_offset,int arg2_offset, FILE* file) {
     char str[MAX_SIZE_STR]= "";
     char addr[MAX_SIZE_STR]= "";
     strcat(str,instruction);
