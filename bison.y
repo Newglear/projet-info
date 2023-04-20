@@ -85,9 +85,9 @@ final_expression : variable_definition
            | print_statement 
            | if_statement
            | while_statement 
-		   | function_call
-		   | return_expr
-		   | function_definition
+//	   | function_call
+	   | return_expr
+//	   | function_definition
 	;
 
 expression : variable_definition 
@@ -95,10 +95,10 @@ expression : variable_definition
            | print_statement
            | if_statement
            | while_statement 
-		   | function_call
-		   | function_definition
-		   | final_expression expression
-		   | return_expr
+//	   | function_call
+//	   | function_definition
+	   | final_expression expression
+	   | return_expr
 	;
 
 function_body : variable_definition 
@@ -106,9 +106,9 @@ function_body : variable_definition
            | print_statement
            | if_statement
            | while_statement 
-		   | function_call
-		   | final_expression expression
-		   | return_expr
+	   | function_call
+	   | final_expression expression
+	   | return_expr
 	;
 
 function_argument_definition: %empty
@@ -169,22 +169,26 @@ symbol: tADD {strcpy($$,"ADD");}
 
 
 final_value: tNB {$$ = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); write_assembly("AFC", offset -INT_SIZE , $1, out_file); push_element(symbolTable,str,1,INT, &offset,scope); }
-      | function_call_int 
-	  | tNOT final_value { $$ = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope); }
-	  | tID  {char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope);int e_offset = symbol_table_get_by_symbol($1,symbolTable)->offset;write_assembly("COP", offset,e_offset,out_file); $$ = offset;}
+//	| function_call_int
+	| tNOT final_value { $$ = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope); }
+	| tID  {char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope);int e_offset = symbol_table_get_by_symbol($1,symbolTable)->offset;write_assembly("COP", offset,e_offset,out_file); $$ = offset;}
     ;
 
 // Value that can be assign to a variable or in function arguments
 value : tNB { $$ = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope); write_assembly("AFC", offset - INT_SIZE, $1, out_file);} // AFC
-      | function_call_int
-	  | final_value symbol value {write_assembly_3($2,$1,$1,$3,out_file);symbol_table_pop(symbolTable,&offset);symbol_table_pop(symbolTable,&offset);}
-	  | tNOT value	{ $$ = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope);}
-	  | tID {char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope);int e_offset = symbol_table_get_by_symbol($1,symbolTable)->offset;write_assembly("COP", offset,e_offset,out_file); $$ = offset;}
+//      | function_call_int
+	| final_value symbol value {write_assembly_3($2,$1,$1,$3,out_file);symbol_table_pop(symbolTable,&offset);symbol_table_pop(symbolTable,&offset);}
+	| tNOT value	{ $$ = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope);}
+	| tID {char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope);int e_offset = symbol_table_get_by_symbol($1,symbolTable)->offset;write_assembly("COP", offset,e_offset,out_file); $$ = offset;}
        ;
 
-if_statement : tIF tLPAR value tRPAR tLBRACE {flow_control_push("FIN",flowControlTable, scope, out_file);scope++;} expression tRBRACE {flow_control_pop(flowControlTable,&scope, out_file);pop_scope(&scope,&offset,symbolTable);}
-			 | tIF tLPAR value tRPAR tLBRACE /*{flow_control_push("ELSE",flowControlTable, scope, out_file);scope++;}*/ expression tRBRACE {pop_scope(&scope,&offset,symbolTable);flow_control_pop(flowControlTable,&scope, out_file);} tELSE tLBRACE {scope++;} expression tRBRACE {pop_scope(&scope,&offset,symbolTable);} %prec tELSE
-			 | tIF tLPAR value tRPAR tLBRACE /*{flow_control_push("ELSE",flowControlTable, scope, out_file);scope++;}*/ expression tRBRACE {pop_scope(&scope,&offset,symbolTable);flow_control_pop(flowControlTable,&scope, out_file);} tELSE if_statement 
+if_statement : tIF tLPAR value tRPAR tLBRACE {flow_control_push("FIN",flowControlTable, scope, out_file);scope++;} expression tRBRACE {flow_control_pop(flowControlTable,&scope, out_file);pop_scope(&scope,&offset,symbolTable);} if_cont
+//	| tIF tLPAR value tRPAR tLBRACE /*{flow_control_push("ELSE",flowControlTable, scope, out_file);scope++;}*/ expression tRBRACE {pop_scope(&scope,&offset,symbolTable);flow_control_pop(flowControlTable,&scope, out_file);} tELSE tLBRACE {scope++;} expression tRBRACE {pop_scope(&scope,&offset,symbolTable);} %prec tELSE
+//	| tIF tLPAR value tRPAR tLBRACE /*{flow_control_push("ELSE",flowControlTable, scope, out_file);scope++;}*/ expression tRBRACE {pop_scope(&scope,&offset,symbolTable);flow_control_pop(flowControlTable,&scope, out_file);} tELSE if_statement
+    ;
+
+if_cont : %empty
+	| tELSE tLBRACE expression tRBRACE
     ;
                 
 while_statement : tWHILE tLPAR value tRPAR tLBRACE {scope++;} expression tRBRACE {pop_scope(&scope,&offset,symbolTable);}

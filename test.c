@@ -9,3 +9,12 @@ if(a == 2) {
   int d = a;
 }
 int e =5;
+
+
+if(a) {
+
+} else {
+    if() {
+
+    }
+}
