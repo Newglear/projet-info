@@ -180,6 +180,13 @@ void push_element(symbol_table* table,char* name, char is_init, enum variable_ty
     *offset += INT_SIZE;
 }
 
+void write_assembly_none(char* instruction,FILE* file){
+    char str[MAX_SIZE_STR]= "__";
+    strcat(str,instruction);
+    strcat(str,"__ :\n");
+    fwrite(str,sizeof(char),strlen(str),file);
+}
+
 void write_assembly(char* instruction, int arg1_offset,int arg2_offset, FILE* file) {
     char str[MAX_SIZE_STR]= "";
     char addr[MAX_SIZE_STR]= "";
@@ -190,13 +197,15 @@ void write_assembly(char* instruction, int arg1_offset,int arg2_offset, FILE* fi
     strcat(str,addr);
     fwrite(str,sizeof(char),strlen(str),file);
 }
-void write_assembly_single(char* instruction,FILE* file){
-    char str[MAX_SIZE_STR]= "__";
+
+void write_assembly_single(char* instruction,char* arg1,FILE* file){
+    char str[MAX_SIZE_STR]= "";
+    char addr[MAX_SIZE_STR]= "";
     strcat(str,instruction);
-    strcat(str,"__ :\n");
+    sprintf(addr," %s\n",arg1); 
+    strcat(str,addr); 
     fwrite(str,sizeof(char),strlen(str),file);
 }
-
 void write_assembly_3(char* instruction, int arg1_offset,int arg2_offset,int arg3_offset, FILE* file){
     char str[MAX_SIZE_STR]= "";
     char addr[MAX_SIZE_STR]= "";
@@ -210,10 +219,33 @@ void write_assembly_3(char* instruction, int arg1_offset,int arg2_offset,int arg
     fwrite(str,sizeof(char),strlen(str),file);
 }
 
+
+
+void function_table_push(symbol_table* table, symbol_table_entry* entry){
+     if (table == NULL) {
+        printf("table not initialised %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    if (table->size < table->allocated_size) {
+        table->symbol_table[table->size] = entry;
+        table->size++;
+    } else {
+        void* p = realloc(table->symbol_table, table->allocated_size + TABLE_ALLOC_BLOCK);
+        if(p == NULL) {
+            printf("realloc failed %s\n", __PRETTY_FUNCTION__ );
+            exit(-1);
+        }
+        table->symbol_table = p;
+        table->allocated_size = table->allocated_size + TABLE_ALLOC_BLOCK;
+        table->symbol_table[table->size] = entry;
+    }
+}
+
 void flow_control_push(char* word,symbol_table* table, int scope, FILE* file) {
     static unsigned int flow_control_counter = 0;
     char str[MAX_SIZE_STR] = "";
     char tmp[MAX_SIZE_STR] = "";
+    char jump[MAX_SIZE_STR]= "JMF ";
     if (!table) {
         printf("Table not initialized in %s\n", __PRETTY_FUNCTION__);
         exit(-1);
@@ -228,11 +260,12 @@ void flow_control_push(char* word,symbol_table* table, int scope, FILE* file) {
     sprintf(tmp,"_%d", flow_control_counter++);
     strcat(str, tmp);
     strcat(str, "__:\n");
+    strcat(jump,str);
 
     symbol_table_entry* e = symbol_table_entry_init(str, 0, 0, 0, scope);
     symbol_table_push(table,e);
 
-    fwrite(str,sizeof(char),strlen(str),file);
+    fwrite(jump,sizeof(char),strlen(jump),file);
 }
 
 // TODO pop last of corect type???
@@ -247,11 +280,18 @@ void flow_control_get(symbol_table* table, FILE* file) {
 }
 
 void flow_control_pop(symbol_table* table,int* scope, FILE* file) {
+    char str[MAX_SIZE_STR] = "";
+    int offset = 0;
     if (!table) {
         printf("Table not initialized in %s\n", __PRETTY_FUNCTION__);
         exit(-1);
     }
     (*scope)--;
-    flow_control_get(table,file);
-    symbol_table_pop(table);
+    //write_assembly_none("__FIN_IF__",out_file);
+    symbol_table_entry*  e = symbol_table_pop(table,&offset);
+    strcat(str, e->symbol);
+    printf("Symbol : %s\n",e->symbol);
+    fwrite(str,sizeof(char),strlen(str),file);
+    
+    
 }
