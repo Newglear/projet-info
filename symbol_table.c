@@ -91,8 +91,9 @@ symbol_table_entry* symbol_table_get(int index, symbol_table* table) { // indexe
         printf("Table not initialized %s\n", __PRETTY_FUNCTION__ );
         exit(-1);
     }
-    if(index >= table->size){
-        printf("Index out of range\n");
+    if(index >= table->size) {
+        printf("Index out of range %d\n", index);
+        symbol_table_print(table);
         exit(-1);
     }
     return table->symbol_table[index];
@@ -279,8 +280,8 @@ void flow_control_get(symbol_table* table, FILE* file) {
     fwrite(e->symbol,sizeof(char),strlen(e->symbol),file);
 }
 
-void flow_control_pop(symbol_table* table,int* scope, FILE* file) {
-    char str[MAX_SIZE_STR] = "";
+char* flow_control_pop(symbol_table* table,int* scope) {
+    char* str = malloc(MAX_SIZE_STR);
     int offset = 0;
     if (!table) {
         printf("Table not initialized in %s\n", __PRETTY_FUNCTION__);
@@ -291,7 +292,8 @@ void flow_control_pop(symbol_table* table,int* scope, FILE* file) {
     symbol_table_entry*  e = symbol_table_pop(table,&offset);
     strcat(str, e->symbol);
     printf("Symbol : %s\n",e->symbol);
-    fwrite(str,sizeof(char),strlen(str),file);
+    return str;
+//    fwrite(str,sizeof(char),strlen(str),file);
     
     
 }

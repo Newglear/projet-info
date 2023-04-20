@@ -51,7 +51,7 @@ void write_assembly(char* instruction, int arg1_offset,int arg2_offset, FILE* fi
 void write_assembly_single(char* instruction,char* arg1,FILE* file);
 void write_assembly_3(char* instruction, int arg1_offset,int arg2_offset,int arg3_offset, FILE* file);
 
-void flow_control_pop(symbol_table* table,int* scope, FILE* file);
+char* flow_control_pop(symbol_table* table,int* scope);
 void flow_control_get(symbol_table* table, FILE* file) ;
 void flow_control_push(char* word,symbol_table* table, int scope, FILE* file) ;
 #endif
