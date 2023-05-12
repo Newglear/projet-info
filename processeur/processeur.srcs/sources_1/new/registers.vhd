@@ -47,22 +47,21 @@ entity registers is
 end registers;
 
 architecture Behavioral of registers is
-type reg_vector is array(0 to 15) of STD_LOGIC_VECTOR(7 downto 0);
-signal regs: reg_vector;
-signal adrW: Integer;
+    type reg_vector is array(0 to 15) of STD_LOGIC_VECTOR(7 downto 0);
+    signal regs: reg_vector;
+signal auxA,auxB : STD_LOGIC_VECTOR(7 downto 0) := x"00"; 
 begin
     process begin
          wait until Clock'Event and Clock='1';
-         if W = '1' then
-            adrW <= conv_integer(atW);
-            regs(adrW) <= DATA;
-         end if;
          if RST = '0' then
-            for i in regs'range loop
-                regs(i) <= x"00";
-            end loop;
+            regs <= (others => x"00");
+         else
+             if W = '1' then
+                regs(conv_integer(atW)) <= DATA;
+             end if;
         end if;
          
     end process;
-
+    QA <= regs(conv_integer(atA)) when atW /= atA else DATA;
+    QB <= regs(conv_integer(atB)) when atW /= atB else DATA;
 end Behavioral;

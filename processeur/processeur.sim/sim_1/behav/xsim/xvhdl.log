@@ -1,2 +1,2 @@
-INFO: [VRFC 10-163] Analyzing VHDL file "/home/imbergam/Documents/4IR/projet-info/processeur/processeur.srcs/sim_1/new/ALU_Test.vhd" into library xil_defaultlib
-INFO: [VRFC 10-307] analyzing entity ALU_Test
+INFO: [VRFC 10-163] Analyzing VHDL file "/home/imbergam/Documents/4IR/projet-info/processeur/processeur.srcs/sim_1/new/CPU_sim.vhd" into library xil_defaultlib
+INFO: [VRFC 10-307] analyzing entity CPU_sim

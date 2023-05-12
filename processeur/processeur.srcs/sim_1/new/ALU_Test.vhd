@@ -58,6 +58,7 @@ begin
     b <= x"02" ;
     ctr <= "000", "001" after 10ns, "010" after 20ns;
     
+   
         
    
 end Behavioral;

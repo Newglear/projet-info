@@ -1,0 +1,13 @@
+# compile vhdl design source files
+vhdl xil_defaultlib  \
+"../../../../processeur.srcs/sources_1/new/ALU.vhd" \
+"../../../../processeur.srcs/sources_1/new/registers.vhd" \
+"../../../../processeur.srcs/sources_1/new/data_bench.vhd" \
+"../../../../processeur.srcs/sources_1/new/code_bench.vhd" \
+"../../../../processeur.srcs/sources_1/new/sync.vhd" \
+"../../../../processeur.srcs/sim_1/new/ALU_Test.vhd" \
+"../../../../processeur.srcs/sim_1/new/regs_Test.vhd" \
+"../../../../processeur.srcs/sim_1/new/CPU_sim.vhd" \
+
+# Do not sort compile order
+nosort
