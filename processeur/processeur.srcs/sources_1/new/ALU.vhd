@@ -48,7 +48,7 @@ end ALU;
 architecture Behavioral of ALU is
     signal aux : STD_LOGIC_VECTOR (15 downto 0) := x"0000";
 begin
-
+    
     aux <=  (x"00" & A) + (x"00" & B) when CTR = "000" else 
             (x"00" & A) - (x"00" & B) when CTR = "001" else
             (A * B) when CTR = "010"; -- TODO SIGNED VS UNSIGNED

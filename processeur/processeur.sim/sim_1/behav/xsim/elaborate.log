@@ -12,6 +12,14 @@ Compiling package std.textio
 Compiling package ieee.std_logic_1164
 Compiling package ieee.std_logic_arith
 Compiling package ieee.std_logic_unsigned
+Compiling architecture behavioral of entity xil_defaultlib.registers [registers_default]
+Compiling architecture behavioral of entity xil_defaultlib.code_bench [code_bench_default]
+Compiling architecture behavioral of entity xil_defaultlib.compteur_8bits [compteur_8bits_default]
 Compiling architecture behavioral of entity xil_defaultlib.sync [sync_default]
+Compiling architecture behavioral of entity xil_defaultlib.MUX_DI [mux_di_default]
+Compiling architecture behavioral of entity xil_defaultlib.LC_ALU [lc_alu_default]
+Compiling architecture behavioral of entity xil_defaultlib.ALU [alu_default]
+Compiling architecture behavioral of entity xil_defaultlib.LC [lc_default]
+Compiling architecture behavioral of entity xil_defaultlib.CPU [cpu_default]
 Compiling architecture behavioral of entity xil_defaultlib.cpu_sim
 Built simulation snapshot CPU_sim_behav

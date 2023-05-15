@@ -32,6 +32,14 @@ set_property ip_cache_permissions {read write} [current_project]
 read_vhdl -library xil_defaultlib {
   /home/imbergam/Documents/4IR/projet-info/processeur/processeur.srcs/sources_1/new/ALU.vhd
   /home/imbergam/Documents/4IR/projet-info/processeur/processeur.srcs/sources_1/new/registers.vhd
+  /home/imbergam/Documents/4IR/projet-info/processeur/processeur.srcs/sources_1/new/data_bench.vhd
+  /home/imbergam/Documents/4IR/projet-info/processeur/processeur.srcs/sources_1/new/code_bench.vhd
+  /home/imbergam/Documents/4IR/projet-info/processeur/processeur.srcs/sources_1/new/sync.vhd
+  /home/imbergam/Documents/4IR/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd
+  /home/imbergam/Documents/4IR/projet-info/processeur/processeur.srcs/sources_1/new/compteur_8bits.vhd
+  /home/imbergam/Documents/4IR/projet-info/processeur/processeur.srcs/sources_1/new/LC.vhd
+  /home/imbergam/Documents/4IR/projet-info/processeur/processeur.srcs/sources_1/new/MUX_DI.vhd
+  /home/imbergam/Documents/4IR/projet-info/processeur/processeur.srcs/sources_1/new/LC_ALU.vhd
 }
 # Mark all dcp files as not used in implementation to prevent them from being
 # stitched into the results of this synthesis run. Any black boxes in the
@@ -44,12 +52,12 @@ foreach dcp [get_files -quiet -all -filter file_type=="Design\ Checkpoint"] {
 set_param ips.enableIPCacheLiteLoad 0
 close [open __synthesis_is_running__ w]
 
-synth_design -top registers -part xc7a35tcpg236-1
+synth_design -top CPU -part xc7a35tcpg236-1
 
 
 # disable binary constraint mode for synth run checkpoints
 set_param constraints.enableBinaryConstraints false
-write_checkpoint -force -noxdef registers.dcp
-create_report "synth_1_synth_report_utilization_0" "report_utilization -file registers_utilization_synth.rpt -pb registers_utilization_synth.pb"
+write_checkpoint -force -noxdef CPU.dcp
+create_report "synth_1_synth_report_utilization_0" "report_utilization -file CPU_utilization_synth.rpt -pb CPU_utilization_synth.pb"
 file delete __synthesis_is_running__
 close [open __synthesis_is_complete__ w]
