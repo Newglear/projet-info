@@ -5,6 +5,7 @@
 #include "symbol_table.h"
 
 enum {
+    AST_NODE_EXPRESSION,
     AST_NODE_VARIABLE_DEFINITION,
     AST_NODE_VARIABLE_DECLARATION,
     AST_NODE_VALUE,
@@ -38,6 +39,7 @@ struct {
         ast_node_symbol symbol; // variable declaration
         ast_node_variable_definition variable_definition;
         ast_node_value value;
+        struct ast_expr_struct expression;
     };
 } typedef ast_node;
 

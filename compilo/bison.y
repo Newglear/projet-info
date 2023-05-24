@@ -27,7 +27,7 @@ void yyerror (const char *);
 %union {
 	char id[32];
 	int val;
-	ast_node* node;
+	struct ast_node* node;
 }         /* Yacc definitions */
 
 /*first element to parse*/
@@ -156,7 +156,9 @@ expression : variable_definition
 //return_expr : tRETURN value tSEMI
 //    ;
 
-variable_definition: tINT variable_definition_content tSEMI 
+variable_definition: tINT variable_definition_content tSEMI {
+		$$ = $2;
+	}
     ;                 
 
 variable_definition_content : tID tASSIGN value {
@@ -228,7 +230,7 @@ final_value: tNB {
 
 // Value that can be assign to a variable or in function arguments
 value : tNB { 
-		$$ = offset; 
+//		$$ = offset;
 		char str[15]; 
 		sprintf(str,"%d",temp_cnt++); strcat(str,"t"); 
 		push_element(symbolTable,str,1,INT, &offset,scope); 
