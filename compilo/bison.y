@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "symbol_table.h"
+#include "ast.h"
 
 int yylex (void);
 void yyerror (const char *);
@@ -19,10 +20,15 @@ void yyerror (const char *);
 	symbol_table* flowControlTable;
 	int scope;
 	int offset;
-	int temp_cnt; 
+	int temp_cnt;
+	ast_root* root;
 }
 
-%union {char id[32];int val;}         /* Yacc definitions */
+%union {
+	char id[32];
+	int val;
+	ast_node* node;
+}         /* Yacc definitions */
 
 /*first element to parse*/
 %start start
@@ -70,82 +76,110 @@ void yyerror (const char *);
 %type <id> symbol
 %type <val> final_value
 %type <val> value
-%type <val> expression
+%type <node> expression
+%type <node> variable_definition_content
+%type <node> variable_definition
 /*conflit shift reduce*/
 %left tADD tSUB tMUL tDIV tLT tLE tEQ tNE tGE tGT tAND tOR tNOT 
 %left tCOMMA
 %right tELSE
 
 %%
-start: expression {symbol_table_print(symbolTable);symbol_table_print(functionTable);symbol_table_print(functionTable);printf("SUCCESS !\n");fclose(out_file);}
+start: expression {
+	ast_node* node = new_ast_node_expression($1, NULL);
+	ast_insert(root, node);
+	symbol_table_print(symbolTable);
+	symbol_table_print(functionTable);
+	symbol_table_print(functionTable);
+	printf("SUCCESS !\n");
+	fclose(out_file);
+	ast_insert(root, $1);
+	}
 	;
 
-final_expression : variable_definition 
-           | variable_assignement
-           | print_statement 
-           | if_statement
-           | while_statement 
+final_expression : variable_definition
+//           | variable_assignement
+//           | print_statement
+//           | if_statement
+//           | while_statement
 //	   | function_call
-	   | return_expr
+//	   | return_expr
 //	   | function_definition
 	;
 
-expression : variable_definition 
-           | variable_assignement  
-           | print_statement
-           | if_statement
-           | while_statement 
+expression : variable_definition
+//           | variable_assignement
+//           | print_statement
+//           | if_statement
+//           | while_statement
 //	   | function_call
 //	   | function_definition
-	   | final_expression expression
-	   | return_expr
+//	   | final_expression expression
+//	   | return_expr
 	;
 
-function_body : variable_definition 
-           | variable_assignement  
-           | print_statement
-           | if_statement
-           | while_statement 
-	   | function_call
-	   | final_expression expression
-	   | return_expr
-	;
+//function_body : variable_definition
+//           | variable_assignement
+//           | print_statement
+//           | if_statement
+//           | while_statement
+//	   | function_call
+//	   | final_expression expression
+//	   | return_expr
+//	;
 
-function_argument_definition: %empty
-			| tINT tID { push_element(symbolTable,$2,1,INT,&offset,scope);}
-			| tVOID
-			| function_argument_definition_bis tCOMMA function_argument_definition
-    ;
-function_argument_definition_bis : %empty
+//function_argument_definition: %empty
+//			| tINT tID { push_element(symbolTable,$2,1,INT,&offset,scope);}
+//			| tVOID
+//			| function_argument_definition_bis tCOMMA function_argument_definition
+//    ;
+//function_argument_definition_bis : %empty
 								| tINT tID { push_element(symbolTable,$2,1,INT,&offset,scope);}
 								| tVOID
 	;
-// TODO: function definition without expression
-function_definition : tINT tID  tLPAR {scope++;write_assembly_none($2,out_file);} function_argument_definition tRPAR tLBRACE function_body tRBRACE {pop_scope(&scope,&offset,symbolTable); function_table_push(functionTable,symbol_table_entry_init($2, 1,INT, 0,0));} // Gestion du write asm quand ?
-					| tVOID tID tLPAR {scope++;write_assembly_none($2,out_file);} function_argument_definition tRPAR tLBRACE function_body tRBRACE {pop_scope(&scope,&offset,symbolTable); function_table_push(functionTable,symbol_table_entry_init($2, 1,VOID, 0,0));}
-    ;
+//// TODO: function definition without expression
+//function_definition : tINT tID  tLPAR {scope++;write_assembly_none($2,out_file);} function_argument_definition tRPAR tLBRACE function_body tRBRACE {pop_scope(&scope,&offset,symbolTable); function_table_push(functionTable,symbol_table_entry_init($2, 1,INT, 0,0));} // Gestion du write asm quand ?
+//					| tVOID tID tLPAR {scope++;write_assembly_none($2,out_file);} function_argument_definition tRPAR tLBRACE function_body tRBRACE {pop_scope(&scope,&offset,symbolTable); function_table_push(functionTable,symbol_table_entry_init($2, 1,VOID, 0,0));}
+//    ;
 
-function_args: %empty
-		    | value  tCOMMA function_args
-    ;
-
-function_call : function_call_void
-			  | function_call_int
-    ;
-
-function_call_void : tID {scope++;} tLPAR function_args tRPAR tSEMI {write_assembly_single("JMP",$1,out_file);pop_scope(&scope,&offset,symbolTable);}
-function_call_int : tID tLPAR function_args tRPAR {write_assembly_single("JMP",$1,out_file);}
-
-return_expr : tRETURN value tSEMI
-    ;
+//function_args: %empty
+//		    | value  tCOMMA function_args
+//    ;
+//
+//function_call : function_call_void
+//			  | function_call_int
+//    ;
+//
+//function_call_void : tID {scope++;} tLPAR function_args tRPAR tSEMI {write_assembly_single("JMP",$1,out_file);pop_scope(&scope,&offset,symbolTable);}
+//function_call_int : tID tLPAR function_args tRPAR {write_assembly_single("JMP",$1,out_file);}
+//
+//return_expr : tRETURN value tSEMI
+//    ;
 
 variable_definition: tINT variable_definition_content tSEMI 
     ;                 
 
-variable_definition_content : tID tASSIGN value {write_assembly("COP",offset,$3,out_file);symbol_table_pop(symbolTable,&offset);push_element(symbolTable,$1,1,INT,&offset,scope);} // Copy the value from a to b 
-							| tID { push_element(symbolTable,$1,0,INT,&offset,scope);}
+variable_definition_content : tID tASSIGN value {
+//	write_assembly("COP",offset,$3,out_file);
+//	symbol_table_pop(symbolTable,&offset);
+//	push_element(symbolTable,$1,1,INT,&offset,scope);
+	printf("assign\n");
+	symbol_table_entry* e = symbol_table_entry_init($1, 1, INT, offset, scope);
+	ast_node* value = new_ast_node_value($3);
+	$$ = new_ast_node_variable_definition(e, value);
+	} // Copy the value from a to b
+	| tID {
+//	push_element(symbolTable,$1,0,INT,&offset,scope);
+	symbol_table_entry* e = symbol_table_entry_init($1, 1, INT, offset, scope);
+	$$ = new_ast_node_symbol(e, symbolTable);
+	}
 				   
-variable_assignement: tID tASSIGN value tSEMI {symbol_table_entry* e = symbol_table_get_by_symbol($1,symbolTable);e->is_initialised = 1; symbol_table_pop(symbolTable,&offset);push_element(symbolTable,$1,1,INT,&offset,scope);}
+variable_assignement: tID tASSIGN value tSEMI {
+	 symbol_table_entry* e = symbol_table_get_by_symbol($1,symbolTable);
+	 e->is_initialised = 1;
+	 symbol_table_pop(symbolTable,&offset);
+	 push_element(symbolTable,$1,1,INT,&offset,scope);
+	 }
     ;
 
 print_statement : tPRINT tLPAR tRPAR tSEMI 
@@ -156,7 +190,7 @@ symbol: tADD {strcpy($$,"ADD");}
 	| tSUB	 {strcpy($$,"SUB");}
 	| tMUL   {strcpy($$,"MUL");}
 	| tDIV   {strcpy($$,"DIV");}
-	| tLE	{srcpy($$,"LE");}
+	| tLE	{strcpy($$,"LE");}
 	| tGE
 	| tGT
 	| tNE
@@ -254,10 +288,12 @@ int main (int argc, char* argv[] ) {
 	//push_element(symbolTable,"SP",1,INT,0,0);
 	//push_element(symbolTable,"LR",1,INT,0,0);
 	flowControlTable = symbol_table_init();
+	root = ast_new();
 	scope = 0;
 	offset = 0;
 	temp_cnt = 0;
 	yyparse();
+	ast_print(root);
 }
 
 

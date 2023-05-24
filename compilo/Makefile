@@ -6,7 +6,7 @@ LEX=lex.l
 BIN=main
 OUT=main
 
-OBJ=bison.tab.o lex.yy.o symbol_table.o
+OBJ=bison.tab.o lex.yy.o symbol_table.o ast.o
 
 # SRCS=$(wildcard *.c)
 
