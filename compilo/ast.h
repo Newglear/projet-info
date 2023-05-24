@@ -52,6 +52,7 @@ void ast_insert(ast_root*, ast_node*);
 ast_node* new_ast_node_value(int value);
 ast_node* new_ast_node_symbol(symbol_table_entry* entry, symbol_table* symbol_table);
 ast_node* new_ast_node_variable_definition(symbol_table_entry* entry, ast_node* value);
+ast_node* new_ast_node_variable_declaration(symbol_table_entry* entry);
 ast_node* new_ast_node_expression(ast_node* first, ast_node *second);
 
 

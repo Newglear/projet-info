@@ -79,6 +79,7 @@ void yyerror (const char *);
 %type <node> expression
 %type <node> variable_definition_content
 %type <node> variable_definition
+%type <node> final_expression
 /*conflit shift reduce*/
 %left tADD tSUB tMUL tDIV tLT tLE tEQ tNE tGE tGT tAND tOR tNOT 
 %left tCOMMA
@@ -114,7 +115,10 @@ expression : variable_definition
 //           | while_statement
 //	   | function_call
 //	   | function_definition
-//	   | final_expression expression
+	   | final_expression expression {
+	   	ast_node* node = new_ast_node_expression($1, $2);
+		$$ = node;
+	   }
 //	   | return_expr
 	;
 
@@ -165,14 +169,15 @@ variable_definition_content : tID tASSIGN value {
 //	write_assembly("COP",offset,$3,out_file);
 //	symbol_table_pop(symbolTable,&offset);
 //	push_element(symbolTable,$1,1,INT,&offset,scope);
-	printf("assign\n");
 	symbol_table_entry* e = symbol_table_entry_init($1, 1, INT, offset, scope);
 	ast_node* value = new_ast_node_value($3);
 	$$ = new_ast_node_variable_definition(e, value);
 	} // Copy the value from a to b
 	| tID {
 //	push_element(symbolTable,$1,0,INT,&offset,scope);
-	symbol_table_entry* e = symbol_table_entry_init($1, 1, INT, offset, scope);
+	symbol_table_entry* e = symbol_table_entry_init($1, 0, INT, offset, scope);
+	ast_node* value = new_ast_node_value($1);
+	$$ = new_ast_node_variable_definition(e, value);
 	$$ = new_ast_node_symbol(e, symbolTable);
 	}
 				   

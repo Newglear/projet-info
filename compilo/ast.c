@@ -40,12 +40,21 @@ ast_node* new_ast_node_variable_definition(symbol_table_entry *entry, ast_node* 
     ast_node* node = malloc(sizeof(ast_node));
     node->type = AST_NODE_VARIABLE_DEFINITION;
     node->variable_definition.symbol = entry;
-    node->variable_definition.value = value; // TODO save the value inside the struc correctry, rvably deref and copy
-    printf("created var def node\n");
+    node->variable_definition.value = &value->value;
+//    printf("created var def node sym: %s, val: %d\n", node->variable_definition.symbol->symbol, node->variable_definition.value->value);
     symbol_entry_print(entry);
     return node;
 }
-
+ast_node* new_ast_node_variable_declaration(symbol_table_entry* entry) {
+    if (entry == NULL) {
+        printf("passed null node %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    ast_node* node = malloc(sizeof(ast_node));
+    node->type = AST_NODE_VARIABLE_DECLARATION;
+    node->symbol.entry = entry;
+    return node;
+}
 ast_node* new_ast_node_expression(ast_node* first, ast_node* second) {
     if (first == NULL) {
         printf("passed null node %s\n", __PRETTY_FUNCTION__ );
@@ -59,16 +68,18 @@ ast_node* new_ast_node_expression(ast_node* first, ast_node* second) {
 }
 
 void ast_node_print(ast_node *node, int tabs) {
-    printf("{\n");
     if(node == NULL) {
         printf("passed null node %s\n", __PRETTY_FUNCTION__ );
         exit(-1);
     }
-    char tab[tabs*2];
+    char tab[tabs*2 +1];
+    tab[0] = '\0';
     for (int i = 0; i < tabs; i += 2) {
         tab[i] = ' ';
         tab[i+1] = ' ';
     }
+    tab[tabs*2 +1] = '\0';
+    printf("%s{\n", tab);
     switch (node->type) {
 
         case AST_NODE_VARIABLE_DEFINITION:
@@ -88,6 +99,8 @@ void ast_node_print(ast_node *node, int tabs) {
         case AST_NODE_EXPRESSION:
             printf("%s AST_NODE_EXPRESSION: ",tab);
             ast_node_print(node->expression.node, tabs+1);
+            if (node->expression.next != NULL)
+                ast_node_print(node->expression.next, tabs+1);
             break;
     }
     printf("%s}\n", tab);

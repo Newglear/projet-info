@@ -1,4 +1,6 @@
 int a = 3; 
+int b = 5;
+int d;
 //int b = 4;
 //b=8;
 //if(a == 2) {
