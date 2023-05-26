@@ -169,6 +169,9 @@ char* print_ast_op_type(ast_op_type op) {
         case OP_NOT:
             strcpy(op_str, "OP_NOT");
             break;
+        case OP_ASSIGN:
+            strcpy(op_str, "OP_ASSIGN");
+            break;
     }
     return op_str;
 }

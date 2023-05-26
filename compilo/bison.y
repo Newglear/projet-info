@@ -108,6 +108,7 @@ final_expression : variable_definition
 //           | print_statement
            | if_statement
            | while_statement
+           | value tSEMI
 //	   | function_call
 //	   | return_expr
 //	   | function_definition
@@ -165,34 +166,16 @@ variable_definition: tINT variable_definition_content tSEMI {
     ;                 
 
 variable_definition_content : tID tASSIGN value {
-//	write_assembly("COP",offset,$3,out_file);
-//	symbol_table_pop(symbolTable,&offset);
-//	push_element(symbolTable,$1,1,INT,&offset,scope);
 	symbol_table_entry* e = push_element(symbolTable,$1,1,INT,&offset,scope);
-//	ast_node* value = new_ast_node_value($3);
 	$$ = new_ast_node_variable_definition(e, $3);
 	} // Copy the value from a to b
 	| tID {
-//	push_element(symbolTable,$1,0,INT,&offset,scope);
-//	symbol_table_entry* e = symbol_table_entry_init($1, 0, INT, offset, scope);
 	symbol_table_entry* e = push_element(symbolTable,$1,1,INT,&offset,scope);
 	ast_node* value = new_ast_node_value($1);
 	$$ = new_ast_node_variable_definition(e, value);
 	}
-				   
-variable_assignement: tID tASSIGN value tSEMI {
-	 symbol_table_entry* e = symbol_table_get_by_symbol($1,symbolTable);
-	 e->is_initialised = 1;
-	 symbol_table_pop(symbolTable,&offset);
-	 push_element(symbolTable,$1,1,INT,&offset,scope);
-	 }
-    ;
 
-print_statement : tPRINT tLPAR tRPAR tSEMI 
-				| tPRINT tLPAR value tRPAR tSEMI
-				;
 
-// TODO
 symbol: tADD {$$ = OP_ADD;}
 	| tSUB	 { $$ = OP_SUB;}
 	| tMUL   { $$ = OP_MUL;}
@@ -205,6 +188,7 @@ symbol: tADD {$$ = OP_ADD;}
 	| tLT    { $$ = OP_LT;}
 	| tAND   { $$ = OP_AND;}
 	| tOR	 { $$ = OP_OR;}
+	| tASSIGN { $$ = OP_ASSIGN;}
 	;
 
 
@@ -212,8 +196,7 @@ symbol: tADD {$$ = OP_ADD;}
 final_value: tNB {
 		$$ = new_ast_node_value($1);
 	}
-//	| function_call_int
-	| tNOT final_value { 
+	| tNOT final_value {
 		$$ = new_ast_node_operator(OP_NOT, $2, NULL);
 	}
 	| tID  {
@@ -229,22 +212,27 @@ value : final_value
 	}
 ;
 
-if_statement : tIF tLPAR value tRPAR tLBRACE  expression tRBRACE if_cont {
-		ast_node* value = new_ast_node_if($3, $6, $8);
+if_statement : tIF tLPAR value tRPAR tLBRACE {
+	scope++;
+	} expression tRBRACE {
+		pop_scope(&scope,&offset,symbolTable);
+	} if_cont {
+		ast_node* value = new_ast_node_if($3, $7, $10);
 		$$ = value;
 	}
-//	| tIF tLPAR value tRPAR tLBRACE /*{flow_control_push("ELSE",flowControlTable, scope, out_file);scope++;}*/ expression tRBRACE {pop_scope(&scope,&offset,symbolTable);flow_control_pop(flowControlTable,&scope, out_file);} tELSE tLBRACE {scope++;} expression tRBRACE {pop_scope(&scope,&offset,symbolTable);} %prec tELSE
-//	| tIF tLPAR value tRPAR tLBRACE /*{flow_control_push("ELSE",flowControlTable, scope, out_file);scope++;}*/ expression tRBRACE {pop_scope(&scope,&offset,symbolTable);flow_control_pop(flowControlTable,&scope, out_file);} tELSE if_statement
     ;
 
 if_cont : %empty {
 		$$ = NULL;
 	}
-	| tELSE tLBRACE expression tRBRACE {
-		$$ = $3;
+	| tELSE tLBRACE {
+		scope++;
+	} expression tRBRACE {
+		pop_scope(&scope,&offset,symbolTable);
+		$$ = $4;
 	}
     ;
-                
+
 while_statement : tWHILE tLPAR value tRPAR tLBRACE {scope++;} expression tRBRACE {
 	pop_scope(&scope,&offset,symbolTable);
 	$$ = new_ast_node_while($3,$7);

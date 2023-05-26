@@ -28,7 +28,8 @@ enum {
     OP_LT,
     OP_AND,
     OP_OR,
-    OP_NOT
+    OP_NOT,
+    OP_ASSIGN
 } typedef ast_op_type;
 //struct ast_node_struct;
 //typedef struct ast_node_struct ast_node;
@@ -68,6 +69,7 @@ struct {
     struct ast_node* cond;
     struct ast_node* loop;
 } typedef ast_node_while;
+
 
 struct {
     ast_node_type type;

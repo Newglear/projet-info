@@ -17,7 +17,7 @@ if (2) {
 while (5) {
     int f = 5;
 }
-int u = a;
+x = a +3;
 //int e =5;
 
 //
