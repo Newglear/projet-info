@@ -28,6 +28,7 @@ void yyerror (const char *);
 	char id[32];
 	int val;
 	struct ast_node* node;
+	ast_op_type opearnd;
 }         /* Yacc definitions */
 
 /*first element to parse*/
@@ -73,13 +74,16 @@ void yyerror (const char *);
 %token tERROR
 
 %type <id> variable_assignement
-%type <id> symbol
-%type <val> final_value
-%type <val> value
+%type <opearnd> symbol
+%type <node> final_value
+%type <node> value
 %type <node> expression
 %type <node> variable_definition_content
 %type <node> variable_definition
 %type <node> final_expression
+%type <node> if_statement
+%type <node> if_cont
+
 /*conflit shift reduce*/
 %left tADD tSUB tMUL tDIV tLT tLE tEQ tNE tGE tGT tAND tOR tNOT 
 %left tCOMMA
@@ -101,7 +105,7 @@ start: expression {
 final_expression : variable_definition
 //           | variable_assignement
 //           | print_statement
-//           | if_statement
+           | if_statement
 //           | while_statement
 //	   | function_call
 //	   | return_expr
@@ -111,7 +115,7 @@ final_expression : variable_definition
 expression : variable_definition
 //           | variable_assignement
 //           | print_statement
-//           | if_statement
+           | if_statement
 //           | while_statement
 //	   | function_call
 //	   | function_definition
@@ -170,8 +174,8 @@ variable_definition_content : tID tASSIGN value {
 //	symbol_table_pop(symbolTable,&offset);
 //	push_element(symbolTable,$1,1,INT,&offset,scope);
 	symbol_table_entry* e = symbol_table_entry_init($1, 1, INT, offset, scope);
-	ast_node* value = new_ast_node_value($3);
-	$$ = new_ast_node_variable_definition(e, value);
+//	ast_node* value = new_ast_node_value($3);
+	$$ = new_ast_node_variable_definition(e, $3);
 	} // Copy the value from a to b
 	| tID {
 //	push_element(symbolTable,$1,0,INT,&offset,scope);
@@ -193,18 +197,19 @@ print_statement : tPRINT tLPAR tRPAR tSEMI
 				| tPRINT tLPAR value tRPAR tSEMI
 				;
 
-symbol: tADD {strcpy($$,"ADD");}
-	| tSUB	 {strcpy($$,"SUB");}
-	| tMUL   {strcpy($$,"MUL");}
-	| tDIV   {strcpy($$,"DIV");}
-	| tLE	{strcpy($$,"LE");}
-	| tGE
-	| tGT
-	| tNE
-	| tEQ	 {strcpy($$,"EQUAL");}
-	| tLT
-	| tAND
-	| tOR
+// TODO
+symbol: tADD {$$ = OP_ADD;}
+	| tSUB	 { $$ = OP_SUB;}
+	| tMUL   { $$ = OP_MUL;}
+	| tDIV   { $$ = OP_DIV;}
+	| tLE	 { $$ = OP_LE;}
+	| tGE    { $$ = OP_GE;}
+	| tGT	 { $$ = OP_GT;}
+	| tNE    { $$ = OP_NE;}
+	| tEQ	 { $$ = OP_EQ;}
+	| tLT    { $$ = OP_LT;}
+	| tAND   { $$ = OP_AND;}
+	| tOR	 { $$ = OP_OR;}
 	;
 
 
@@ -218,11 +223,8 @@ final_value: tNB {
 	}
 //	| function_call_int
 	| tNOT final_value { 
-		$$ = offset; char str[15]; 
-		sprintf(str,"%d",temp_cnt++); 
-		strcat(str,"t"); 
-		push_element(symbolTable,str,1,INT, &offset,scope); 
-		}
+		$$ = new_ast_node_operator(OP_NOT, $2, NULL);
+	}
 	| tID  {
 		char str[15]; 
 		sprintf(str,"%d",temp_cnt++); 
@@ -234,40 +236,32 @@ final_value: tNB {
     ;
 
 // Value that can be assign to a variable or in function arguments
-value : tNB { 
-//		$$ = offset;
-		char str[15]; 
-		sprintf(str,"%d",temp_cnt++); strcat(str,"t"); 
-		push_element(symbolTable,str,1,INT, &offset,scope); 
-		write_assembly("AFC", offset - INT_SIZE, $1, out_file);
+value : tNB {
+		$$ = new_ast_node_value($1);
 	} // AFC
 //      | function_call_int
-	| final_value symbol value {write_assembly_3($2,$1,$1,$3,out_file);symbol_table_pop(symbolTable,&offset);symbol_table_pop(symbolTable,&offset);}
-	| tNOT value	{ $$ = offset; char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope);}
+	| final_value symbol value {
+		$$ = NULL; // TODO
+	}
+	| tNOT value {
+		$$ = new_ast_node_operator(OP_NOT, $2, NULL);
+	}
 	| tID {char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope);int e_offset = symbol_table_get_by_symbol($1,symbolTable)->offset;write_assembly("COP", offset,e_offset,out_file); $$ = offset;}
        ;
 
-if_statement : tIF tLPAR value{
-
-	} tRPAR tLBRACE {
-	flow_control_push("FIN",flowControlTable, scope, out_file);
-	scope++;
-	} expression tRBRACE if_cont
+if_statement : tIF tLPAR value tRPAR tLBRACE  expression tRBRACE if_cont {
+		ast_node* value = new_ast_node_if($3, $6, $8);
+		$$ = value;
+	}
 //	| tIF tLPAR value tRPAR tLBRACE /*{flow_control_push("ELSE",flowControlTable, scope, out_file);scope++;}*/ expression tRBRACE {pop_scope(&scope,&offset,symbolTable);flow_control_pop(flowControlTable,&scope, out_file);} tELSE tLBRACE {scope++;} expression tRBRACE {pop_scope(&scope,&offset,symbolTable);} %prec tELSE
 //	| tIF tLPAR value tRPAR tLBRACE /*{flow_control_push("ELSE",flowControlTable, scope, out_file);scope++;}*/ expression tRBRACE {pop_scope(&scope,&offset,symbolTable);flow_control_pop(flowControlTable,&scope, out_file);} tELSE if_statement
     ;
 
 if_cont : %empty {
-		char* label = flow_control_pop(flowControlTable, &scope);
-		fwrite(label,sizeof(char),strlen(label),out_file);
+		$$ = NULL;
 	}
-	| tELSE tLBRACE {
-		char* label = flow_control_pop(flowControlTable, &scope);
-		flow_control_push("FIN_ELSE",flowControlTable, scope, out_file);
-		fwrite(label,sizeof(char),strlen(label),out_file);
-	} expression tRBRACE {
-		char* label = flow_control_pop(flowControlTable, &scope);
-		fwrite(label,sizeof(char),strlen(label),out_file);
+	| tELSE tLBRACE expression tRBRACE {
+		$$ = $3;
 	}
     ;
                 

@@ -33,14 +33,14 @@ ast_node *new_ast_node_symbol(symbol_table_entry *entry, symbol_table *symbol_ta
 }
 
 ast_node* new_ast_node_variable_definition(symbol_table_entry *entry, ast_node* value) {
-    if(value->type != AST_NODE_VALUE) {
+    if(value->type != AST_NODE_VALUE && value->type != AST_NODE_OPERATOR) {
         printf("value is not ast_node_value %s\n", __PRETTY_FUNCTION__ );
         exit(-1);
     }
     ast_node* node = malloc(sizeof(ast_node));
     node->type = AST_NODE_VARIABLE_DEFINITION;
     node->variable_definition.symbol = entry;
-    node->variable_definition.value = &value->value;
+    node->variable_definition.value = value;
 //    printf("created var def node sym: %s, val: %d\n", node->variable_definition.symbol->symbol, node->variable_definition.value->value);
     symbol_entry_print(entry);
     return node;
@@ -62,9 +62,89 @@ ast_node* new_ast_node_expression(ast_node* first, ast_node* second) {
     }
     ast_node* node = malloc(sizeof(ast_node));
     node->type = AST_NODE_EXPRESSION;
-    node->expression.node = first;
-    node->expression.next = second;
+    node->expression.node = (struct ast_node *) first;
+    node->expression.next = (struct ast_expr_struct *) second;
     return node;
+}
+
+ast_node* new_ast_node_if(ast_node* cond, ast_node* then_block, ast_node* else_block) {
+    if (cond == NULL) {
+        printf("passed null node %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    if (then_block == NULL) {
+        printf("passed null node %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    ast_node* node = malloc(sizeof(ast_node));
+    node->type = AST_NODE_IF;
+    node->if_block.cond = (struct ast_node *) cond;
+    node->if_block.then_block = (struct ast_node *) then_block;
+    node->if_block.else_block = (struct ast_node *) else_block;
+    return node;
+}
+
+ast_node* new_ast_node_operator(ast_op_type op, ast_node* left, ast_node* right) {
+    if(left == NULL) {
+        printf("passed null node %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    ast_node* node = malloc(sizeof(ast_node));
+    node->type = AST_NODE_OPERATOR;
+    node->operator.op = op;
+    node->operator.left = (struct ast_node *) left;
+    node->operator.right = (struct ast_node *) right;
+    if(right == NULL && op != OP_NOT) {
+        printf("passed null node %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    return node;
+}
+
+char* print_ast_op_type(ast_op_type op) {
+    char *op_str = malloc((sizeof(char))*8);
+    switch (op) {
+        case OP_ADD:
+            strcpy(op_str, "OP_ADD");
+            break;
+        case OP_SUB:
+            strcpy(op_str, "OP_SUB");
+            break;
+        case OP_MUL:
+            strcpy(op_str, "OP_MUL");
+            break;
+        case OP_DIV:
+            strcpy(op_str, "OP_DIV");
+            break;
+        case OP_LE:
+            strcpy(op_str, "OP_LE");
+            break;
+        case OP_GE:
+            strcpy(op_str, "OP_GE");
+            break;
+        case OP_GT:
+            strcpy(op_str, "OP_GT");
+            break;
+        case OP_NE:
+            strcpy(op_str, "OP_NE");
+            break;
+        case OP_EQ:
+            strcpy(op_str, "OP_EQ");
+            break;
+        case OP_LT:
+            strcpy(op_str, "OP_LT");
+            break;
+        case OP_AND:
+            strcpy(op_str, "OP_AND");
+            break;
+        case OP_OR:
+            strcpy(op_str, "OP_OR");
+            break;
+        case OP_NOT:
+            strcpy(op_str, "OP_NOT");
+            break;
+    }
+    return op_str;
 }
 
 void ast_node_print(ast_node *node, int tabs) {
@@ -85,7 +165,8 @@ void ast_node_print(ast_node *node, int tabs) {
         case AST_NODE_VARIABLE_DEFINITION:
             printf("%s AST_NODE_VARIABLE_DEFINITION: {\n", tab);
             printf("%s   smbol: %s\n",tab, node->variable_definition.symbol->symbol);
-            printf("%s   value: %d\n",tab, node->variable_definition.value->value);
+//            printf("%s   value: %d\n",tab, node->variable_definition.value->value);
+            ast_node_print(node->variable_definition.value, tabs+1);
             printf("%s }\n",tab);
             break;
         case AST_NODE_VARIABLE_DECLARATION:
@@ -101,6 +182,19 @@ void ast_node_print(ast_node *node, int tabs) {
             ast_node_print(node->expression.node, tabs+1);
             if (node->expression.next != NULL)
                 ast_node_print(node->expression.next, tabs+1);
+            break;
+        case AST_NODE_IF:
+            printf("%s AST_NODE_IF: ",tab);
+            ast_node_print(node->if_block.cond, tabs+1);
+            ast_node_print(node->if_block.then_block, tabs+1);
+            if (node->if_block.else_block != NULL)
+                ast_node_print(node->if_block.else_block, tabs+1);
+            break;
+        case AST_NODE_OPERATOR:
+            printf("%s AST_NODE_OPERATOR: %s",tab, print_ast_op_type(node->operator.op));
+            ast_node_print(node->operator.left, tabs+1);
+            if(node->operator.right != NULL)
+                ast_node_print(node->operator.right, tabs+1);
             break;
     }
     printf("%s}\n", tab);
