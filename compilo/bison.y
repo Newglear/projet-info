@@ -98,7 +98,6 @@ start: expression {
 	symbol_table_print(functionTable);
 	symbol_table_print(functionTable);
 	printf("SUCCESS !\n");
-	fclose(out_file);
 	ast_insert(root, $1);
 	}
 	;
@@ -266,6 +265,8 @@ int main (int argc, char* argv[] ) {
 	temp_cnt = 0;
 	yyparse();
 	ast_print(root);
+	ast_to_asm(root,out_file);
+	fclose(out_file);
 }
 
 

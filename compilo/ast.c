@@ -1,7 +1,10 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "ast.h"
 #include <string.h>
+#include "ast.h"
+#include "mem_manager.h"
+
+#define FWRITE(s) sprintf(str, "%s\n", s);fwrite(str,sizeof(char), strlen(str),f);
 
 ast_root *ast_new() {
     ast_root *root = malloc(sizeof(ast_root));
@@ -175,6 +178,70 @@ char* print_ast_op_type(ast_op_type op) {
     }
     return op_str;
 }
+
+void write_str(FILE* f, char* str) {
+    fprintf(f, "%s", str);
+}
+
+void ast_node_to_asm(ast_node* node, FILE* f) {
+    char str[MAX_SIZE_STR] = "";
+//    FWRITE("daw");
+    if (node == NULL) {
+        printf("passed null root %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    reg_t r = 0;
+
+    switch (node->type) {
+        case AST_NODE_EXPRESSION:
+            ast_node_to_asm((ast_node *) node->expression.node, f);
+            if (node->expression.next != NULL)
+                ast_node_to_asm((ast_node *) node->expression.next, f);
+            break;
+        case AST_NODE_VARIABLE_DEFINITION:
+            get_reg(node->variable_definition.symbol);
+            break;
+        case AST_NODE_VARIABLE_DECLARATION:
+            get_reg(node->variable_definition.symbol);
+            break;
+        case AST_NODE_VALUE:
+            break;
+        case AST_NODE_IF:
+            ast_node_to_asm(node->if_block.cond, f);
+            FWRITE("cond");
+            FWRITE("JMPNE_ENDIF");
+            FWRITE("exprif");
+            ast_node_to_asm(node->if_block.then_block, f);
+            if (node->if_block.else_block != NULL) {
+
+                FWRITE("JMP_ENDELSE");
+                FWRITE("ENDIF");
+                FWRITE("expr_else");
+                FWRITE("ENDELSE");
+
+            } else {
+                FWRITE("ENDIF");
+            }
+
+
+            break;
+        case AST_NODE_OPERATOR:
+            break;
+        case AST_NODE_SYMBOL:
+            break;
+        case AST_NODE_WHILE:
+            break;
+    }
+}
+
+void ast_to_asm(ast_root* root, FILE* f) {
+    if (root == NULL) {
+        printf("passed null root %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    ast_node_to_asm(root->root, f);
+}
+
 
 void ast_node_print(ast_node *node, int tabs) {
     if(node == NULL) {
