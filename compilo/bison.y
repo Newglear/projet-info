@@ -83,6 +83,7 @@ void yyerror (const char *);
 %type <node> final_expression
 %type <node> if_statement
 %type <node> if_cont
+%type <node> while_statement
 
 /*conflit shift reduce*/
 %left tADD tSUB tMUL tDIV tLT tLE tEQ tNE tGE tGT tAND tOR tNOT 
@@ -106,19 +107,13 @@ final_expression : variable_definition
 //           | variable_assignement
 //           | print_statement
            | if_statement
-//           | while_statement
+           | while_statement
 //	   | function_call
 //	   | return_expr
 //	   | function_definition
 	;
 
-expression : variable_definition
-//           | variable_assignement
-//           | print_statement
-           | if_statement
-//           | while_statement
-//	   | function_call
-//	   | function_definition
+expression : final_expression
 	   | final_expression expression {
 	   	ast_node* node = new_ast_node_expression($1, $2);
 		$$ = node;
@@ -173,16 +168,16 @@ variable_definition_content : tID tASSIGN value {
 //	write_assembly("COP",offset,$3,out_file);
 //	symbol_table_pop(symbolTable,&offset);
 //	push_element(symbolTable,$1,1,INT,&offset,scope);
-	symbol_table_entry* e = symbol_table_entry_init($1, 1, INT, offset, scope);
+	symbol_table_entry* e = push_element(symbolTable,$1,1,INT,&offset,scope);
 //	ast_node* value = new_ast_node_value($3);
 	$$ = new_ast_node_variable_definition(e, $3);
 	} // Copy the value from a to b
 	| tID {
 //	push_element(symbolTable,$1,0,INT,&offset,scope);
-	symbol_table_entry* e = symbol_table_entry_init($1, 0, INT, offset, scope);
+//	symbol_table_entry* e = symbol_table_entry_init($1, 0, INT, offset, scope);
+	symbol_table_entry* e = push_element(symbolTable,$1,1,INT,&offset,scope);
 	ast_node* value = new_ast_node_value($1);
 	$$ = new_ast_node_variable_definition(e, value);
-	$$ = new_ast_node_symbol(e, symbolTable);
 	}
 				   
 variable_assignement: tID tASSIGN value tSEMI {
@@ -215,39 +210,24 @@ symbol: tADD {$$ = OP_ADD;}
 
 
 final_value: tNB {
-		$$ = offset; char str[15]; 
-		sprintf(str,"%d",temp_cnt++); 
-		strcat(str,"t"); 
-		write_assembly("AFC", offset -INT_SIZE , $1, out_file); 
-		push_element(symbolTable,str,1,INT, &offset,scope); 
+		$$ = new_ast_node_value($1);
 	}
 //	| function_call_int
 	| tNOT final_value { 
 		$$ = new_ast_node_operator(OP_NOT, $2, NULL);
 	}
 	| tID  {
-		char str[15]; 
-		sprintf(str,"%d",temp_cnt++); 
-		strcat(str,"t"); 
-		push_element(symbolTable,str,1,INT, &offset,scope);
-		int e_offset = symbol_table_get_by_symbol($1,symbolTable)->offset;
-		write_assembly("COP", offset,e_offset,out_file); $$ = offset;
-		}
+		symbol_table_entry* e = symbol_table_get_by_symbol($1,symbolTable);
+		$$ = new_ast_node_symbol(e);
+	}
     ;
 
 // Value that can be assign to a variable or in function arguments
-value : tNB {
-		$$ = new_ast_node_value($1);
-	} // AFC
-//      | function_call_int
+value : final_value
 	| final_value symbol value {
-		$$ = NULL; // TODO
+		$$ = new_ast_node_operator($2, $1, $3); // TODO
 	}
-	| tNOT value {
-		$$ = new_ast_node_operator(OP_NOT, $2, NULL);
-	}
-	| tID {char str[15]; sprintf(str,"%d",temp_cnt++); strcat(str,"t"); push_element(symbolTable,str,1,INT, &offset,scope);int e_offset = symbol_table_get_by_symbol($1,symbolTable)->offset;write_assembly("COP", offset,e_offset,out_file); $$ = offset;}
-       ;
+;
 
 if_statement : tIF tLPAR value tRPAR tLBRACE  expression tRBRACE if_cont {
 		ast_node* value = new_ast_node_if($3, $6, $8);
@@ -265,7 +245,10 @@ if_cont : %empty {
 	}
     ;
                 
-while_statement : tWHILE tLPAR value tRPAR tLBRACE {scope++;} expression tRBRACE {pop_scope(&scope,&offset,symbolTable);}
+while_statement : tWHILE tLPAR value tRPAR tLBRACE {scope++;} expression tRBRACE {
+	pop_scope(&scope,&offset,symbolTable);
+	$$ = new_ast_node_while($3,$7);
+	}
     ;
 
 %%                     /* C code */

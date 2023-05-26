@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "ast.h"
+#include <string.h>
 
 ast_root *ast_new() {
     ast_root *root = malloc(sizeof(ast_root));
@@ -16,6 +17,12 @@ void ast_insert(ast_root *root, ast_node *node) {
     }
 }
 
+int isValue(ast_node* node) {
+    return node->type == AST_NODE_VALUE
+            || node->type == AST_NODE_OPERATOR
+            || node->type == AST_NODE_SYMBOL;
+}
+
 ast_node *new_ast_node_value(int value) {
     printf("newASTNode: %d\n", value);
     ast_node *node = malloc(sizeof(ast_node));
@@ -24,23 +31,27 @@ ast_node *new_ast_node_value(int value) {
     return node;
 }
 
-ast_node *new_ast_node_symbol(symbol_table_entry *entry, symbol_table *symbol_table) {
+ast_node *new_ast_node_symbol(symbol_table_entry *entry) {
+    if (entry == NULL) {
+        printf("variable does not exist; %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
     ast_node *node = malloc(sizeof(ast_node));
     //symbol_table_push(symbol_table, entry);
-    node->type = AST_NODE_VARIABLE_DECLARATION;
+    node->type = AST_NODE_SYMBOL;
     node->symbol.entry = entry;
     return node;
 }
 
 ast_node* new_ast_node_variable_definition(symbol_table_entry *entry, ast_node* value) {
-    if(value->type != AST_NODE_VALUE && value->type != AST_NODE_OPERATOR) {
+    if(!isValue(value)) {
         printf("value is not ast_node_value %s\n", __PRETTY_FUNCTION__ );
         exit(-1);
     }
     ast_node* node = malloc(sizeof(ast_node));
     node->type = AST_NODE_VARIABLE_DEFINITION;
     node->variable_definition.symbol = entry;
-    node->variable_definition.value = value;
+    node->variable_definition.value = (struct ast_node *) value;
 //    printf("created var def node sym: %s, val: %d\n", node->variable_definition.symbol->symbol, node->variable_definition.value->value);
     symbol_entry_print(entry);
     return node;
@@ -101,6 +112,21 @@ ast_node* new_ast_node_operator(ast_op_type op, ast_node* left, ast_node* right)
     return node;
 }
 
+ast_node* new_ast_node_while(ast_node* cond, ast_node* loop) {
+    if (cond == NULL) {
+        printf("passed null node %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    if (!isValue(cond))  {
+        printf("passed non-value node %s\n", __PRETTY_FUNCTION__ );
+    }
+    ast_node* node = malloc(sizeof(ast_node));
+    node->type = AST_NODE_WHILE;
+    node->while_block.cond = (struct ast_node *) cond;
+    node->while_block.loop = (struct ast_node *) loop;
+    return node;
+}
+
 char* print_ast_op_type(ast_op_type op) {
     char *op_str = malloc((sizeof(char))*8);
     switch (op) {
@@ -152,7 +178,7 @@ void ast_node_print(ast_node *node, int tabs) {
         printf("passed null node %s\n", __PRETTY_FUNCTION__ );
         exit(-1);
     }
-    char tab[tabs*2 +1];
+    char tab[tabs*2 +2];
     tab[0] = '\0';
     for (int i = 0; i < tabs; i += 2) {
         tab[i] = ' ';
@@ -166,7 +192,9 @@ void ast_node_print(ast_node *node, int tabs) {
             printf("%s AST_NODE_VARIABLE_DEFINITION: {\n", tab);
             printf("%s   smbol: %s\n",tab, node->variable_definition.symbol->symbol);
 //            printf("%s   value: %d\n",tab, node->variable_definition.value->value);
-            ast_node_print(node->variable_definition.value, tabs+1);
+            if (node->variable_definition.value != NULL)
+                ast_node_print(node->variable_definition.value, tabs+1);
+            else printf("%s   value: NULL\n",tab);
             printf("%s }\n",tab);
             break;
         case AST_NODE_VARIABLE_DECLARATION:
@@ -195,6 +223,15 @@ void ast_node_print(ast_node *node, int tabs) {
             ast_node_print(node->operator.left, tabs+1);
             if(node->operator.right != NULL)
                 ast_node_print(node->operator.right, tabs+1);
+            break;
+        case AST_NODE_SYMBOL:
+            printf("%s AST_NODE_SYMBOL: %s",tab, node->symbol.entry->symbol);
+            break;
+        case AST_NODE_WHILE:
+            printf("%s AST_NODE_WHILE: ",tab);
+            if (node->while_block.loop != NULL)
+                ast_node_print(node->while_block.loop, tabs+1);
+            else printf("PASS\n");
             break;
     }
     printf("%s}\n", tab);

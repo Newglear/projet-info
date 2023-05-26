@@ -1,4 +1,4 @@
-int a = 3; 
+int a = 3 - 4;
 int b = 5 + 4;
 int x;
 //int b = 4;
@@ -14,6 +14,10 @@ if (2) {
 } else {
     int e = 42;
 }
+while (5) {
+    int f = 5;
+}
+int u = a;
 //int e =5;
 
 //

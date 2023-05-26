@@ -10,7 +10,9 @@ enum {
     AST_NODE_VARIABLE_DECLARATION,
     AST_NODE_VALUE,
     AST_NODE_IF,
-    AST_NODE_OPERATOR
+    AST_NODE_OPERATOR,
+    AST_NODE_SYMBOL,
+    AST_NODE_WHILE
 } typedef ast_node_type;
 
 enum {
@@ -63,6 +65,11 @@ struct {
 } typedef ast_node_operator;
 
 struct {
+    struct ast_node* cond;
+    struct ast_node* loop;
+} typedef ast_node_while;
+
+struct {
     ast_node_type type;
     union {
         ast_node_symbol symbol; // variable declaration
@@ -71,6 +78,7 @@ struct {
         struct ast_expr_struct expression;
         ast_node_if if_block;
         ast_node_operator operator;
+        ast_node_while while_block;
     };
 } typedef ast_node;
 
@@ -83,12 +91,13 @@ struct {
 ast_root* ast_new();
 void ast_insert(ast_root*, ast_node*);
 ast_node* new_ast_node_value(int value);
-ast_node* new_ast_node_symbol(symbol_table_entry* entry, symbol_table* symbol_table);
+ast_node* new_ast_node_symbol(symbol_table_entry* entry);
 ast_node* new_ast_node_variable_definition(symbol_table_entry* entry, ast_node* value);
 ast_node* new_ast_node_variable_declaration(symbol_table_entry* entry);
 ast_node* new_ast_node_expression(ast_node* first, ast_node *second);
 ast_node* new_ast_node_if(ast_node* cond, ast_node* then_block, ast_node* else_block);
 ast_node* new_ast_node_operator(ast_op_type op, ast_node* left, ast_node* right);
+ast_node* new_ast_node_while(ast_node* cond, ast_node* loop);
 
 void ast_print(ast_root* root);
 #endif //PROJET_INFO_AST_H
