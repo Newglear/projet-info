@@ -42,7 +42,11 @@ architecture Behavioral of LC is
 begin
 W <= '1' when 
     OP = x"05" or --COP
-    OP = x"06"  --AFC
+    OP = x"06" or --AFC
+    OP = x"01" or -- ADD
+    OP = x"02" or -- MUL
+    OP = x"03" or -- SOU
+    OP = x"04"    -- DIV
     else '0';
 
 end Behavioral;

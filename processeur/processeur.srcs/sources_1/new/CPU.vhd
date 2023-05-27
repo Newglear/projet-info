@@ -104,6 +104,16 @@ component sync is  Port (
            CTRL: out STD_LOGIC_VECTOR (2 downto 0)
         );
    end component;
+   
+    component MUX_EX is
+        Port ( 
+        OP: in STD_LOGIC_VECTOR(7 downto 0);
+        B : in STD_LOGIC_VECTOR(7 downto 0);
+        S : in STD_LOGIC_VECTOR(7 downto 0);
+        OUTPUT: out STD_LOGIC_VECTOR(7 downto 0)
+        );
+   end component;
+   
   
     signal IP: STD_LOGIC_VECTOR (7 downto 0);
     signal ASM_OUT: STD_LOGIC_VECTOR (31 downto 0);
@@ -113,7 +123,7 @@ component sync is  Port (
     signal A_MEM, OP_MEM, B_MEM, C_MEM: STD_LOGIC_VECTOR (7 downto 0); 
     signal A_RE, OP_RE, B_RE, C_RE: STD_LOGIC_VECTOR (7 downto 0); 
     signal WB : STD_LOGIC;
-    signal QA,QB, OUT_DI: STD_LOGIc_VECTOR (7 downto 0 );
+    signal QA,QB, OUT_DI,OUT_EX: STD_LOGIc_VECTOR (7 downto 0 );
     signal S_EX: STD_LOGIc_VECTOR (7 downto 0 );
     signal CTRL_ALU: sTD_LOGIC_VECTOR (2 downto 0);
     
@@ -139,7 +149,7 @@ begin
     OP_LI <= ASM_OUT(31 downto 24);
     A_LI <= ASM_OUT(23 downto 16);
     B_LI <= ASM_OUT(15 downto 8);
-    C_DI <= ASM_OUT(7 downto 0);
+    C_LI <= ASM_OUT(7 downto 0);
         
         
     CONT: compteur_8bits port map ( 
@@ -183,6 +193,12 @@ begin
                   C => open,
                   CTR => CTRL_ALU
             );
+   EX_MUX: MUX_EX port map(
+                OP => OP_EX,
+                B  => B_EX,
+                S => S_EX,
+                OUTPUT => OUT_EX
+            );
     
     DIEX: sync port map(
         A_IN => A_DI,
@@ -198,7 +214,7 @@ begin
     EXMEM: sync port map(
         A_IN => A_EX,
         OP_IN => OP_EX,
-        B_IN => B_EX,
+        B_IN => OUT_EX,
         C_IN => C_EX,
         A_OUT => A_MEM,
         OP_OUT => OP_MEM,

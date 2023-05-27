@@ -22,24 +22,25 @@ create_project -in_memory -part xc7a35tcpg236-1
 set_param project.singleFileAddWarning.threshold 0
 set_param project.compositeFile.enableAutoGeneration 0
 set_param synth.vivado.isSynthRun true
-set_property webtalk.parent_dir /home/imbergam/Documents/4IR/projet-info/processeur/processeur.cache/wt [current_project]
-set_property parent.project_path /home/imbergam/Documents/4IR/projet-info/processeur/processeur.xpr [current_project]
+set_property webtalk.parent_dir /home/g_robert/tmp_PSI/projet-info/processeur/processeur.cache/wt [current_project]
+set_property parent.project_path /home/g_robert/tmp_PSI/projet-info/processeur/processeur.xpr [current_project]
 set_property default_lib xil_defaultlib [current_project]
 set_property target_language VHDL [current_project]
 set_property board_part digilentinc.com:basys3:part0:1.1 [current_project]
-set_property ip_output_repo /home/imbergam/Documents/4IR/projet-info/processeur/processeur.cache/ip [current_project]
+set_property ip_output_repo /home/g_robert/tmp_PSI/projet-info/processeur/processeur.cache/ip [current_project]
 set_property ip_cache_permissions {read write} [current_project]
 read_vhdl -library xil_defaultlib {
-  /home/imbergam/Documents/4IR/projet-info/processeur/processeur.srcs/sources_1/new/ALU.vhd
-  /home/imbergam/Documents/4IR/projet-info/processeur/processeur.srcs/sources_1/new/registers.vhd
-  /home/imbergam/Documents/4IR/projet-info/processeur/processeur.srcs/sources_1/new/data_bench.vhd
-  /home/imbergam/Documents/4IR/projet-info/processeur/processeur.srcs/sources_1/new/code_bench.vhd
-  /home/imbergam/Documents/4IR/projet-info/processeur/processeur.srcs/sources_1/new/sync.vhd
-  /home/imbergam/Documents/4IR/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd
-  /home/imbergam/Documents/4IR/projet-info/processeur/processeur.srcs/sources_1/new/compteur_8bits.vhd
-  /home/imbergam/Documents/4IR/projet-info/processeur/processeur.srcs/sources_1/new/LC.vhd
-  /home/imbergam/Documents/4IR/projet-info/processeur/processeur.srcs/sources_1/new/MUX_DI.vhd
-  /home/imbergam/Documents/4IR/projet-info/processeur/processeur.srcs/sources_1/new/LC_ALU.vhd
+  /home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/ALU.vhd
+  /home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/registers.vhd
+  /home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/data_bench.vhd
+  /home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/code_bench.vhd
+  /home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/sync.vhd
+  /home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd
+  /home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/compteur_8bits.vhd
+  /home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/LC.vhd
+  /home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/MUX_DI.vhd
+  /home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/LC_ALU.vhd
+  /home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/MUX_EX.vhd
 }
 # Mark all dcp files as not used in implementation to prevent them from being
 # stitched into the results of this synthesis run. Any black boxes in the

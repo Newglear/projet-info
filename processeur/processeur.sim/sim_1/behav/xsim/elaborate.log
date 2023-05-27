@@ -19,6 +19,7 @@ Compiling architecture behavioral of entity xil_defaultlib.sync [sync_default]
 Compiling architecture behavioral of entity xil_defaultlib.MUX_DI [mux_di_default]
 Compiling architecture behavioral of entity xil_defaultlib.LC_ALU [lc_alu_default]
 Compiling architecture behavioral of entity xil_defaultlib.ALU [alu_default]
+Compiling architecture behavioral of entity xil_defaultlib.MUX_EX [mux_ex_default]
 Compiling architecture behavioral of entity xil_defaultlib.LC [lc_default]
 Compiling architecture behavioral of entity xil_defaultlib.CPU [cpu_default]
 Compiling architecture behavioral of entity xil_defaultlib.cpu_sim

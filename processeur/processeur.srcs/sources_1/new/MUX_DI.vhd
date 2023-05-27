@@ -42,5 +42,5 @@ end MUX_DI;
 architecture Behavioral of MUX_DI is
 
 begin
-OUTPUT <= QA when OP = x"05"  else B; -- x"05" => COP
+OUTPUT <= QA when OP = x"05" or OP = x"01" or OP = x"02" or OP = x"03" or OP = x"04" else B; -- x"05" => COP
 end Behavioral;
