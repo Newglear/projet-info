@@ -22,6 +22,23 @@ while (5) {
     int f = 5;
 }
 x = a +3;
+int abc = 0;
+int abcd = 0;
+int abcdf = 0;
+int abcfdg = 0;
+int abcdfgh = 0;
+int opq = 0;
+int opc = 0;
+int asdf = 0;
+int asdfg = 0;
+int qwerty = 0;
+int qwert = 0;
+int qwer = 0;
+int qwe = 0;
+int qw = 0;
+int qwr = 0;
+int qr = 0;
+
 //int e =5;
 
 //

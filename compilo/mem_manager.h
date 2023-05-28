@@ -6,6 +6,7 @@
 #define COMPILO_MEM_MANAGER_H
 
 #include "symbol_table.h"
+#define STACK_SIZE 2048
 
 // order is important
 enum {
@@ -28,6 +29,8 @@ enum {
     R_NONE
 } typedef reg_t;
 
+static symbol_table_entry* stak[2048];
+
 reg_t get_reg(symbol_table_entry* entry);
 void free_reg(reg_t reg);
 /** provide the scope of the values to be cleaned:
@@ -36,5 +39,13 @@ void free_reg(reg_t reg);
 void free_regs(int scope);
 
 reg_t find_reg(symbol_table_entry* entry);
+
+int stack_push(symbol_table_entry* entry);
+symbol_table_entry* stack_pop();
+int stack_find(symbol_table_entry* entry);
+
+reg_t store(symbol_table_entry* entry);
+reg_t retrieve(symbol_table_entry* entry);
+
 
 #endif //COMPILO_MEM_MANAGER_H
