@@ -10,15 +10,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="200050000fs"></ZoomStartTime>
-      <ZoomEndTime time="259750001fs"></ZoomEndTime>
-      <Cursor1Time time="250000000fs"></Cursor1Time>
+      <ZoomStartTime time="298270000fs"></ZoomStartTime>
+      <ZoomEndTime time="354670001fs"></ZoomEndTime>
+      <Cursor1Time time="1000000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="109"></NameColumnWidth>
-      <ValueColumnWidth column_width="66"></ValueColumnWidth>
+      <NameColumnWidth column_width="105"></NameColumnWidth>
+      <ValueColumnWidth column_width="91"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="51" />
+   <WVObjectSize size="14" />
    <wvobject type="logic" fp_name="/CPU_sim/Clock">
       <obj_property name="ElementShortName">Clock</obj_property>
       <obj_property name="ObjectShortName">Clock</obj_property>
@@ -51,176 +51,28 @@
       <obj_property name="ElementShortName">OP_MEM[7:0]</obj_property>
       <obj_property name="ObjectShortName">OP_MEM[7:0]</obj_property>
    </wvobject>
+   <wvobject type="array" fp_name="/CPU_sim/proco/OP_DELAY">
+      <obj_property name="ElementShortName">OP_DELAY[7:0]</obj_property>
+      <obj_property name="ObjectShortName">OP_DELAY[7:0]</obj_property>
+   </wvobject>
    <wvobject type="array" fp_name="/CPU_sim/proco/OP_RE">
       <obj_property name="ElementShortName">OP_RE[7:0]</obj_property>
       <obj_property name="ObjectShortName">OP_RE[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/CPU_sim/proco/OUT_DATA">
+      <obj_property name="ElementShortName">OUT_DATA[7:0]</obj_property>
+      <obj_property name="ObjectShortName">OUT_DATA[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/CPU_sim/proco/OUT_MEM">
+      <obj_property name="ElementShortName">OUT_MEM[7:0]</obj_property>
+      <obj_property name="ObjectShortName">OUT_MEM[7:0]</obj_property>
    </wvobject>
    <wvobject type="array" fp_name="/CPU_sim/proco/REGS/regs">
       <obj_property name="ElementShortName">regs[0:15][7:0]</obj_property>
       <obj_property name="ObjectShortName">regs[0:15][7:0]</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/CPU_sim/proco/WB">
-      <obj_property name="ElementShortName">WB</obj_property>
-      <obj_property name="ObjectShortName">WB</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/REGS/atW">
-      <obj_property name="ElementShortName">atW[3:0]</obj_property>
-      <obj_property name="ObjectShortName">atW[3:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/REGS/DATA">
-      <obj_property name="ElementShortName">DATA[7:0]</obj_property>
-      <obj_property name="ObjectShortName">DATA[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/B_EX">
-      <obj_property name="ElementShortName">B_EX[7:0]</obj_property>
-      <obj_property name="ObjectShortName">B_EX[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/DI_MUX/OUTPUT">
-      <obj_property name="ElementShortName">OUTPUT[7:0]</obj_property>
-      <obj_property name="ObjectShortName">OUTPUT[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/DI_MUX/B">
-      <obj_property name="ElementShortName">B[7:0]</obj_property>
-      <obj_property name="ObjectShortName">B[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/DI_MUX/QA">
-      <obj_property name="ElementShortName">QA[7:0]</obj_property>
-      <obj_property name="ObjectShortName">QA[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/REGS/atA">
-      <obj_property name="ElementShortName">atA[3:0]</obj_property>
-      <obj_property name="ObjectShortName">atA[3:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/ALU_LC/OP">
-      <obj_property name="ElementShortName">OP[7:0]</obj_property>
-      <obj_property name="ObjectShortName">OP[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/ALU_LC/CTRL">
-      <obj_property name="ElementShortName">CTRL[2:0]</obj_property>
-      <obj_property name="ObjectShortName">CTRL[2:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/DIEX/A_IN">
-      <obj_property name="ElementShortName">A_IN[7:0]</obj_property>
-      <obj_property name="ObjectShortName">A_IN[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/DIEX/OP_IN">
-      <obj_property name="ElementShortName">OP_IN[7:0]</obj_property>
-      <obj_property name="ObjectShortName">OP_IN[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/DIEX/B_IN">
-      <obj_property name="ElementShortName">B_IN[7:0]</obj_property>
-      <obj_property name="ObjectShortName">B_IN[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/DIEX/C_IN">
-      <obj_property name="ElementShortName">C_IN[7:0]</obj_property>
-      <obj_property name="ObjectShortName">C_IN[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/REGS/atA">
-      <obj_property name="ElementShortName">atA[3:0]</obj_property>
-      <obj_property name="ObjectShortName">atA[3:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/REGS/atB">
-      <obj_property name="ElementShortName">atB[3:0]</obj_property>
-      <obj_property name="ObjectShortName">atB[3:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/REGS/atW">
-      <obj_property name="ElementShortName">atW[3:0]</obj_property>
-      <obj_property name="ObjectShortName">atW[3:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/CPU_sim/proco/REGS/W">
-      <obj_property name="ElementShortName">W</obj_property>
-      <obj_property name="ObjectShortName">W</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/REGS/DATA">
-      <obj_property name="ElementShortName">DATA[7:0]</obj_property>
-      <obj_property name="ObjectShortName">DATA[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/UAL/A">
-      <obj_property name="ElementShortName">A[7:0]</obj_property>
-      <obj_property name="ObjectShortName">A[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/UAL/B">
-      <obj_property name="ElementShortName">B[7:0]</obj_property>
-      <obj_property name="ObjectShortName">B[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/UAL/S">
-      <obj_property name="ElementShortName">S[7:0]</obj_property>
-      <obj_property name="ObjectShortName">S[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/CPU_sim/proco/UAL/N">
-      <obj_property name="ElementShortName">N</obj_property>
-      <obj_property name="ObjectShortName">N</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/CPU_sim/proco/UAL/O">
-      <obj_property name="ElementShortName">O</obj_property>
-      <obj_property name="ObjectShortName">O</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/CPU_sim/proco/UAL/Z">
-      <obj_property name="ElementShortName">Z</obj_property>
-      <obj_property name="ObjectShortName">Z</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/CPU_sim/proco/UAL/C">
-      <obj_property name="ElementShortName">C</obj_property>
-      <obj_property name="ObjectShortName">C</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/UAL/CTR">
-      <obj_property name="ElementShortName">CTR[2:0]</obj_property>
-      <obj_property name="ObjectShortName">CTR[2:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/UAL/aux">
-      <obj_property name="ElementShortName">aux[15:0]</obj_property>
-      <obj_property name="ObjectShortName">aux[15:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/EX_MUX/OP">
-      <obj_property name="ElementShortName">OP[7:0]</obj_property>
-      <obj_property name="ObjectShortName">OP[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/EX_MUX/B">
-      <obj_property name="ElementShortName">B[7:0]</obj_property>
-      <obj_property name="ObjectShortName">B[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/EX_MUX/S">
-      <obj_property name="ElementShortName">S[7:0]</obj_property>
-      <obj_property name="ObjectShortName">S[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/EX_MUX/OUTPUT">
-      <obj_property name="ElementShortName">OUTPUT[7:0]</obj_property>
-      <obj_property name="ObjectShortName">OUTPUT[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/EXMEM/A_IN">
-      <obj_property name="ElementShortName">A_IN[7:0]</obj_property>
-      <obj_property name="ObjectShortName">A_IN[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/EXMEM/OP_IN">
-      <obj_property name="ElementShortName">OP_IN[7:0]</obj_property>
-      <obj_property name="ObjectShortName">OP_IN[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/EXMEM/B_IN">
-      <obj_property name="ElementShortName">B_IN[7:0]</obj_property>
-      <obj_property name="ObjectShortName">B_IN[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/EXMEM/C_IN">
-      <obj_property name="ElementShortName">C_IN[7:0]</obj_property>
-      <obj_property name="ObjectShortName">C_IN[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/EXMEM/A_OUT">
-      <obj_property name="ElementShortName">A_OUT[7:0]</obj_property>
-      <obj_property name="ObjectShortName">A_OUT[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/EXMEM/OP_OUT">
-      <obj_property name="ElementShortName">OP_OUT[7:0]</obj_property>
-      <obj_property name="ObjectShortName">OP_OUT[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/EXMEM/B_OUT">
-      <obj_property name="ElementShortName">B_OUT[7:0]</obj_property>
-      <obj_property name="ObjectShortName">B_OUT[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/EXMEM/C_OUT">
-      <obj_property name="ElementShortName">C_OUT[7:0]</obj_property>
-      <obj_property name="ObjectShortName">C_OUT[7:0]</obj_property>
-   </wvobject>
-   <wvobject type="logic" fp_name="/CPU_sim/proco/EXMEM/Clock">
-      <obj_property name="ElementShortName">Clock</obj_property>
-      <obj_property name="ObjectShortName">Clock</obj_property>
+   <wvobject type="array" fp_name="/CPU_sim/proco/MEMORY/memory">
+      <obj_property name="ElementShortName">memory[0:255][7:0]</obj_property>
+      <obj_property name="ObjectShortName">memory[0:255][7:0]</obj_property>
    </wvobject>
 </wave_config>

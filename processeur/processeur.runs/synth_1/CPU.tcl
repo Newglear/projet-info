@@ -41,6 +41,9 @@ read_vhdl -library xil_defaultlib {
   /home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/MUX_DI.vhd
   /home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/LC_ALU.vhd
   /home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/MUX_EX.vhd
+  /home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/LC_Mem.vhd
+  /home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/MUX_MEM.vhd
+  /home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/MUX_RE.vhd
 }
 # Mark all dcp files as not used in implementation to prevent them from being
 # stitched into the results of this synthesis run. Any black boxes in the

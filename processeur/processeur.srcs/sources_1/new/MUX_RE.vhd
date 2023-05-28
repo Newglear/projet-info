@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 15.05.2023 14:04:05
+-- Create Date: 28.05.2023 15:20:54
 -- Design Name: 
--- Module Name: LC - Behavioral
+-- Module Name: MUX_RE - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -31,25 +31,18 @@ use IEEE.STD_LOGIC_1164.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity LC is
-Port ( OP : in STD_LOGIC_VECTOR (7 downto 0); 
-        W : out STD_LOGIC 
-);
-end LC;
+entity MUX_RE is
+    Port ( 
+        OUT_MEM: in STD_LOGIC_VECTOR(7 downto 0);
+        B : in STD_LOGIC_VECTOR(7 downto 0);
+        OP : in STD_LOGIC_VECTOR(7 downto 0);
+        OUTPUT: out STD_LOGIC_VECTOR(7 downto 0)
+    );
+end MUX_RE;
 
-architecture Behavioral of LC is
+architecture Behavioral of MUX_RE is
 
 begin
-W <= '1' when 
-
-    OP = x"01" or -- ADD
-    OP = x"02" or -- MUL
-    OP = x"03" or -- SOU
-    OP = x"04" or -- DIV
-    OP = x"05" or -- COP
-    OP = x"06" or -- AFC
-    OP = x"07"    -- LOAD
-    
-    else '0';
+    OUTPUT <= OUT_MEM when OP = x"07" else B;
 
 end Behavioral;

@@ -46,6 +46,7 @@ end data_bench;
 architecture Behavioral of data_bench is
 type memory_struct is array(0 to 255) of STD_LOGIC_VECTOR(7 downto 0);
 signal memory: memory_struct;
+signal aux: STD_LOGIC_VECTOR (7 downto 0); 
 begin
 process
 begin 
@@ -55,11 +56,11 @@ begin
         memory <= (others => x"00");
     else
         if RW = '1' then -- READ
-            OUTPUT <= memory(conv_integer(adr)); 
+            aux <= memory(conv_integer(adr)); 
         else -- WRITE
             memory(conv_integer(adr)) <= INPUT; 
         end if; 
     end if;     
 end process; 
-
+OUTPUT <= aux; 
 end Behavioral;
