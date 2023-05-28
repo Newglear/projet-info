@@ -36,8 +36,8 @@ int qwert = 0;
 int qwer = 0;
 int qwe = 0;
 int qw = 0;
-int qwr = 0;
-int qr = 0;
+int qwr = 2;
+int qr = 3;
 
 //int e =5;
 

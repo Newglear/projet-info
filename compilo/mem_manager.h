@@ -26,10 +26,9 @@ enum {
     R13,
     SP,
     LR,
-    R_NONE
+    R_NONE = -1
 } typedef reg_t;
 
-static symbol_table_entry* stak[2048];
 
 reg_t get_reg(symbol_table_entry* entry);
 void free_reg(reg_t reg);
@@ -40,11 +39,18 @@ void free_regs(int scope);
 
 reg_t find_reg(symbol_table_entry* entry);
 
-int stack_push(symbol_table_entry* entry);
+int stack_alloc(symbol_table_entry* entry, FILE* f);
 symbol_table_entry* stack_pop();
 int stack_find(symbol_table_entry* entry);
 
-reg_t store(symbol_table_entry* entry);
+/**
+ *
+ * @param entry
+ * @param scope Optional parameter, nullable read reference
+ * @param f out_file
+ * @return
+ */
+reg_t var_store(symbol_table_entry* entry, const int* scope, FILE* f);
 reg_t retrieve(symbol_table_entry* entry);
 
 

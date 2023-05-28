@@ -4,8 +4,6 @@
 #include "ast.h"
 #include "mem_manager.h"
 
-#define FWRITE(s) sprintf(str, "%s\n", s);fwrite(str,sizeof(char), strlen(str),f);
-
 ast_root *ast_new() {
     ast_root *root = malloc(sizeof(ast_root));
     root->root = NULL;
@@ -201,8 +199,8 @@ reg_t ast_node_to_asm(ast_node* node, FILE* f) {
                 ast_node_to_asm((ast_node *) node->expression.next, f);
             break;
         case AST_NODE_VARIABLE_DEFINITION:
-            r = get_reg(node->variable_definition.symbol);
-            node->variable_definition.symbol->scope = scope;
+            r = var_store(node->variable_definition.symbol,&scope,f);
+//            node->variable_definition.symbol->scope = scope;
             printf("reg %d\n", r);
             ast_node *var_node = (ast_node *) node->variable_definition.value;
             reg_t ret_reg_value = ast_node_to_asm(var_node, f);
@@ -216,11 +214,14 @@ reg_t ast_node_to_asm(ast_node* node, FILE* f) {
             return r;
             break;
         case AST_NODE_VARIABLE_DECLARATION:
-            get_reg(node->variable_definition.symbol);
+            var_store(node->variable_definition.symbol,&scope,f);
             break;
         case AST_NODE_VALUE:
             sprintf(str, "tmp%d", temp_var_cnt++);
-            r = get_reg(symbol_table_entry_init(str, 1, INT, 0, scope));
+            r = var_store(
+                    symbol_table_entry_init(str, 1, INT, 0, scope),
+                    &scope,
+                    f);
             sprintf(str, "AFC r%d %d;", r, node->value.value);
             FWRITE(str);
             return r;
@@ -250,7 +251,11 @@ reg_t ast_node_to_asm(ast_node* node, FILE* f) {
             break;
         case AST_NODE_OPERATOR:
             sprintf(str, "tmp%d", temp_var_cnt++);
-            r = get_reg(symbol_table_entry_init(str, 1, INT, 0, scope));
+            r = var_store(
+                    symbol_table_entry_init(str, 1, INT, 0, scope),
+                    &scope,
+                    f);
+            // its normal to have r16 as input reg in nor as its not used
             sprintf(str,"%s r%d r%d r%d;",
                     print_ast_op_type(node->operator.op),
                     r,

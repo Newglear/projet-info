@@ -4,6 +4,9 @@
 
 #include "symbol_table.h"
 
+#define FWRITE(s) sprintf(str, "%s\n", s);fwrite(str,sizeof(char), strlen(str),f);
+
+
 typedef enum {
     AST_NODE_EXPRESSION,
     AST_NODE_VARIABLE_DEFINITION,
