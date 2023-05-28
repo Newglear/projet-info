@@ -267,7 +267,7 @@ reg_t ast_node_to_asm(ast_node* node, FILE* f) {
             FWRITE(str);
             return r;
         case AST_NODE_SYMBOL:
-            return find_reg(node->symbol.entry);
+            return var_retrieve(node->symbol.entry,f);
         case AST_NODE_WHILE:
             FWRITE("# WHILE COND");
             sprintf(str, ": WHILE_LOOP_%d", scope);

@@ -13,7 +13,7 @@ static symbol_table_entry* regs[REGS_SIZE];
 static reg_t last_used_reg[REGS_SIZE];
 static int last_used_reg_index;
 
-static symbol_table_entry* stak[2048];
+static symbol_table_entry* stack[2048];
 static sp;
 /**
  * increments the index of the reg, it indicates that the reg has been
@@ -64,8 +64,8 @@ reg_t find_reg(symbol_table_entry* entry) {
         printf("entry not initialised %s\n", __PRETTY_FUNCTION__ );
         return R_NONE;
     }
-    for (int i = 0; i < REGS_SIZE; i++) {
-        if (0 == strcmp(regs[i]->symbol, entry->symbol) && regs[i]->scope == entry->scope) {
+    for (int i = 0; i < REGS_SIZE -2; i++) {
+        if (regs[i] != NULL && 0 == strcmp(regs[i]->symbol, entry->symbol) && regs[i]->scope == entry->scope) {
             return touch_reg(i, NULL);
         }
     }
@@ -77,7 +77,7 @@ int stack_alloc(symbol_table_entry* entry, FILE* f) {
         printf("entry not initialised %s\n", __PRETTY_FUNCTION__ );
         exit(-1);
     }
-    stak[sp] = entry;
+    stack[sp] = entry;
     char str[MAX_SIZE_STR] ="";
     sprintf(str,"ADD SP SP 1;");
     FWRITE(str);
@@ -85,14 +85,14 @@ int stack_alloc(symbol_table_entry* entry, FILE* f) {
     return sp;
 }
 symbol_table_entry* stack_pop() {
-    if (stak[0] == NULL) {
+    if (stack[0] == NULL) {
         printf("stack is empty %s\n", __PRETTY_FUNCTION__ );
         return NULL;
     }
     for (int i = 0; i < STACK_SIZE; ++i) {
-        if (stak[i] != NULL) {
-            symbol_table_entry *tmp = stak[i-1];
-            stak[i-1] = NULL;
+        if (stack[i] != NULL) {
+            symbol_table_entry *tmp = stack[i - 1];
+            stack[i - 1] = NULL;
             return tmp;
         }
     }
@@ -101,13 +101,11 @@ symbol_table_entry* stack_pop() {
 }
 int stack_find(symbol_table_entry* entry) {
     for (int i = 0; i < STACK_SIZE; ++i) {
-        if (stak[i] != NULL) {
-            if (stak[i] == entry) {
-                return i;
-            }
+        if (stack[i] != NULL && stack[i] == entry) {
+            return i;
         }
     }
-    return -1;
+    printf("entry not found in the stack %s\n", __PRETTY_FUNCTION__ );
 }
 
 reg_t least_used_reg() {
@@ -126,7 +124,7 @@ reg_t least_used_reg() {
 reg_t stack_store(symbol_table_entry* entry,FILE* f) {
     reg_t r = find_reg(entry);
     for (int i = 0; i < STACK_SIZE -2; ++i) {
-        if (stak[i] == entry) {
+        if (stack[i] == entry) {
             char str[MAX_SIZE_STR] = "";
             sprintf(str, "STR %d r%d;", i, r);
             FWRITE(str);
@@ -156,6 +154,18 @@ reg_t var_store(symbol_table_entry* entry, const int* scope, FILE* f) {
     return touch_reg(least_used, entry);
 }
 
-reg_t retrieve(symbol_table_entry* entry) {
-
+reg_t var_retrieve(symbol_table_entry* entry, FILE* f) {
+    reg_t r = find_reg(entry);
+    char str[MAX_SIZE_STR] = "";
+    if (r == R_NONE) {
+        int stack_entry = stack_find(entry);
+        reg_t least_used = least_used_reg();
+        if (regs[least_used] != NULL) {
+            stack_store(regs[least_used],f);
+        }
+        sprintf(str, "LOAD r%d %d;", least_used, stack_entry);
+        FWRITE(str);
+        r = least_used;
+    }
+    return r;
 }
