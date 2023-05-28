@@ -11,6 +11,9 @@ void yyerror (const char *);
 
 %}
 
+%code requires {
+  #include "ast.h"
+}
 
 %code 
 {
@@ -28,7 +31,7 @@ void yyerror (const char *);
 	char id[32];
 	int val;
 	struct ast_node* node;
-	ast_op_type opearnd;
+	ast_node_type opearnd;
 }         /* Yacc definitions */
 
 /*first element to parse*/
@@ -73,7 +76,6 @@ void yyerror (const char *);
 
 %token tERROR
 
-%type <id> variable_assignement
 %type <opearnd> symbol
 %type <node> final_value
 %type <node> value
@@ -153,7 +155,7 @@ expression : final_expression
 //			  | function_call_int
 //    ;
 //
-//function_call_void : tID {scope++;} tLPAR function_args tRPAR tSEMI {write_assembly_single("JMP",$1,out_file);pop_scope(&scope,&offset,symbolTable);}
+//function_call_void : tID  tLPAR function_args tRPAR tSEMI {write_assembly_single("JMP",$1,out_file);pop_scope(&scope,&offset,symbolTable);}
 //function_call_int : tID tLPAR function_args tRPAR {write_assembly_single("JMP",$1,out_file);}
 //
 //return_expr : tRETURN value tSEMI
@@ -211,12 +213,8 @@ value : final_value
 	}
 ;
 
-if_statement : tIF tLPAR value tRPAR tLBRACE {
-	scope++;
-	} expression tRBRACE {
-		pop_scope(&scope,&offset,symbolTable);
-	} if_cont {
-		ast_node* value = new_ast_node_if($3, $7, $10);
+if_statement : tIF tLPAR value tRPAR tLBRACE expression tRBRACE if_cont {
+		ast_node* value = new_ast_node_if($3, $6, $8);
 		$$ = value;
 	}
     ;
@@ -224,17 +222,13 @@ if_statement : tIF tLPAR value tRPAR tLBRACE {
 if_cont : %empty {
 		$$ = NULL;
 	}
-	| tELSE tLBRACE {
-		scope++;
-	} expression tRBRACE {
-		pop_scope(&scope,&offset,symbolTable);
-		$$ = $4;
+	| tELSE tLBRACE expression tRBRACE {
+		$$ = $3;
 	}
     ;
 
-while_statement : tWHILE tLPAR value tRPAR tLBRACE {scope++;} expression tRBRACE {
-	pop_scope(&scope,&offset,symbolTable);
-	$$ = new_ast_node_while($3,$7);
+while_statement : tWHILE tLPAR value tRPAR tLBRACE  expression tRBRACE {
+	$$ = new_ast_node_while($3,$6);
 	}
     ;
 

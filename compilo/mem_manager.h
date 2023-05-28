@@ -25,9 +25,16 @@ enum {
     R13,
     SP,
     LR,
+    R_NONE
 } typedef reg_t;
 
 reg_t get_reg(symbol_table_entry* entry);
 void free_reg(reg_t reg);
+/** provide the scope of the values to be cleaned:
+ * Ex: if you provide 3, all the values having scope 3 or more will free their registers
+ */
+void free_regs(int scope);
+
+reg_t find_reg(symbol_table_entry* entry);
 
 #endif //COMPILO_MEM_MANAGER_H

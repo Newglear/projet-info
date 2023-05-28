@@ -6,6 +6,7 @@
 %{
 #include "bison.tab.h"
 #include <string.h>
+#include "ast.h"
 %}
 %%
 "//".*                  /* skip everything in a line comment */

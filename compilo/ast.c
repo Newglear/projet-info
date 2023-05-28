@@ -183,9 +183,11 @@ void write_str(FILE* f, char* str) {
     fprintf(f, "%s", str);
 }
 
-void ast_node_to_asm(ast_node* node, FILE* f) {
+reg_t ast_node_to_asm(ast_node* node, FILE* f) {
+    static int scope;
+    static int temp_var_cnt;
+    reg_t r_ret = R_NONE;
     char str[MAX_SIZE_STR] = "";
-//    FWRITE("daw");
     if (node == NULL) {
         printf("passed null root %s\n", __PRETTY_FUNCTION__ );
         exit(-1);
@@ -199,39 +201,84 @@ void ast_node_to_asm(ast_node* node, FILE* f) {
                 ast_node_to_asm((ast_node *) node->expression.next, f);
             break;
         case AST_NODE_VARIABLE_DEFINITION:
-            get_reg(node->variable_definition.symbol);
+            r = get_reg(node->variable_definition.symbol);
+            node->variable_definition.symbol->scope = scope;
+            printf("reg %d\n", r);
+            ast_node *var_node = (ast_node *) node->variable_definition.value;
+            reg_t ret_reg_value = ast_node_to_asm(var_node, f);
+            if (ret_reg_value == R_NONE) {
+                printf("didnt get a register %s\n", __PRETTY_FUNCTION__ );
+                exit(-1);
+            }
+            sprintf(str, "MOV r%d r%d;", r, ret_reg_value);
+            FWRITE(str);
+            free_reg(ret_reg_value);
+            return r;
             break;
         case AST_NODE_VARIABLE_DECLARATION:
             get_reg(node->variable_definition.symbol);
             break;
         case AST_NODE_VALUE:
+            sprintf(str, "tmp%d", temp_var_cnt++);
+            r = get_reg(symbol_table_entry_init(str, 1, INT, 0, scope));
+            sprintf(str, "AFC r%d %d;", r, node->value.value);
+            FWRITE(str);
+            return r;
             break;
         case AST_NODE_IF:
-            ast_node_to_asm(node->if_block.cond, f);
-            FWRITE("cond");
-            FWRITE("JMPNE_ENDIF");
-            FWRITE("exprif");
-            ast_node_to_asm(node->if_block.then_block, f);
+            FWRITE("# IF COND");
+            ast_node_to_asm((ast_node *) node->if_block.cond, f);
+            scope++;
+            sprintf(str,"JMPNE ENDIF_%d", scope);
+            FWRITE(str);
+            ast_node_to_asm((ast_node *) node->if_block.then_block, f);
             if (node->if_block.else_block != NULL) {
-
-                FWRITE("JMP_ENDELSE");
-                FWRITE("ENDIF");
+                sprintf(str,"JMP ENDELSE_%d", scope);
+                FWRITE(str);
+                sprintf(str,": ENDIF_%d", scope);
+                FWRITE(str);
                 FWRITE("expr_else");
-                FWRITE("ENDELSE");
-
+                ast_node_to_asm((ast_node *) node->if_block.else_block, f);
+                sprintf(str,": ENDELSE_%d", scope);
+                FWRITE(str);
             } else {
-                FWRITE("ENDIF");
+                sprintf(str,": ENDIF_%d", scope);
+                FWRITE(str);
             }
-
-
+            free_regs(scope);
+            scope--;
             break;
         case AST_NODE_OPERATOR:
-            break;
+            sprintf(str, "tmp%d", temp_var_cnt++);
+            r = get_reg(symbol_table_entry_init(str, 1, INT, 0, scope));
+            sprintf(str,"%s r%d r%d r%d;",
+                    print_ast_op_type(node->operator.op),
+                    r,
+                    ast_node_to_asm((ast_node *) node->operator.left, f),
+                    node->operator.right == NULL
+                        ? R_NONE
+                        : ast_node_to_asm((ast_node *) node->operator.right, f)
+                    );
+            FWRITE(str);
+            return r;
         case AST_NODE_SYMBOL:
-            break;
+            return find_reg(node->symbol.entry);
         case AST_NODE_WHILE:
+            FWRITE("# WHILE COND");
+            sprintf(str, ": WHILE_LOOP_%d", scope);
+            FWRITE(str);
+            ast_node_to_asm((ast_node *) node->while_block.cond, f);
+            sprintf(str, "JMPNE WHILE_END_%d", scope);
+            FWRITE(str);
+
+            ast_node_to_asm((ast_node *) node->while_block.loop, f);
+            sprintf(str, "JMP WHILE_LOOP_%d", scope);
+            FWRITE(str);
+            sprintf(str, ": WHILE_END_%d", scope);
+            FWRITE(str);
             break;
     }
+    return r_ret;
 }
 
 void ast_to_asm(ast_root* root, FILE* f) {
@@ -248,13 +295,11 @@ void ast_node_print(ast_node *node, int tabs) {
         printf("passed null node %s\n", __PRETTY_FUNCTION__ );
         exit(-1);
     }
-    char tab[tabs*2 +2];
-    tab[0] = '\0';
-    for (int i = 0; i < tabs; i += 2) {
-        tab[i] = ' ';
-        tab[i+1] = ' ';
+    char tab[MAX_SIZE_STR] = "";
+    for (int i = 0; i < tabs; i++) {
+        strcat(tab,"  ");
+        strcat(tab,"  ");
     }
-    tab[tabs*2 +1] = '\0';
     printf("%s{\n", tab);
     switch (node->type) {
 
@@ -276,29 +321,29 @@ void ast_node_print(ast_node *node, int tabs) {
             printf("%s AST_NODE_VALUE: %d\n",tab, node->value.value);
             break;
         case AST_NODE_EXPRESSION:
-            printf("%s AST_NODE_EXPRESSION: ",tab);
+            printf("%s AST_NODE_EXPRESSION: \n",tab);
             ast_node_print(node->expression.node, tabs+1);
             if (node->expression.next != NULL)
                 ast_node_print(node->expression.next, tabs+1);
             break;
         case AST_NODE_IF:
-            printf("%s AST_NODE_IF: ",tab);
+            printf("%s AST_NODE_IF: \n",tab);
             ast_node_print(node->if_block.cond, tabs+1);
             ast_node_print(node->if_block.then_block, tabs+1);
             if (node->if_block.else_block != NULL)
                 ast_node_print(node->if_block.else_block, tabs+1);
             break;
         case AST_NODE_OPERATOR:
-            printf("%s AST_NODE_OPERATOR: %s",tab, print_ast_op_type(node->operator.op));
+            printf("%s AST_NODE_OPERATOR: %s\n",tab, print_ast_op_type(node->operator.op));
             ast_node_print(node->operator.left, tabs+1);
             if(node->operator.right != NULL)
                 ast_node_print(node->operator.right, tabs+1);
             break;
         case AST_NODE_SYMBOL:
-            printf("%s AST_NODE_SYMBOL: %s",tab, node->symbol.entry->symbol);
+            printf("%s AST_NODE_SYMBOL: %s\n",tab, node->symbol.entry->symbol);
             break;
         case AST_NODE_WHILE:
-            printf("%s AST_NODE_WHILE: ",tab);
+            printf("%s AST_NODE_WHILE: \n",tab);
             if (node->while_block.loop != NULL)
                 ast_node_print(node->while_block.loop, tabs+1);
             else printf("PASS\n");

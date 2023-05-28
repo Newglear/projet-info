@@ -4,7 +4,7 @@
 
 #include "symbol_table.h"
 
-enum {
+typedef enum {
     AST_NODE_EXPRESSION,
     AST_NODE_VARIABLE_DEFINITION,
     AST_NODE_VARIABLE_DECLARATION,
@@ -13,7 +13,7 @@ enum {
     AST_NODE_OPERATOR,
     AST_NODE_SYMBOL,
     AST_NODE_WHILE
-} typedef ast_node_type;
+} ast_node_type;
 
 enum {
     OP_ADD,

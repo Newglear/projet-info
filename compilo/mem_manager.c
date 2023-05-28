@@ -29,3 +29,25 @@ reg_t get_reg(symbol_table_entry* entry) {
 void free_reg(reg_t reg) {
     regs[reg] = NULL;
 }
+
+void free_regs(int scope) {
+    for (int i = 0; i < REGS_SIZE; i++) {
+        if (regs[i] != NULL && regs[i]->scope >= scope) {
+            regs[i] = NULL;
+        }
+    }
+}
+
+reg_t find_reg(symbol_table_entry* entry) {
+    if (entry == NULL) {
+        printf("entry not initialised %s\n", __PRETTY_FUNCTION__ );
+        return R_NONE;
+    }
+    for (int i = 0; i < REGS_SIZE; i++) {
+        if (0 == strcmp(regs[i]->symbol, entry->symbol) && regs[i]->scope == entry->scope) {
+            return i;
+        }
+    }
+
+}
+
