@@ -78,7 +78,7 @@ int stack_alloc(symbol_table_entry* entry, FILE* f) {
         exit(-1);
     }
     stack[sp] = entry;
-    char str[MAX_SIZE_STR] ="";
+    char str[MAX_SIZE_STR] = "";
     sprintf(str,"ADD SP SP 1;");
     FWRITE(str);
     sp++;
@@ -169,3 +169,6 @@ reg_t var_retrieve(symbol_table_entry* entry, FILE* f) {
     }
     return r;
 }
+
+void open_scope(int* scope);
+void close_scope(int* scope);

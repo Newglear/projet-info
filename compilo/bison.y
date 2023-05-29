@@ -30,7 +30,7 @@ void yyerror (const char *);
 %union {
 	char id[32];
 	int val;
-	struct ast_node* node;
+	ast_node* node;
 	ast_node_type opearnd;
 }         /* Yacc definitions */
 
@@ -94,7 +94,7 @@ void yyerror (const char *);
 
 %%
 start: expression {
-	ast_node* node = new_ast_node_expression($1, NULL);
+	ast_node* node = (ast_node*) new_ast_node_expression($1, NULL);
 	ast_insert(root, node);
 	symbol_table_print(symbolTable);
 	symbol_table_print(functionTable);
@@ -139,9 +139,9 @@ expression : final_expression
 //			| function_argument_definition_bis tCOMMA function_argument_definition
 //    ;
 //function_argument_definition_bis : %empty
-								| tINT tID { push_element(symbolTable,$2,1,INT,&offset,scope);}
-								| tVOID
-	;
+//		| tINT tID { push_element(symbolTable,$2,1,INT,&offset,scope);}
+//		| tVOID
+//	;
 //// TODO: function definition without expression
 //function_definition : tINT tID  tLPAR {scope++;write_assembly_none($2,out_file);} function_argument_definition tRPAR tLBRACE function_body tRBRACE {pop_scope(&scope,&offset,symbolTable); function_table_push(functionTable,symbol_table_entry_init($2, 1,INT, 0,0));} // Gestion du write asm quand ?
 //					| tVOID tID tLPAR {scope++;write_assembly_none($2,out_file);} function_argument_definition tRPAR tLBRACE function_body tRBRACE {pop_scope(&scope,&offset,symbolTable); function_table_push(functionTable,symbol_table_entry_init($2, 1,VOID, 0,0));}
@@ -172,7 +172,7 @@ variable_definition_content : tID tASSIGN value {
 	} // Copy the value from a to b
 	| tID {
 	symbol_table_entry* e = push_element(symbolTable,$1,1,INT,&offset,scope);
-	ast_node* value = new_ast_node_value($1);
+	ast_node* value = new_ast_node_value(0);
 	$$ = new_ast_node_variable_definition(e, value);
 	}
 
@@ -228,7 +228,7 @@ if_cont : %empty {
     ;
 
 while_statement : tWHILE tLPAR value tRPAR tLBRACE  expression tRBRACE {
-	$$ = new_ast_node_while($3,$6);
+	$$ = (ast_node*) new_ast_node_while($3,$6);
 	}
     ;
 
@@ -259,8 +259,10 @@ int main (int argc, char* argv[] ) {
 	temp_cnt = 0;
 	yyparse();
 	ast_print(root);
-	ast_to_asm(root,out_file);
+	ast_to_asm(root, symbolTable, out_file);
+	symbol_table_print(symbolTable);
 	fclose(out_file);
+
 }
 
 

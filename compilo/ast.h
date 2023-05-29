@@ -4,7 +4,7 @@
 
 #include "symbol_table.h"
 
-#define FWRITE(s) sprintf(str, "%s\n", s);fwrite(str,sizeof(char), strlen(str),f);
+#define FWRITE(s) {char __str[MAX_SIZE_STR+1];sprintf(__str, "%s\n", s);fwrite(__str,sizeof(char), strlen(__str),f);}
 
 
 typedef enum {
@@ -104,6 +104,6 @@ ast_node* new_ast_node_if(ast_node* cond, ast_node* then_block, ast_node* else_b
 ast_node* new_ast_node_operator(ast_op_type op, ast_node* left, ast_node* right);
 ast_node* new_ast_node_while(ast_node* cond, ast_node* loop);
 
-void ast_to_asm(ast_root* root, FILE*);
+void ast_to_asm(ast_root* root, symbol_table* symbol_table, FILE*);
 void ast_print(ast_root* root);
 #endif //PROJET_INFO_AST_H

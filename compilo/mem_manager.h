@@ -54,5 +54,7 @@ reg_t var_retrieve(symbol_table_entry* entry, FILE* f);
 reg_t var_store(symbol_table_entry* entry, const int* scope, FILE* f);
 reg_t retrieve(symbol_table_entry* entry);
 
+void open_scope(int* scope);
+void close_scope(int* scope);
 
 #endif //COMPILO_MEM_MANAGER_H
