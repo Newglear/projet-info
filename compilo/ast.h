@@ -78,9 +78,11 @@ struct {
 
 struct {
     struct ast_node* args[MAX_FUNCTION_ARGS];
+    int nb_of_args;
 } typedef ast_node_function_args;
 
 struct {
+    struct ast_node* name;
     struct ast_node* args;
     struct ast_node* expr;
 } typedef ast_node_function;
@@ -120,7 +122,7 @@ ast_node* new_ast_node_expression(ast_node* first, ast_node *second);
 ast_node* new_ast_node_if(ast_node* cond, ast_node* then_block, ast_node* else_block);
 ast_node* new_ast_node_operator(ast_op_type op, ast_node* left, ast_node* right);
 ast_node* new_ast_node_while(ast_node* cond, ast_node* loop);
-ast_node* new_ast_node_function(ast_node* args, ast_node* expr);
+ast_node* new_ast_node_function(ast_node* name, ast_node* args, ast_node* expr);
 ast_node* new_ast_node_function_args(ast_node* args[MAX_FUNCTION_ARGS]);
 ast_node* new_ast_node_return(ast_node* ret);
 

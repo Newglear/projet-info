@@ -1,7 +1,10 @@
-int f() {
-    
+int f(int a) {
+    int c = 4;
+    int d = 5;
+    return 8;
 }
 
+//f(3);
 int v = 5;
 int a = 42;
 int b = 5 + 4;

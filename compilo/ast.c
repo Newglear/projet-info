@@ -128,13 +128,14 @@ ast_node* new_ast_node_while(ast_node* cond, ast_node* loop) {
     return node;
 }
 
-ast_node* new_ast_node_function(ast_node* args, ast_node* expr) {
+ast_node* new_ast_node_function(ast_node* name, ast_node* args, ast_node* expr) {
     if (args == NULL) {
         printf("passed null node %s\n", __PRETTY_FUNCTION__ );
         exit(-1);
     }
     ast_node* node = malloc(sizeof(ast_node));
     node->type = AST_NODE_FUNCTION;
+    node->function.name = (struct ast_node *) name;
     node->function.args = (struct ast_node *) args;
     node->function.expr = (struct ast_node *) expr;
     return node;
@@ -145,11 +146,16 @@ ast_node* new_ast_node_function_args(ast_node* args[MAX_FUNCTION_ARGS]) {
         printf("passed null node %s\n", __PRETTY_FUNCTION__ );
         exit(-1);
     }
+    int nb_args = 0;
     ast_node* node = malloc(sizeof(ast_node));
     node->type = AST_NODE_FUNCTION_ARGS;
     for (int i = 0; i < MAX_FUNCTION_ARGS; i++) {
         node->function_args.args[i] = (struct ast_node *) args[i];
+        if (args[i] != NULL) {
+            nb_args++;
+        }
     }
+    node->function_args.nb_of_args = nb_args;
     return node;
 }
 
@@ -331,17 +337,32 @@ reg_t ast_node_to_asm(ast_node* node, compiler_args* args) {
             for (int i = 0; i < MAX_FUNCTION_ARGS; i++) {
                 reg_push(i,f);
                 ast_node* arg = (ast_node *) node->function_args.args[i];
-                if (arg->type != AST_NODE_FUNCTION_ARGS) {
-                    printf("Function arguments cant be an expression %s\n", __PRETTY_FUNCTION__ );
-                    exit(-1);
+                if (arg != NULL) {
+                    if ( arg->type != AST_NODE_SYMBOL) {
+                        printf("Function arguments cant be an expression %s\n", __PRETTY_FUNCTION__ );
+                        exit(-1);
+                    }
+                    ast_node_to_asm(arg, args);
                 }
-                ast_node_to_asm(arg, args);
             }
             close_scope(&scope, f);
             break;
         case AST_NODE_RETURN:
+            reg_push(R0,f);
+            sprintf(str,"MOV r%d r%d;", R0, ast_node_to_asm((ast_node *) node->ret.value, args));
+            FWRITE(str);
+            close_scope(&scope, f);
             break;
         case AST_NODE_FUNCTION:
+            sprintf(str, "# FUNCTION %s", ((ast_node*) node->function.name)->symbol.entry->symbol);
+            FWRITE(str);
+            ast_node_to_asm((ast_node *) node->function.args, args);
+            if(node->function.expr != NULL)
+                ast_node_to_asm((ast_node *) node->function.expr, args);
+            sprintf(str, "JMP LR;");
+            FWRITE(str);
+            sprintf(str, "# END_FUNCTION %s", ((ast_node*) node->function.name)->symbol.entry->symbol);
+            FWRITE(str);
             break;
     }
     return r_ret;
@@ -418,6 +439,23 @@ void ast_node_print(ast_node *node, int tabs) {
             if (node->while_block.loop != NULL)
                 ast_node_print((ast_node *) node->while_block.loop, tabs + 1);
             else printf("PASS\n");
+            break;
+        case AST_NODE_FUNCTION_ARGS:
+            printf("%s AST_NODE_FUNCTION_ARGS: \n",tab);
+            for (int i = 0; i < MAX_FUNCTION_ARGS; i++) {
+                if (node->function_args.args[i] != NULL)
+                    ast_node_print((ast_node *) node->function_args.args[i], tabs + 1);
+            }
+            break;
+        case AST_NODE_RETURN:
+            printf("%s AST_NODE_RETURN: \n",tab);
+            ast_node_print((ast_node *) node->ret.value, tabs + 1);
+            break;
+        case AST_NODE_FUNCTION:
+            printf("%s AST_NODE_FUNCTION: \n",tab);
+            ast_node_print((ast_node *) node->function.args, tabs + 1);
+            if (node->function.expr != NULL)
+                ast_node_print((ast_node *) node->function.expr, tabs + 1);
             break;
     }
     printf("%s}\n", tab);

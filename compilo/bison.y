@@ -87,6 +87,9 @@ void yyerror (const char *);
 %type <node> if_cont
 %type <node> while_statement
 %type <node> function_definition
+%type <node> function_body
+%type <node> function_argument_definition
+%type <node> return_expr
 
 /*conflit shift reduce*/
 %left tADD tSUB tMUL tDIV tLT tLE tEQ tNE tGE tGT tAND tOR tNOT 
@@ -121,7 +124,7 @@ expression : final_expression
 	   	ast_node* node = new_ast_node_expression($1, $2);
 		$$ = node;
 	   }
-//	   | return_expr
+	   | return_expr
 	;
 
 function_body : %empty
@@ -130,31 +133,56 @@ function_body : %empty
            | if_statement
            | while_statement
 //	   | function_call
-	   | final_expression expression
+	   | final_expression expression {
+	   	ast_node* node = new_ast_node_expression($1, $2);
+		$$ = node;
+	   }
 	   | return_expr
 	;
 
-function_argument_definition: %empty
-			| tINT tID tCOMMA function_argument_definition
+function_argument_definition: %empty {
+		ast_node* args[MAX_FUNCTION_ARGS] = {0};
+		$$ = new_ast_node_function_args(args);
+		}
+		| tINT tID tCOMMA function_argument_definition {
+			symbol_table_entry* e = symbol_table_entry_init($2,1,INT,&offset,scope);
+			ast_node* symb = new_ast_node_symbol(e);
+			ast_node* after_args = $4;
+			after_args->function_args.args[after_args->function_args.nb_of_args] = symb;
+			after_args->function_args.nb_of_args++;
+			$$ = after_args;
+		}
+		| tINT tID {
+			symbol_table_entry* e = symbol_table_entry_init($2,1,INT,&offset,scope);
+			ast_node* symb = new_ast_node_symbol(e);
+			ast_node* args[MAX_FUNCTION_ARGS] = {0};
+			args[0] = symb;
+			$$ = new_ast_node_function_args(args);
+		}
     ;
 
-function_definition : tINT tID  tLPAR function_argument_definition tRPAR tLBRACE function_body tRBRACE {
-	$$ =
+function_definition : tINT tID tLPAR function_argument_definition tRPAR tLBRACE function_body tRBRACE {
+	symbol_table_entry* e = symbol_table_entry_init($2,1,INT,&offset,scope);
+	ast_node* symb = new_ast_node_symbol(e);
+	$$ = new_ast_node_function(symb, $4,$7);
 }
     ;
 
-//function_args: %empty
-//		    | value  tCOMMA function_args
-//    ;
+function_args: %empty
+	    | value tCOMMA function_args
+    ;
 //
 //function_call : function_call_void
 //			  | function_call_int
 //    ;
 //
 //function_call_void : tID  tLPAR function_args tRPAR tSEMI {write_assembly_single("JMP",$1,out_file);pop_scope(&scope,&offset,symbolTable);}
-//function_call_int : tID tLPAR function_args tRPAR {write_assembly_single("JMP",$1,out_file);}
+function_call_int : tID tLPAR function_args tRPAR
+;
 //
-return_expr : tRETURN value tSEMI
+return_expr : tRETURN value tSEMI {
+	$$ = new_ast_node_return($2);
+}
     ;
 
 variable_definition: tINT variable_definition_content tSEMI {
