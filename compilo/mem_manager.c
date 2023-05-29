@@ -134,6 +134,23 @@ reg_t stack_store(symbol_table_entry* entry,FILE* f) {
     free_reg(r);
     return r;
 }
+reg_t reg_push(reg_t r, FILE* f) {
+    sp++;
+    stack[sp] = regs[r];
+    char str[MAX_SIZE_STR] = "";
+    sprintf(str,"STR %d r%d;", sp, r);
+    FWRITE(str);
+    return r;
+}
+reg_t reg_pop(reg_t r, FILE* f) {
+    regs[r] = stack[r];
+    char str[MAX_SIZE_STR] = "";
+    sprintf(str,"LOAD r%d %d", r, sp);
+    FWRITE(str);
+    stack[sp] = NULL;
+    sp--;
+    return r;
+}
 
 reg_t var_store(symbol_table_entry* entry, const int* scope, FILE* f) {
     if (entry == NULL) {

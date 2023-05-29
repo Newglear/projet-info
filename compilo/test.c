@@ -1,9 +1,14 @@
+int f() {
+    
+}
+
 int v = 5;
 int a = 42;
 int b = 5 + 4;
 int x;
 //int b = 4;
 //b=8;
+2;
 if (2) {
     if(6) {
         int p = !5;
@@ -19,7 +24,7 @@ if(5) {
     int t = 8;
 }
 while (5) {
-    int f = 5;
+    int k = 5;
 }
 x = a +3;
 int abc = 0;

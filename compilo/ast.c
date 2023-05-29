@@ -128,6 +128,42 @@ ast_node* new_ast_node_while(ast_node* cond, ast_node* loop) {
     return node;
 }
 
+ast_node* new_ast_node_function(ast_node* args, ast_node* expr) {
+    if (args == NULL) {
+        printf("passed null node %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    ast_node* node = malloc(sizeof(ast_node));
+    node->type = AST_NODE_FUNCTION;
+    node->function.args = (struct ast_node *) args;
+    node->function.expr = (struct ast_node *) expr;
+    return node;
+}
+
+ast_node* new_ast_node_function_args(ast_node* args[MAX_FUNCTION_ARGS]) {
+    if (args == NULL) {
+        printf("passed null node %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    ast_node* node = malloc(sizeof(ast_node));
+    node->type = AST_NODE_FUNCTION_ARGS;
+    for (int i = 0; i < MAX_FUNCTION_ARGS; i++) {
+        node->function_args.args[i] = (struct ast_node *) args[i];
+    }
+    return node;
+}
+
+ast_node* new_ast_node_return(ast_node* ret) {
+    if (ret == NULL) {
+        printf("passed null node %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    ast_node* node = malloc(sizeof(ast_node));
+    node->type = AST_NODE_RETURN;
+    node->ret.value = (struct ast_node *) ret;
+    return node;
+}
+
 char* print_ast_op_type(ast_op_type op) {
     char *op_str = malloc((sizeof(char))*MAX_SIZE_STR);
     switch (op) {
@@ -289,6 +325,23 @@ reg_t ast_node_to_asm(ast_node* node, compiler_args* args) {
             sprintf(str, ": WHILE_END_%d", scope);
             FWRITE(str);
             close_scope(&scope, f);
+            break;
+        case AST_NODE_FUNCTION_ARGS:
+            open_scope(&scope);
+            for (int i = 0; i < MAX_FUNCTION_ARGS; i++) {
+                reg_push(i,f);
+                ast_node* arg = (ast_node *) node->function_args.args[i];
+                if (arg->type != AST_NODE_FUNCTION_ARGS) {
+                    printf("Function arguments cant be an expression %s\n", __PRETTY_FUNCTION__ );
+                    exit(-1);
+                }
+                ast_node_to_asm(arg, args);
+            }
+            close_scope(&scope, f);
+            break;
+        case AST_NODE_RETURN:
+            break;
+        case AST_NODE_FUNCTION:
             break;
     }
     return r_ret;

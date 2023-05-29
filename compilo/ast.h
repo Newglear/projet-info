@@ -5,7 +5,7 @@
 #include "symbol_table.h"
 
 #define FWRITE(s) {char __str[MAX_SIZE_STR+1];sprintf(__str, "%s\n", s);fwrite(__str,sizeof(char), strlen(__str),f);}
-
+#define MAX_FUNCTION_ARGS 4
 
 typedef enum {
     AST_NODE_EXPRESSION,
@@ -15,7 +15,10 @@ typedef enum {
     AST_NODE_IF,
     AST_NODE_OPERATOR,
     AST_NODE_SYMBOL,
-    AST_NODE_WHILE
+    AST_NODE_WHILE,
+    AST_NODE_FUNCTION_ARGS,
+    AST_NODE_RETURN,
+    AST_NODE_FUNCTION
 } ast_node_type;
 
 enum {
@@ -73,7 +76,18 @@ struct {
     struct ast_node* loop;
 } typedef ast_node_while;
 
+struct {
+    struct ast_node* args[MAX_FUNCTION_ARGS];
+} typedef ast_node_function_args;
 
+struct {
+    struct ast_node* args;
+    struct ast_node* expr;
+} typedef ast_node_function;
+
+struct {
+    struct ast_node* value;
+} typedef ast_node_return;
 struct {
     ast_node_type type;
     union {
@@ -84,6 +98,9 @@ struct {
         ast_node_if if_block;
         ast_node_operator operator;
         ast_node_while while_block;
+        ast_node_function function;
+        ast_node_return ret;
+        ast_node_function_args function_args;
     };
 } typedef ast_node;
 
@@ -103,6 +120,9 @@ ast_node* new_ast_node_expression(ast_node* first, ast_node *second);
 ast_node* new_ast_node_if(ast_node* cond, ast_node* then_block, ast_node* else_block);
 ast_node* new_ast_node_operator(ast_op_type op, ast_node* left, ast_node* right);
 ast_node* new_ast_node_while(ast_node* cond, ast_node* loop);
+ast_node* new_ast_node_function(ast_node* args, ast_node* expr);
+ast_node* new_ast_node_function_args(ast_node* args[MAX_FUNCTION_ARGS]);
+ast_node* new_ast_node_return(ast_node* ret);
 
 void ast_to_asm(ast_root* root, FILE*);
 void ast_print(ast_root* root);

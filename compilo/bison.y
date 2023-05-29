@@ -19,7 +19,7 @@ void yyerror (const char *);
 {
 	FILE* out_file = NULL;
 	symbol_table* symbolTable ;
-	symbol_table* functionTable;
+	symbol_table* function_table;
 	symbol_table* flowControlTable;
 	int scope;
 	int offset;
@@ -86,6 +86,7 @@ void yyerror (const char *);
 %type <node> if_statement
 %type <node> if_cont
 %type <node> while_statement
+%type <node> function_definition
 
 /*conflit shift reduce*/
 %left tADD tSUB tMUL tDIV tLT tLE tEQ tNE tGE tGT tAND tOR tNOT 
@@ -97,8 +98,8 @@ start: expression {
 	ast_node* node = (ast_node*) new_ast_node_expression($1, NULL);
 	ast_insert(root, node);
 	symbol_table_print(symbolTable);
-	symbol_table_print(functionTable);
-	symbol_table_print(functionTable);
+	symbol_table_print(function_table);
+	symbol_table_print(function_table);
 	printf("SUCCESS !\n");
 	ast_insert(root, $1);
 	}
@@ -112,7 +113,7 @@ final_expression : variable_definition
            | value tSEMI
 //	   | function_call
 //	   | return_expr
-//	   | function_definition
+	   | function_definition
 	;
 
 expression : final_expression
@@ -123,29 +124,24 @@ expression : final_expression
 //	   | return_expr
 	;
 
-//function_body : variable_definition
-//           | variable_assignement
+function_body : %empty
+	   | variable_definition
 //           | print_statement
-//           | if_statement
-//           | while_statement
+           | if_statement
+           | while_statement
 //	   | function_call
-//	   | final_expression expression
-//	   | return_expr
-//	;
+	   | final_expression expression
+	   | return_expr
+	;
 
-//function_argument_definition: %empty
-//			| tINT tID { push_element(symbolTable,$2,1,INT,&offset,scope);}
-//			| tVOID
-//			| function_argument_definition_bis tCOMMA function_argument_definition
-//    ;
-//function_argument_definition_bis : %empty
-//		| tINT tID { push_element(symbolTable,$2,1,INT,&offset,scope);}
-//		| tVOID
-//	;
-//// TODO: function definition without expression
-//function_definition : tINT tID  tLPAR {scope++;write_assembly_none($2,out_file);} function_argument_definition tRPAR tLBRACE function_body tRBRACE {pop_scope(&scope,&offset,symbolTable); function_table_push(functionTable,symbol_table_entry_init($2, 1,INT, 0,0));} // Gestion du write asm quand ?
-//					| tVOID tID tLPAR {scope++;write_assembly_none($2,out_file);} function_argument_definition tRPAR tLBRACE function_body tRBRACE {pop_scope(&scope,&offset,symbolTable); function_table_push(functionTable,symbol_table_entry_init($2, 1,VOID, 0,0));}
-//    ;
+function_argument_definition: %empty
+			| tINT tID tCOMMA function_argument_definition
+    ;
+
+function_definition : tINT tID  tLPAR function_argument_definition tRPAR tLBRACE function_body tRBRACE {
+	$$ =
+}
+    ;
 
 //function_args: %empty
 //		    | value  tCOMMA function_args
@@ -158,8 +154,8 @@ expression : final_expression
 //function_call_void : tID  tLPAR function_args tRPAR tSEMI {write_assembly_single("JMP",$1,out_file);pop_scope(&scope,&offset,symbolTable);}
 //function_call_int : tID tLPAR function_args tRPAR {write_assembly_single("JMP",$1,out_file);}
 //
-//return_expr : tRETURN value tSEMI
-//    ;
+return_expr : tRETURN value tSEMI
+    ;
 
 variable_definition: tINT variable_definition_content tSEMI {
 		$$ = $2;
@@ -249,7 +245,7 @@ int main (int argc, char* argv[] ) {
 	out_file = fopen(argv[1],"w");
 
 	symbolTable = symbol_table_init();
-	functionTable = symbol_table_init();
+	function_table = symbol_table_init();
 	//push_element(symbolTable,"SP",1,INT,0,0);
 	//push_element(symbolTable,"LR",1,INT,0,0);
 	flowControlTable = symbol_table_init();

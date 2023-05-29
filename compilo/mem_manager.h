@@ -43,6 +43,8 @@ int stack_alloc(symbol_table_entry* entry, FILE* f);
 symbol_table_entry* stack_pop();
 int stack_find(symbol_table_entry* entry);
 reg_t var_retrieve(symbol_table_entry* entry, FILE* f);
+reg_t reg_push(reg_t r, FILE* f);
+reg_t reg_pop(reg_t r, FILE* f);
 
 /**
  *

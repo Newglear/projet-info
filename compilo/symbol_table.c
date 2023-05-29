@@ -162,13 +162,13 @@ void pop_scope(int* scope,int* offset, symbol_table* table){
         printf("Table not initialized in %s\n", __PRETTY_FUNCTION__);
         exit(-1);
     }
-    symbol_table_entry* element = symbol_table_get(table->size-1,table);
+    symbol_table_entry* element = symbol_table_get((int)table->size-1,table);
 
-    while(element->scope == *scope){
+    while(element->scope == *scope) {
         printf("POP! \n");
         symbol_entry_print(element);
         symbol_table_pop(table,offset);
-        element = symbol_table_get(table->size-1,table);
+        element = symbol_table_get((int) table->size-1,table);
         *offset-=INT_SIZE;
     }
 
