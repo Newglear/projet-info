@@ -9,12 +9,13 @@
 #include "ast.h"
 
 #define REGS_SIZE 16
+#define STACK_SIZE 2048
 static symbol_table_entry* regs[REGS_SIZE];
 static reg_t last_used_reg[REGS_SIZE];
 static int last_used_reg_index;
 
-static symbol_table_entry* stack[2048];
-static sp;
+static symbol_table_entry* stack[STACK_SIZE];
+static int sp;
 /**
  * increments the index of the reg, it indicates that the reg has been
  * used, a higher reg index number indicates a more recent use of the reg
@@ -170,5 +171,21 @@ reg_t var_retrieve(symbol_table_entry* entry, FILE* f) {
     return r;
 }
 
-void open_scope(int* scope);
-void close_scope(int* scope);
+void open_scope(int* scope) {
+    (*scope)++;
+}
+void close_scope(int* scope, FILE* f) {
+    int scope_reduction = 0;
+    char str[MAX_SIZE_STR] = "";
+    free_regs(*scope);
+    for (int i = 0; i < STACK_SIZE; i++) {
+        if (stack[i] && stack[i]->scope >= *scope) {
+            stack[i] = NULL;
+            sp--;
+            scope_reduction++;
+        }
+    }
+    sprintf(str,"SUBN SP %d;", scope_reduction);
+    FWRITE(str);
+    (*scope)--;
+}

@@ -114,7 +114,7 @@ symbol_table_entry* symbol_table_get_by_symbol(char* symbol, symbol_table* table
         printf("Symbol not initialized in %s \n", __PRETTY_FUNCTION__ );
         exit(-1);
     }
-    for (int i = 0; i < table->size; ++i) {
+    for (int i = (int)table->size-1; i >= 0; i--) {
         symbol_table_entry* entry = table->symbol_table[i];
         if (strcmp(entry->symbol, symbol) == 0) {
             return entry;

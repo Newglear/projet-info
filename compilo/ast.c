@@ -235,7 +235,7 @@ reg_t ast_node_to_asm(ast_node* node, compiler_args* args) {
         case AST_NODE_IF:
             FWRITE("# IF COND");
             ast_node_to_asm((ast_node *) node->if_block.cond, args);
-            scope++;
+            open_scope(&scope);
             sprintf(str,"JMPNE ENDIF_%d", scope);
             FWRITE(str);
             ast_node_to_asm((ast_node *) node->if_block.then_block, args);
@@ -252,8 +252,8 @@ reg_t ast_node_to_asm(ast_node* node, compiler_args* args) {
                 sprintf(str,": ENDIF_%d", scope);
                 FWRITE(str);
             }
-            free_regs(scope);
-            scope--;
+//            free_regs(scope);
+            close_scope(&scope, f);
             break;
         case AST_NODE_OPERATOR:
             sprintf(str, "tmp%d", temp_var_cnt++);
@@ -275,7 +275,7 @@ reg_t ast_node_to_asm(ast_node* node, compiler_args* args) {
         case AST_NODE_SYMBOL:
             return var_retrieve(node->symbol.entry,f);
         case AST_NODE_WHILE:
-
+            open_scope(&scope);
             FWRITE("# WHILE COND");
             sprintf(str, ": WHILE_LOOP_%d", scope);
             FWRITE(str);
@@ -288,16 +288,18 @@ reg_t ast_node_to_asm(ast_node* node, compiler_args* args) {
             FWRITE(str);
             sprintf(str, ": WHILE_END_%d", scope);
             FWRITE(str);
+            close_scope(&scope, f);
             break;
     }
     return r_ret;
 }
 
-void ast_to_asm(ast_root* root, symbol_table* symbol_table, FILE* f) {
+void ast_to_asm(ast_root* root, FILE* f) {
     if (root == NULL) {
         printf("passed null root %s\n", __PRETTY_FUNCTION__ );
         exit(-1);
     }
+
     compiler_args args = {
             f,
             NULL
@@ -366,7 +368,6 @@ void ast_node_print(ast_node *node, int tabs) {
             break;
     }
     printf("%s}\n", tab);
-
 }
 
 void ast_print(ast_root* root) {

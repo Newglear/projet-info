@@ -259,7 +259,7 @@ int main (int argc, char* argv[] ) {
 	temp_cnt = 0;
 	yyparse();
 	ast_print(root);
-	ast_to_asm(root, symbolTable, out_file);
+	ast_to_asm(root, out_file);
 	symbol_table_print(symbolTable);
 	fclose(out_file);
 
