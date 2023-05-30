@@ -15,7 +15,7 @@ vhdl xil_defaultlib  \
 "../../../../processeur.srcs/sources_1/new/MUX_MEM.vhd" \
 "../../../../processeur.srcs/sources_1/new/MUX_RE.vhd" \
 "../../../../processeur.srcs/sources_1/new/PRE_PROCESS.vhd" \
-"../../../../processeur.srcs/sources_1/new/REGS_BLOCKER.vhd" \
+"../../../../processeur.srcs/sources_1/new/BLOCKER.vhd" \
 "../../../../processeur.srcs/sim_1/new/ALU_Test.vhd" \
 "../../../../processeur.srcs/sim_1/new/regs_Test.vhd" \
 "../../../../processeur.srcs/sim_1/new/CPU_sim.vhd" \

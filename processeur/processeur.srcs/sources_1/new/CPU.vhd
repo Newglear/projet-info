@@ -161,16 +161,17 @@ component sync is  Port (
      );
    end component;
    
-   component REGS_BLOCKER is
-     Port ( 
-       A_IN,OP_IN: in STD_LOGIC_VECTOR(7 downto 0);  
-       A_OUT,OP_OUT: in STD_LOGIC_VECTOR(7 downto 0);
-       REGS_BLOCKED: out STD_LOGIC_VECTOR(15 downto 0)
+   component BLOCKER is
+     Port (
+       ASM :in STD_LOGIC_VECTOR(31 downto 0);
+       OUT_ASM: out STD_LOGIC_VECTOR(31 downto 0);
+       A_RE, OP_RE:in STD_LOGIC_VECTOR(7 downto 0);
+       EN_FLAG: out STD_LOGIC := '1'
      );
    end component;
   
     signal IP: STD_LOGIC_VECTOR (7 downto 0);
-    signal ASM_OUT,ASM_MEM: STD_LOGIC_VECTOR (31 downto 0);
+    signal ASM_OUT,ASM_TMP: STD_LOGIC_VECTOR (31 downto 0);
     signal ZERO_FLAG,FLUSH,NF: STD_LOGIC;
     signal A_LI, OP_LI, B_LI, C_LI: STD_LOGIC_VECTOR (7 downto 0); 
     signal A_DI, OP_DI,OP_DI_TEMP, B_DI, C_DI: STD_LOGIC_VECTOR (7 downto 0);
@@ -185,7 +186,7 @@ component sync is  Port (
     signal RW_MEM: STD_LOGIC;
     signal ADR_MEM,OUT_DATA,OUT_MEM: STD_LOGIc_VECTOR (7 downto 0 );
     signal REGS_MEM: STD_LOGIC_VECTOR(15 downto 0);
-    signal WAIT_FOR_REGISTER: STD_LOGIC;
+    signal EN_FLAG,REGS_BLOCKED: STD_LOGIC;
     
     --signal Clock: STD_LOGIC := '0';
    
@@ -197,13 +198,6 @@ begin
         FLUSH => FLUSH
     );
 
-    Blocker : REGS_BLOCKER Port map ( 
-        A_IN => A_LI,  
-        OP_IN => OP_LI,
-        A_OUT => A_RE,
-        OP_OUT => OP_RE, 
-        REGS_BLOCKED => REGS_MEM
-   );
     REGS: registers port map (atA => B_DI(3 downto 0),
                 atB => C_DI(3 downto 0),
                 atW => A_RE(3 downto 0),
@@ -216,13 +210,28 @@ begin
     ASM: code_bench port map (
         adr => IP,
         Clock => Clock, 
-        OUTPUT => ASM_OUT
+        OUTPUT => ASM_TMP
     );
-    
-    OP_LI <= ASM_OUT(31 downto 24);
-    A_LI <= ASM_OUT(23 downto 16);
-    B_LI <= ASM_OUT(15 downto 8);
-    C_LI <= ASM_OUT(7 downto 0);
+    REGS_BLOCKER: BLOCKER Port map (
+        ASM => ASM_TMP,
+        OUT_ASM => ASM_OUT,
+        A_RE => A_RE, 
+        OP_RE=> OP_RE, 
+        EN_FLAG => EN_FLAG
+      );
+      
+    OP_LI <= ASM_OUT(31 downto 24) when EN_FLAG ='1' else 
+                       x"00"
+                      ;
+    A_LI <= ASM_OUT(23 downto 16) when EN_FLAG ='1'else
+            x"00"
+           ;
+    B_LI <= ASM_OUT(15 downto 8) when EN_FLAG ='1' else
+           x"00"
+          ;
+    C_LI <= ASM_OUT(7 downto 0) when EN_FLAG ='1'  else
+            x"00"
+           ;
     
         
     CONT: compteur_8bits port map ( 
@@ -230,10 +239,12 @@ begin
         RST => '1',
         LOAD => FLUSH,
         SENS => '1',
-        EN => WAIT_FOR_REGISTER, -- A bloquer
+        EN => EN_FLAG, -- A bloquer
         DIN => A_LI,
         DOUT => IP
     );
+
+    
 
     LIDI: sync port map(
         A_IN => A_LI,
@@ -241,15 +252,13 @@ begin
         B_IN => B_LI,
         C_IN => C_LI,
         A_OUT => A_DI,
-        OP_OUT => OP_DI_TEMP,
+        OP_OUT => OP_DI,
         B_OUT => B_DI,
         C_OUT => C_DI,
         FLUSH => FLUSH,
         Clock => Clock 
     );
-    
-    OP_DI <= OP_DI_TEMP when WAIT_FOR_REGISTER = '1' else x"00";
-    WAIT_FOR_REGISTER <= '0' when REGS_MEM(conv_integer(A_DI)) = '1' else '1';
+  
     DI_MUX : MUX_DI port map (
         OP => OP_DI,
         B  => B_DI ,

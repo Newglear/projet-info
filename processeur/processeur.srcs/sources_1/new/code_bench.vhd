@@ -86,10 +86,5 @@ signal memory: memory_struct := (
     others => x"00_00_00_00"
     );
 begin
-process
-begin 
-    wait until Clock'event and Clock = '1'; 
     OUTPUT <= memory(conv_integer(adr));
-end process; 
-
 end Behavioral;
