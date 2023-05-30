@@ -4,7 +4,7 @@ int f(int a) {
     return 8;
 }
 
-//f(3);
+f();
 int v = 5;
 int a = 42;
 int b = 5 + 4;

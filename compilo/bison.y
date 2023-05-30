@@ -90,6 +90,7 @@ void yyerror (const char *);
 %type <node> function_body
 %type <node> function_argument_definition
 %type <node> return_expr
+%type <node> function_args
 
 /*conflit shift reduce*/
 %left tADD tSUB tMUL tDIV tLT tLE tEQ tNE tGE tGT tAND tOR tNOT 
@@ -127,7 +128,7 @@ expression : final_expression
 	   | return_expr
 	;
 
-function_body : %empty
+function_body : %empty {$$ = NULL;}
 	   | variable_definition
 //           | print_statement
            | if_statement
@@ -163,13 +164,22 @@ function_argument_definition: %empty {
 
 function_definition : tINT tID tLPAR function_argument_definition tRPAR tLBRACE function_body tRBRACE {
 	symbol_table_entry* e = symbol_table_entry_init($2,1,INT,&offset,scope);
+	symbol_table_push(function_table, e);
 	ast_node* symb = new_ast_node_symbol(e);
 	$$ = new_ast_node_function(symb, $4,$7);
 }
     ;
 
-function_args: %empty
-	    | value tCOMMA function_args
+function_args: %empty {
+		ast_node* args[MAX_FUNCTION_ARGS] = {0};
+		$$ = new_ast_node_function_args(args);
+	    }
+	    | value tCOMMA function_args {
+	    	ast_node* args = $3;
+	    	args->function_args.args[args->function_args.nb_of_args] = $1;
+	    	args->function_args.nb_of_args++;
+	    	$$ = args;
+	    }
     ;
 //
 //function_call : function_call_void
@@ -177,8 +187,8 @@ function_args: %empty
 //    ;
 //
 //function_call_void : tID  tLPAR function_args tRPAR tSEMI {write_assembly_single("JMP",$1,out_file);pop_scope(&scope,&offset,symbolTable);}
-function_call_int : tID tLPAR function_args tRPAR
-;
+//function_call_int : tID tLPAR function_args tRPAR
+//;
 //
 return_expr : tRETURN value tSEMI {
 	$$ = new_ast_node_return($2);
@@ -224,9 +234,17 @@ final_value: tNB {
 	| tNOT final_value {
 		$$ = new_ast_node_operator(OP_NOT, $2, NULL);
 	}
-	| tID  {
+	| tID {
+		printf("ID: %s\n", $1);
 		symbol_table_entry* e = symbol_table_get_by_symbol($1,symbolTable);
 		$$ = new_ast_node_symbol(e);
+	}
+	| tID tLPAR function_args tRPAR {
+		printf("function arg\n");
+		symbol_table_entry* e = symbol_table_get_by_symbol($1,function_table);
+//		symbol_table_push(function_table, e);
+		ast_node* symbol = new_ast_node_symbol(e);
+		$$ = new_ast_node_function_call(symbol, $3);
 	}
     ;
 
@@ -286,7 +304,6 @@ int main (int argc, char* argv[] ) {
 	ast_to_asm(root, out_file);
 	symbol_table_print(symbolTable);
 	fclose(out_file);
-
 }
 
 

@@ -18,7 +18,8 @@ typedef enum {
     AST_NODE_WHILE,
     AST_NODE_FUNCTION_ARGS,
     AST_NODE_RETURN,
-    AST_NODE_FUNCTION
+    AST_NODE_FUNCTION,
+    AST_NODE_FUNCTION_CALL
 } ast_node_type;
 
 enum {
@@ -88,6 +89,11 @@ struct {
 } typedef ast_node_function;
 
 struct {
+    struct ast_node* entry;
+    struct ast_node* function_args;
+} typedef ast_node_function_call;
+
+struct {
     struct ast_node* value;
 } typedef ast_node_return;
 struct {
@@ -103,6 +109,7 @@ struct {
         ast_node_function function;
         ast_node_return ret;
         ast_node_function_args function_args;
+        ast_node_function_call function_call;
     };
 } typedef ast_node;
 
@@ -125,6 +132,7 @@ ast_node* new_ast_node_while(ast_node* cond, ast_node* loop);
 ast_node* new_ast_node_function(ast_node* name, ast_node* args, ast_node* expr);
 ast_node* new_ast_node_function_args(ast_node* args[MAX_FUNCTION_ARGS]);
 ast_node* new_ast_node_return(ast_node* ret);
+ast_node* new_ast_node_function_call(ast_node* entry, ast_node* function_args);
 
 void ast_to_asm(ast_root* root, FILE*);
 void ast_print(ast_root* root);

@@ -170,6 +170,27 @@ ast_node* new_ast_node_return(ast_node* ret) {
     return node;
 }
 
+ast_node* new_ast_node_function_call(ast_node* entry, ast_node* function_args) {
+    if (entry == NULL) {
+        printf("passed null node entry %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    if (function_args == NULL) {
+        printf("passed null node args %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    if (function_args->type != AST_NODE_FUNCTION_ARGS) {
+        printf("passed non-function node %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    ast_node* node = malloc(sizeof(ast_node));
+    node->type = AST_NODE_FUNCTION_CALL;
+    node->function_call.entry = (struct ast_node *) entry;
+    node->function_call.function_args = (struct ast_node *) function_args;
+    return node;
+
+}
+
 char* print_ast_op_type(ast_op_type op) {
     char *op_str = malloc((sizeof(char))*MAX_SIZE_STR);
     switch (op) {
@@ -356,12 +377,18 @@ reg_t ast_node_to_asm(ast_node* node, compiler_args* args) {
         case AST_NODE_FUNCTION:
             sprintf(str, "# FUNCTION %s", ((ast_node*) node->function.name)->symbol.entry->symbol);
             FWRITE(str);
+            sprintf(str, ": FUNCTION_%s", ((ast_node*) node->function.name)->symbol.entry->symbol);
+            FWRITE(str);
             ast_node_to_asm((ast_node *) node->function.args, args);
             if(node->function.expr != NULL)
                 ast_node_to_asm((ast_node *) node->function.expr, args);
             sprintf(str, "JMP LR;");
             FWRITE(str);
             sprintf(str, "# END_FUNCTION %s", ((ast_node*) node->function.name)->symbol.entry->symbol);
+            FWRITE(str);
+            break;
+        case AST_NODE_FUNCTION_CALL:
+            sprintf(str, "JMP FUNCTION_%s", ((ast_node*) node->function_call.entry)->symbol.entry->symbol);
             FWRITE(str);
             break;
     }
@@ -456,6 +483,11 @@ void ast_node_print(ast_node *node, int tabs) {
             ast_node_print((ast_node *) node->function.args, tabs + 1);
             if (node->function.expr != NULL)
                 ast_node_print((ast_node *) node->function.expr, tabs + 1);
+            break;
+        case AST_NODE_FUNCTION_CALL:
+            printf("%s AST_NODE_FUNCTION_CALL: \n",tab);
+            ast_node_print((ast_node *) node->function_call.function_args, tabs + 1);
+            ast_node_print((ast_node *) node->function_call.entry, tabs + 1);
             break;
     }
     printf("%s}\n", tab);
