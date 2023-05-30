@@ -41,6 +41,7 @@ architecture Behavioral of CPU is
 component sync is  Port (
    A_IN, OP_IN, B_IN, C_IN : in STD_LOGIC_VECTOR( 7 downto 0);
    A_OUT, OP_OUT, B_OUT, C_OUT : out STD_LOGIC_VECTOR( 7 downto 0);
+   FLUSH: in STD_LOGIC;
    Clock: in STD_LOGIC
  );
  end component;
@@ -149,9 +150,19 @@ component sync is  Port (
            OUTPUT: out STD_LOGIC_VECTOR(7 downto 0)
        );
    end component;
+   
+   
+   component PRE_PROCESS is
+     Port ( 
+     OP: in STD_LOGIC_VECTOR( 7 downto 0);
+     ZERO_FLAG: in STD_LOGIC;
+     FLUSH: out STD_LOGIC
+     );
+   end component;
   
     signal IP: STD_LOGIC_VECTOR (7 downto 0);
     signal ASM_OUT: STD_LOGIC_VECTOR (31 downto 0);
+    signal ZERO_FLAG,FLUSH,NF: STD_LOGIC;
     signal A_LI, OP_LI, B_LI, C_LI: STD_LOGIC_VECTOR (7 downto 0); 
     signal A_DI, OP_DI, B_DI, C_DI: STD_LOGIC_VECTOR (7 downto 0);
     signal A_EX, OP_EX, B_EX, C_EX: STD_LOGIC_VECTOR (7 downto 0); 
@@ -169,13 +180,19 @@ component sync is  Port (
    
 begin
 
+    PROCESSING: PRE_PROCESS port map (
+        OP => OP_LI,
+        ZERO_FLAG => ZERO_FLAG,
+        FLUSH => FLUSH
+    );
+
     
     REGS: registers port map (atA => B_DI(3 downto 0),
                 atB => C_DI(3 downto 0),
                 atW => A_RE(3 downto 0),
                 W => WB, 
                 DATA => B_RE, 
-                RST=>  '1',
+                RST=>  '1', -- '1' pour ne rien faire
                 QA => QA, 
                 QB => QB,
                 Clock => clock);
@@ -193,10 +210,10 @@ begin
     CONT: compteur_8bits port map ( 
         Clock => Clock,
         RST => '1',
-        LOAD => '0',
+        LOAD => FLUSH,
         SENS => '1',
         EN => '1',
-        DIN => x"00",
+        DIN => A_LI,
         DOUT => IP
     );
 
@@ -209,6 +226,7 @@ begin
         OP_OUT => OP_DI,
         B_OUT => B_DI,
         C_OUT => C_DI,
+        FLUSH => FLUSH,
         Clock => Clock 
     );
     
@@ -227,7 +245,7 @@ begin
                   S => S_EX,
                   N => open,
                   O => open,
-                  Z => open,
+                  Z => ZERO_FLAG,
                   C => open,
                   CTR => CTRL_ALU
             );
@@ -247,6 +265,7 @@ begin
         OP_OUT => OP_EX,
         B_OUT => B_EX,
         C_OUT => C_EX,
+        FLUSH => FLUSH,
         Clock => Clock 
     );
     EXMEM: sync port map(
@@ -258,6 +277,7 @@ begin
         OP_OUT => OP_MEM,
         B_OUT => B_MEM,
         C_OUT => C_MEM,
+        FLUSH => FLUSH,
         Clock => Clock 
     );
     
@@ -290,6 +310,7 @@ begin
          OP_OUT => OP_DELAY,
          B_OUT => B_DELAY,
          C_OUT => C_DELAY,
+         FLUSH => FLUSH,
          Clock => Clock 
      );
      RE_MUX:MUX_RE port map(
@@ -309,6 +330,7 @@ begin
         OP_OUT => OP_RE,
         B_OUT => B_RE,
         C_OUT => C_RE,
+        FLUSH => FLUSH,
         Clock => Clock 
     );
     writeback: LC port map (

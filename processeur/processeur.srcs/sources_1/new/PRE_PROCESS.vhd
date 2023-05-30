@@ -2,9 +2,9 @@
 -- Company: 
 -- Engineer: 
 -- 
--- Create Date: 12.05.2023 17:44:14
+-- Create Date: 29.05.2023 14:31:08
 -- Design Name: 
--- Module Name: sync - Behavioral
+-- Module Name: PRE_PROCESS - Behavioral
 -- Project Name: 
 -- Target Devices: 
 -- Tool Versions: 
@@ -21,8 +21,6 @@
 
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.STD_LOGIC_ARITH.ALL;
-use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -33,31 +31,16 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 --library UNISIM;
 --use UNISIM.VComponents.all;
 
-entity sync is
- Port (
-    A_IN, OP_IN, B_IN, C_IN : in STD_LOGIC_VECTOR( 7 downto 0);
-    A_OUT, OP_OUT, B_OUT, C_OUT : out STD_LOGIC_VECTOR( 7 downto 0);
-    FLUSH:in STD_LOGIC; 
-    Clock: in STD_LOGIC
+entity PRE_PROCESS is
+  Port ( 
+  OP: in STD_LOGIC_VECTOR( 7 downto 0);
+  ZERO_FLAG: in STD_LOGIC;
+  FLUSH: out STD_LOGIC := '0'
   );
-end sync;
+end PRE_PROCESS;
 
-architecture Behavioral of sync is
+architecture Behavioral of PRE_PROCESS is
 
 begin
-process begin
-    wait until Clock'Event and Clock = '1';
-    if FLUSH = '0' then -- flushing the outputs when jumping 
-        A_OUT <= A_IN;
-        OP_OUT <= OP_IN;
-        B_OUT <= B_IN;
-        C_OUT <= C_IN;
-    else
-        A_OUT <= x"00";
-        OP_OUT <= x"00";
-        B_OUT <= x"00";
-        C_OUT <= x"00";
-    end if;
-end process;
-
+    FLUSH <= '1' when OP= x"09" or (OP= x"0A" and ZERO_FLAG = '0') else '0'; -- Jump or JNE
 end Behavioral;

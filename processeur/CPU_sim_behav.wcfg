@@ -10,15 +10,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="298270000fs"></ZoomStartTime>
-      <ZoomEndTime time="354670001fs"></ZoomEndTime>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="69151306fs"></ZoomEndTime>
       <Cursor1Time time="1000000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="105"></NameColumnWidth>
-      <ValueColumnWidth column_width="91"></ValueColumnWidth>
+      <ValueColumnWidth column_width="87"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="14" />
+   <WVObjectSize size="16" />
    <wvobject type="logic" fp_name="/CPU_sim/Clock">
       <obj_property name="ElementShortName">Clock</obj_property>
       <obj_property name="ObjectShortName">Clock</obj_property>
@@ -74,5 +74,13 @@
    <wvobject type="array" fp_name="/CPU_sim/proco/MEMORY/memory">
       <obj_property name="ElementShortName">memory[0:255][7:0]</obj_property>
       <obj_property name="ObjectShortName">memory[0:255][7:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/CPU_sim/proco/PROCESSING/FLUSH">
+      <obj_property name="ElementShortName">FLUSH</obj_property>
+      <obj_property name="ObjectShortName">FLUSH</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/CPU_sim/proco/ZERO_FLAG">
+      <obj_property name="ElementShortName">ZERO_FLAG</obj_property>
+      <obj_property name="ObjectShortName">ZERO_FLAG</obj_property>
    </wvobject>
 </wave_config>

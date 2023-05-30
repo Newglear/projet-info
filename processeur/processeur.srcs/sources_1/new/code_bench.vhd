@@ -47,7 +47,9 @@ end code_bench;
 -- COP = x"05"
 -- AFC = x"06" 
 -- LOAD= x"07" 
--- STORE= x"08" 
+-- STORE=x"08" 
+-- JUMP= x"09" 
+-- JNE= x"09" 
 
 
 architecture Behavioral of code_bench is
@@ -73,7 +75,8 @@ signal memory: memory_struct := (
     8 => x"08_01_03_00",
     9 => x"00_00_00_00",
     10=> x"07_04_01_00",
-    --11=> x"07_04_01_00",
+    11=>  x"00_00_00_00",
+    12=> x"0a_10_00_00",
     others => x"00_00_00_00"
     );
 begin
