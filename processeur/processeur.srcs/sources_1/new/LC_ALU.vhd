@@ -39,9 +39,8 @@ entity LC_ALU is
 end LC_ALU;
 
 architecture Behavioral of LC_ALU is
-
 begin
-    CTRL <= "001" when OP = x"03" else -- SOU 
-            "010" when OP = x"02" else -- MUL
+    CTRL <= "001" when OP = x"03" or OP = x"0d" else -- SOU or SOUM
+            "010" when OP = x"02" or OP = x"0c" else -- MUL or MULM
             "000";
 end Behavioral;

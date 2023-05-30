@@ -40,6 +40,7 @@ entity registers is
            W: in STD_LOGIC;
            DATA: in STD_LOGIC_VECTOR(7 downto 0);
            RST: in STD_LOGIC;
+           REGS_LOCKED: out STD_LOGIC_VECTOR(15 downto 0);
            Clock: in STD_LOGIC;
            QA:  out STD_LOGIC_VECTOR(7 downto 0);
            QB: out STD_LOGIC_VECTOR(7 downto 0)
@@ -63,5 +64,5 @@ begin
          
     end process;
     QA <= regs(conv_integer(atA)) when atW /= atA else DATA;
-    QB <= regs(conv_integer(atB)) when atW /= atB else DATA;
+    QB <= regs(conv_integer(atB)) when atW /= atB else DATA;    
 end Behavioral;

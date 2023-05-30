@@ -43,6 +43,6 @@ end MUX_EX;
 architecture Behavioral of MUX_EX is
 
 begin
-    OUTPUT <= S when OP = x"01" or OP = x"02" or OP = x"03" or OP = x"04" else  B;
+    OUTPUT <= S when OP = x"01" or OP = x"02" or OP = x"03" or OP = x"04"  or OP = x"0b" or OP = x"0c" or OP = x"0d" or OP = x"0e" else  B;
 
 end Behavioral;

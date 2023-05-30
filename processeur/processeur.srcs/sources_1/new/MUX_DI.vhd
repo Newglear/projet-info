@@ -34,13 +34,14 @@ use IEEE.STD_LOGIC_1164.ALL;
 entity MUX_DI is
     Port ( 
     OP : in STD_LOGIC_VECTOR (7 downto 0);
-    B: in STD_LOGIC_VECTOR (7 downto 0) ;
-    QA : in STD_LOGIC_VECTOR (7 downto 0);
-    OUTPUT : out  STD_LOGIC_VECTOR (7 downto 0));
+    B,C: in STD_LOGIC_VECTOR (7 downto 0) ;
+    QA,QB : in STD_LOGIC_VECTOR (7 downto 0);
+    OUTPUT_A,OUTPUT_B : out  STD_LOGIC_VECTOR (7 downto 0));
 end MUX_DI;
 
 architecture Behavioral of MUX_DI is
 
 begin
-OUTPUT <= QA when OP = x"05" or OP = x"01" or OP = x"02" or OP = x"03" or OP = x"04" or OP = x"08" else B; -- x"05" => COP
+    OUTPUT_A <= QA when OP = x"05" or OP = x"01" or OP = x"02" or OP = x"03" or OP = x"04" or OP = x"08" or OP = x"0b" or OP = x"0c" or OP = x"0d" else B; -- x"05" => COP
+    OUTPUt_B <= QB when OP = x"05" or OP = x"01" or OP = x"02" or OP = x"03" or OP = x"04" or OP = x"08" else C; 
 end Behavioral;

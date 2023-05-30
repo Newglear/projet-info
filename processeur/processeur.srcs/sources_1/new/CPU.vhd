@@ -18,9 +18,10 @@
 -- 
 ----------------------------------------------------------------------------------
 
-
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -82,10 +83,10 @@ component sync is  Port (
    
    component MUX_DI is
        Port ( 
-       OP : in STD_LOGIC_VECTOR (7 downto 0);
-       B: in STD_LOGIC_VECTOR (7 downto 0) ;
-       QA : in STD_LOGIC_VECTOR (7 downto 0);
-       OUTPUT : out  STD_LOGIC_VECTOR (7 downto 0));
+        OP : in STD_LOGIC_VECTOR (7 downto 0);
+        B,C: in STD_LOGIC_VECTOR (7 downto 0) ;
+        QA,QB : in STD_LOGIC_VECTOR (7 downto 0);
+        OUTPUT_A,OUTPUT_B : out  STD_LOGIC_VECTOR (7 downto 0));
    end component;
    
    component ALU is
@@ -159,22 +160,32 @@ component sync is  Port (
      FLUSH: out STD_LOGIC
      );
    end component;
+   
+   component REGS_BLOCKER is
+     Port ( 
+       A_IN,OP_IN: in STD_LOGIC_VECTOR(7 downto 0);  
+       A_OUT,OP_OUT: in STD_LOGIC_VECTOR(7 downto 0);
+       REGS_BLOCKED: out STD_LOGIC_VECTOR(15 downto 0)
+     );
+   end component;
   
     signal IP: STD_LOGIC_VECTOR (7 downto 0);
-    signal ASM_OUT: STD_LOGIC_VECTOR (31 downto 0);
+    signal ASM_OUT,ASM_MEM: STD_LOGIC_VECTOR (31 downto 0);
     signal ZERO_FLAG,FLUSH,NF: STD_LOGIC;
     signal A_LI, OP_LI, B_LI, C_LI: STD_LOGIC_VECTOR (7 downto 0); 
-    signal A_DI, OP_DI, B_DI, C_DI: STD_LOGIC_VECTOR (7 downto 0);
+    signal A_DI, OP_DI,OP_DI_TEMP, B_DI, C_DI: STD_LOGIC_VECTOR (7 downto 0);
     signal A_EX, OP_EX, B_EX, C_EX: STD_LOGIC_VECTOR (7 downto 0); 
     signal A_MEM, OP_MEM, B_MEM, C_MEM: STD_LOGIC_VECTOR (7 downto 0); 
     signal A_DELAY, OP_DELAY, B_DELAY, C_DELAY: STD_LOGIC_VECTOR (7 downto 0); 
     signal A_RE, OP_RE, B_RE, C_RE: STD_LOGIC_VECTOR (7 downto 0); 
     signal WB : STD_LOGIC;
-    signal QA,QB, OUT_DI,OUT_EX: STD_LOGIc_VECTOR (7 downto 0 );
+    signal QA,QB, OUT_DI_A,OUT_DI_B,OUT_EX: STD_LOGIc_VECTOR (7 downto 0 );
     signal S_EX: STD_LOGIc_VECTOR (7 downto 0 );
     signal CTRL_ALU: sTD_LOGIC_VECTOR (2 downto 0);
     signal RW_MEM: STD_LOGIC;
     signal ADR_MEM,OUT_DATA,OUT_MEM: STD_LOGIc_VECTOR (7 downto 0 );
+    signal REGS_MEM: STD_LOGIC_VECTOR(15 downto 0);
+    signal WAIT_FOR_REGISTER: STD_LOGIC;
     
     --signal Clock: STD_LOGIC := '0';
    
@@ -186,7 +197,13 @@ begin
         FLUSH => FLUSH
     );
 
-    
+    Blocker : REGS_BLOCKER Port map ( 
+        A_IN => A_LI,  
+        OP_IN => OP_LI,
+        A_OUT => A_RE,
+        OP_OUT => OP_RE, 
+        REGS_BLOCKED => REGS_MEM
+   );
     REGS: registers port map (atA => B_DI(3 downto 0),
                 atB => C_DI(3 downto 0),
                 atW => A_RE(3 downto 0),
@@ -201,18 +218,19 @@ begin
         Clock => Clock, 
         OUTPUT => ASM_OUT
     );
+    
     OP_LI <= ASM_OUT(31 downto 24);
     A_LI <= ASM_OUT(23 downto 16);
     B_LI <= ASM_OUT(15 downto 8);
     C_LI <= ASM_OUT(7 downto 0);
-        
+    
         
     CONT: compteur_8bits port map ( 
         Clock => Clock,
         RST => '1',
         LOAD => FLUSH,
         SENS => '1',
-        EN => '1',
+        EN => WAIT_FOR_REGISTER, -- A bloquer
         DIN => A_LI,
         DOUT => IP
     );
@@ -223,19 +241,24 @@ begin
         B_IN => B_LI,
         C_IN => C_LI,
         A_OUT => A_DI,
-        OP_OUT => OP_DI,
+        OP_OUT => OP_DI_TEMP,
         B_OUT => B_DI,
         C_OUT => C_DI,
         FLUSH => FLUSH,
         Clock => Clock 
     );
     
+    OP_DI <= OP_DI_TEMP when WAIT_FOR_REGISTER = '1' else x"00";
+    WAIT_FOR_REGISTER <= '0' when REGS_MEM(conv_integer(A_DI)) = '1' else '1';
     DI_MUX : MUX_DI port map (
         OP => OP_DI,
         B  => B_DI ,
+        C => C_DI,
         QA => QA,
-        OUTPUT => OUT_DI
-    );
+        QB => QB,
+        OUTPUT_A => OUT_DI_A,
+        OUTPUT_B => OUT_DI_B
+        );
     ALU_LC : LC_ALU port map(
         OP => OP_EX,
         CTRL => CTRL_ALU
@@ -259,8 +282,8 @@ begin
     DIEX: sync port map(
         A_IN => A_DI,
         OP_IN => OP_DI,
-        B_IN => OUT_DI,
-        C_IN => QB,
+        B_IN => OUT_DI_A,
+        C_IN => OUT_DI_B,
         A_OUT => A_EX,
         OP_OUT => OP_EX,
         B_OUT => B_EX,

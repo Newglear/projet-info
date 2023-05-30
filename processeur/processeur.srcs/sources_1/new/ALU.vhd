@@ -51,7 +51,7 @@ begin
     
     aux <=  (x"00" & A) + (x"00" & B) when CTR = "000" else 
             (x"00" & A) - (x"00" & B) when CTR = "001" else
-            (A * B) when CTR = "010"; -- TODO SIGNED VS UNSIGNED
+            (A * B) when CTR = "010" ; -- TODO SIGNED VS UNSIGNED
     C <= aux(8);
     Z <= '1' when aux(7 downto 0) = x"00" else '0';
     O <= '1' when aux(15 downto 8) /= x"00" else '0';

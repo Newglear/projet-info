@@ -48,8 +48,11 @@ W <= '1' when
     OP = x"04" or -- DIV
     OP = x"05" or -- COP
     OP = x"06" or -- AFC
-    OP = x"07"    -- LOAD
-    
+    OP = x"07" or   -- LOAD   
+    OP = x"0b" or -- ADDM
+    OP = x"0c" or -- MULM
+    OP = x"0d" or -- SOUM
+    OP = x"0e"  -- DIVM
     else '0';
 
 end Behavioral;
