@@ -124,7 +124,7 @@ reg_t least_used_reg() {
 
 reg_t stack_store(symbol_table_entry* entry,FILE* f) {
     reg_t r = find_reg(entry);
-    for (int i = 0; i < STACK_SIZE -2; ++i) {
+    for (int i = 0; i < STACK_SIZE; ++i) {
         if (stack[i] == entry) {
             char str[MAX_SIZE_STR] = "";
             sprintf(str, "STR %d r%d;", i, r);
@@ -185,7 +185,7 @@ reg_t var_retrieve(symbol_table_entry* entry, FILE* f) {
         FWRITE(str);
         r = least_used;
     }
-    return r;
+    return touch_reg(r,NULL);
 }
 
 void open_scope(int* scope) {

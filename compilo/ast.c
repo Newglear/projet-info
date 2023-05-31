@@ -254,12 +254,12 @@ reg_t ast_node_to_asm(ast_node* node, compiler_args* args) {
     static int temp_var_cnt;
     FILE* f = args->file;
     reg_t r_ret = R_NONE;
+    reg_t r = 0;
     char str[MAX_SIZE_STR] = "";
     if (node == NULL) {
         printf("passed null root %s\n", __PRETTY_FUNCTION__ );
         exit(-1);
     }
-    reg_t r = 0;
 
     switch (node->type) {
         case AST_NODE_EXPRESSION:
@@ -307,7 +307,6 @@ reg_t ast_node_to_asm(ast_node* node, compiler_args* args) {
                 FWRITE(str);
                 sprintf(str,"__ENDIF_%d__", scope);
                 FWRITE(str);
-                FWRITE("expr_else");
                 ast_node_to_asm((ast_node *) node->if_block.else_block, args);
                 sprintf(str,"__ENDELSE_%d__", scope);
                 FWRITE(str);
@@ -315,7 +314,6 @@ reg_t ast_node_to_asm(ast_node* node, compiler_args* args) {
                 sprintf(str,"__ENDIF_%d__", scope);
                 FWRITE(str);
             }
-//            free_regs(scope);
             close_scope(&scope, f);
             break;
         case AST_NODE_OPERATOR:
@@ -343,11 +341,11 @@ reg_t ast_node_to_asm(ast_node* node, compiler_args* args) {
             sprintf(str, "__WHILE_LOOP_%d__", scope);
             FWRITE(str);
             ast_node_to_asm((ast_node *) node->while_block.cond, args);
-            sprintf(str, "JMPNE WHILE_END_%d", scope);
+            sprintf(str, "JMPNE __WHILE_END_%d__;", scope);
             FWRITE(str);
 
             ast_node_to_asm((ast_node *) node->while_block.loop, args);
-            sprintf(str, "JMP __WHILE_LOOP_%d__", scope);
+            sprintf(str, "JMP __WHILE_LOOP_%d__;", scope);
             FWRITE(str);
             sprintf(str, "__WHILE_END_%d__", scope);
             FWRITE(str);
@@ -401,7 +399,7 @@ reg_t ast_node_to_asm(ast_node* node, compiler_args* args) {
             break;
         case AST_NODE_FUNCTION_CALL:
             FWRITE("STR LR");
-            sprintf(str, "JMP __FUNCTION_%s__", ((ast_node*) node->function_call.entry)->symbol.entry->symbol);
+            sprintf(str, "JMP __FUNCTION_%s__;", ((ast_node*) node->function_call.entry)->symbol.entry->symbol);
             FWRITE(str);
             break;
     }

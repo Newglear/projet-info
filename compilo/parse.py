@@ -6,8 +6,10 @@ def main():
     labels = {} # label: line_num
     infile = sys.argv[1]
     with open("out_file.asm", "w") as out_f:
-        jmp_pattern = re.compile("JM. __.*__")
+        jmp_pattern = re.compile("JM.* __.*__")
         label_pattern = re.compile("__.*__")
+        nop = re.compile("# .*")
+
         with open(infile, "r") as f:
             for index, line in enumerate(f.readlines()):
                 if label_pattern.match(line):
@@ -18,11 +20,13 @@ def main():
                 if jmp_pattern.match(line):
                     label = label_pattern.search(line)[0]
                     index = labels[label]
-                    print(labels["__FUNCTION_f__"], index)
+                    print(label, index)
                     line = line.replace(label, str(index))
                 elif label_pattern.match(line):
-                    # labels[label_pattern.search(line)[0]] = index
-                    line = "PASS\n"
+                    labels[label_pattern.search(line)[0]] = index
+                    line = "NOP;\n"
+                elif nop.match(line):
+                    line = "NOP;\n"
                 out_f.write(line)
 
 
