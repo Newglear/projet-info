@@ -71,7 +71,7 @@ component sync is  Port (
              QB: out STD_LOGIC_VECTOR(7 downto 0)
       );
  end component;  
- component LC is
+ component LC is -- Writeback 
  Port ( OP : in STD_LOGIC_VECTOR (7 downto 0); 
          W : out STD_LOGIC 
  );
@@ -169,7 +169,9 @@ component sync is  Port (
        ASM :in STD_LOGIC_VECTOR(31 downto 0);
        OUT_ASM: out STD_LOGIC_VECTOR(31 downto 0);
        A_RE, OP_RE:in STD_LOGIC_VECTOR(7 downto 0);
-       EN_FLAG: out STD_LOGIC := '1'
+       FLUSH: in STD_LOGIC; 
+       EN_FLAG: out STD_LOGIC := '1';
+       Clock: in STD_Logic
      );
    end component;
   
@@ -196,7 +198,7 @@ begin
     Compt <= IP;
     --Clock <= not clock after 1000ns;
     PROCESSING: PRE_PROCESS port map (
-        OP => OP_LI,
+        OP => OP_RE,
         ZERO_FLAG => ZERO_FLAG,
         FLUSH => FLUSH
     );
@@ -222,7 +224,9 @@ begin
         OUT_ASM => ASM_OUT,
         A_RE => A_RE, 
         OP_RE=> OP_RE, 
-        EN_FLAG => EN_FLAG
+        FLUSH=> FLUSH,
+        EN_FLAG => EN_FLAG,
+        Clock => Clock
       );
       
     OP_LI <= ASM_OUT(31 downto 24) when EN_FLAG ='1' else 
