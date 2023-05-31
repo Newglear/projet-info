@@ -45,7 +45,7 @@ end data_bench;
 
 architecture Behavioral of data_bench is
 type memory_struct is array(0 to 255) of STD_LOGIC_VECTOR(7 downto 0);
-signal memory: memory_struct;
+signal memory: memory_struct := (others => x"00");
 signal aux: STD_LOGIC_VECTOR (7 downto 0); 
 begin
 process

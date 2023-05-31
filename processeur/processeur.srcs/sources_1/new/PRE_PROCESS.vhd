@@ -42,5 +42,5 @@ end PRE_PROCESS;
 architecture Behavioral of PRE_PROCESS is
 
 begin
-    FLUSH <= '1' when OP= x"09" or (OP= x"0A" and ZERO_FLAG = '0') else '0'; -- Jump or JNE
+    FLUSH <= '1' when OP= x"09" or (OP= x"0A" and ZERO_FLAG = '1') else '0'; -- Jump or JNE
 end Behavioral;

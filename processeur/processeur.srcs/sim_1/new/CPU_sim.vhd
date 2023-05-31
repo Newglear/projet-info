@@ -37,14 +37,15 @@ end CPU_sim;
 architecture Behavioral of CPU_sim is
 component CPU is      
 Port (
-Clock: in STD_LOGIC
+    Clock: in STD_LOGIC
 );
 end component;
 
     signal Clock: STD_LOGIC := '0';
+    signal CMP: STD_LOGIC_VECTOR(7 downto 0);
 
 begin
-    proco: CPU port map (Clock);
+    proco: CPU port map(Clock);
 
     clock <= not clock after 10ns;
   

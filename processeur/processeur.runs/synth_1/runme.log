@@ -1,0 +1,114 @@
+
+*** Running vivado
+    with args -log CPU.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source CPU.tcl
+
+
+****** Vivado v2018.2 (64-bit)
+  **** SW Build 2258646 on Thu Jun 14 20:02:38 MDT 2018
+  **** IP Build 2256618 on Thu Jun 14 22:10:49 MDT 2018
+    ** Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
+
+source CPU.tcl -notrace
+Command: synth_design -top CPU -part xc7a35tcpg236-1
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7a35t'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a35t'
+INFO: Launching helper process for spawning children vivado processes
+INFO: Helper process launched with PID 12685 
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:01 ; elapsed = 00:00:02 . Memory (MB): peak = 1255.277 ; gain = 83.699 ; free physical = 55022 ; free virtual = 67198
+---------------------------------------------------------------------------------
+INFO: [Synth 8-638] synthesizing module 'CPU' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd:42]
+INFO: [Synth 8-3491] module 'PRE_PROCESS' declared at '/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/PRE_PROCESS.vhd:34' bound to instance 'PROCESSING' of component 'PRE_PROCESS' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd:198]
+INFO: [Synth 8-638] synthesizing module 'PRE_PROCESS' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/PRE_PROCESS.vhd:42]
+INFO: [Synth 8-256] done synthesizing module 'PRE_PROCESS' (1#1) [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/PRE_PROCESS.vhd:42]
+WARNING: [Synth 8-5640] Port 'regs_locked' is missing in component declaration [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd:60]
+INFO: [Synth 8-3491] module 'registers' declared at '/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/registers.vhd:36' bound to instance 'REGS' of component 'registers' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd:204]
+INFO: [Synth 8-638] synthesizing module 'registers' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/registers.vhd:52]
+WARNING: [Synth 8-3848] Net REGS_LOCKED in module/entity registers does not have driver. [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/registers.vhd:45]
+INFO: [Synth 8-256] done synthesizing module 'registers' (2#1) [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/registers.vhd:52]
+INFO: [Synth 8-3491] module 'code_bench' declared at '/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/code_bench.vhd:36' bound to instance 'ASM' of component 'code_bench' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd:215]
+INFO: [Synth 8-638] synthesizing module 'code_bench' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/code_bench.vhd:59]
+INFO: [Synth 8-256] done synthesizing module 'code_bench' (3#1) [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/code_bench.vhd:59]
+INFO: [Synth 8-3491] module 'BLOCKER' declared at '/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/BLOCKER.vhd:36' bound to instance 'REGS_BLOCKER' of component 'BLOCKER' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd:220]
+INFO: [Synth 8-638] synthesizing module 'BLOCKER' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/BLOCKER.vhd:45]
+WARNING: [Synth 8-614] signal 'blocked' is read in the process but is not in the sensitivity list [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/BLOCKER.vhd:49]
+WARNING: [Synth 8-614] signal 'OP_RE' is read in the process but is not in the sensitivity list [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/BLOCKER.vhd:49]
+INFO: [Synth 8-256] done synthesizing module 'BLOCKER' (4#1) [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/BLOCKER.vhd:45]
+INFO: [Synth 8-3491] module 'compteur_8bits' declared at '/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/compteur_8bits.vhd:36' bound to instance 'CONT' of component 'compteur_8bits' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd:242]
+INFO: [Synth 8-638] synthesizing module 'compteur_8bits' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/compteur_8bits.vhd:46]
+INFO: [Synth 8-256] done synthesizing module 'compteur_8bits' (5#1) [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/compteur_8bits.vhd:46]
+INFO: [Synth 8-3491] module 'sync' declared at '/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/sync.vhd:36' bound to instance 'LIDI' of component 'sync' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd:254]
+INFO: [Synth 8-638] synthesizing module 'sync' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/sync.vhd:45]
+INFO: [Synth 8-256] done synthesizing module 'sync' (6#1) [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/sync.vhd:45]
+INFO: [Synth 8-3491] module 'MUX_DI' declared at '/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/MUX_DI.vhd:34' bound to instance 'DI_MUX' of component 'MUX_DI' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd:267]
+INFO: [Synth 8-638] synthesizing module 'MUX_DI' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/MUX_DI.vhd:42]
+INFO: [Synth 8-256] done synthesizing module 'MUX_DI' (7#1) [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/MUX_DI.vhd:42]
+INFO: [Synth 8-3491] module 'LC_ALU' declared at '/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/LC_ALU.vhd:34' bound to instance 'ALU_LC' of component 'LC_ALU' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd:276]
+INFO: [Synth 8-638] synthesizing module 'LC_ALU' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/LC_ALU.vhd:41]
+INFO: [Synth 8-256] done synthesizing module 'LC_ALU' (8#1) [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/LC_ALU.vhd:41]
+INFO: [Synth 8-3491] module 'ALU' declared at '/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/ALU.vhd:36' bound to instance 'UAL' of component 'ALU' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd:280]
+INFO: [Synth 8-638] synthesizing module 'ALU' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/ALU.vhd:48]
+WARNING: [Synth 8-3848] Net N in module/entity ALU does not have driver. [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/ALU.vhd:40]
+INFO: [Synth 8-256] done synthesizing module 'ALU' (9#1) [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/ALU.vhd:48]
+INFO: [Synth 8-3491] module 'MUX_EX' declared at '/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/MUX_EX.vhd:34' bound to instance 'EX_MUX' of component 'MUX_EX' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd:289]
+INFO: [Synth 8-638] synthesizing module 'MUX_EX' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/MUX_EX.vhd:43]
+INFO: [Synth 8-256] done synthesizing module 'MUX_EX' (10#1) [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/MUX_EX.vhd:43]
+INFO: [Synth 8-3491] module 'sync' declared at '/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/sync.vhd:36' bound to instance 'DIEX' of component 'sync' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd:296]
+INFO: [Synth 8-3491] module 'sync' declared at '/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/sync.vhd:36' bound to instance 'EXMEM' of component 'sync' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd:308]
+INFO: [Synth 8-3491] module 'MUX_MEM' declared at '/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/MUX_MEM.vhd:34' bound to instance 'MEM_MUX' of component 'MUX_MEM' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd:321]
+INFO: [Synth 8-638] synthesizing module 'MUX_MEM' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/MUX_MEM.vhd:43]
+INFO: [Synth 8-256] done synthesizing module 'MUX_MEM' (11#1) [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/MUX_MEM.vhd:43]
+INFO: [Synth 8-3491] module 'LC_Mem' declared at '/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/LC_Mem.vhd:34' bound to instance 'MEM_LC' of component 'LC_Mem' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd:327]
+INFO: [Synth 8-638] synthesizing module 'LC_Mem' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/LC_Mem.vhd:41]
+INFO: [Synth 8-256] done synthesizing module 'LC_Mem' (12#1) [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/LC_Mem.vhd:41]
+INFO: [Synth 8-3491] module 'data_bench' declared at '/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/data_bench.vhd:35' bound to instance 'MEMORY' of component 'data_bench' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd:332]
+INFO: [Synth 8-638] synthesizing module 'data_bench' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/data_bench.vhd:46]
+INFO: [Synth 8-256] done synthesizing module 'data_bench' (13#1) [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/data_bench.vhd:46]
+INFO: [Synth 8-3491] module 'sync' declared at '/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/sync.vhd:36' bound to instance 'DELAY' of component 'sync' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd:341]
+INFO: [Synth 8-3491] module 'MUX_RE' declared at '/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/MUX_RE.vhd:34' bound to instance 'RE_MUX' of component 'MUX_RE' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd:353]
+INFO: [Synth 8-638] synthesizing module 'MUX_RE' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/MUX_RE.vhd:43]
+INFO: [Synth 8-256] done synthesizing module 'MUX_RE' (14#1) [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/MUX_RE.vhd:43]
+INFO: [Synth 8-3491] module 'sync' declared at '/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/sync.vhd:36' bound to instance 'MEMRE' of component 'sync' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd:361]
+INFO: [Synth 8-3491] module 'LC' declared at '/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/LC.vhd:34' bound to instance 'writeback' of component 'LC' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd:373]
+INFO: [Synth 8-638] synthesizing module 'LC' [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/LC.vhd:40]
+INFO: [Synth 8-256] done synthesizing module 'LC' (15#1) [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/LC.vhd:40]
+INFO: [Synth 8-256] done synthesizing module 'CPU' (16#1) [/home/g_robert/tmp_PSI/projet-info/processeur/processeur.srcs/sources_1/new/CPU.vhd:42]
+WARNING: [Synth 8-3331] design ALU has unconnected port N
+WARNING: [Synth 8-3331] design code_bench has unconnected port Clock
+WARNING: [Synth 8-3331] design registers has unconnected port REGS_LOCKED[15]
+WARNING: [Synth 8-3331] design registers has unconnected port REGS_LOCKED[14]
+WARNING: [Synth 8-3331] design registers has unconnected port REGS_LOCKED[13]
+WARNING: [Synth 8-3331] design registers has unconnected port REGS_LOCKED[12]
+WARNING: [Synth 8-3331] design registers has unconnected port REGS_LOCKED[11]
+WARNING: [Synth 8-3331] design registers has unconnected port REGS_LOCKED[10]
+WARNING: [Synth 8-3331] design registers has unconnected port REGS_LOCKED[9]
+WARNING: [Synth 8-3331] design registers has unconnected port REGS_LOCKED[8]
+WARNING: [Synth 8-3331] design registers has unconnected port REGS_LOCKED[7]
+WARNING: [Synth 8-3331] design registers has unconnected port REGS_LOCKED[6]
+WARNING: [Synth 8-3331] design registers has unconnected port REGS_LOCKED[5]
+WARNING: [Synth 8-3331] design registers has unconnected port REGS_LOCKED[4]
+WARNING: [Synth 8-3331] design registers has unconnected port REGS_LOCKED[3]
+WARNING: [Synth 8-3331] design registers has unconnected port REGS_LOCKED[2]
+WARNING: [Synth 8-3331] design registers has unconnected port REGS_LOCKED[1]
+WARNING: [Synth 8-3331] design registers has unconnected port REGS_LOCKED[0]
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1310.902 ; gain = 139.324 ; free physical = 55006 ; free virtual = 67182
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1310.902 ; gain = 139.324 ; free physical = 55013 ; free virtual = 67190
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:02 ; elapsed = 00:00:03 . Memory (MB): peak = 1310.902 ; gain = 139.324 ; free physical = 55013 ; free virtual = 67190
+---------------------------------------------------------------------------------
+INFO: [Device 21-403] Loading part xc7a35tcpg236-1

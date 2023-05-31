@@ -34,7 +34,8 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 entity CPU is
     Port (
-    Clock: in STD_LOGIC
+        Clock: in STD_LOGIC; 
+        Compt: out STD_LOGIC_VECTOR(7 downto 0)
     );
 end CPU;
 
@@ -57,7 +58,9 @@ component sync is  Port (
         DOUT : out STD_LOGIC_VECTOR (7 downto 0));
   end component;
   component registers is
-      Port ( atA: in STD_LOGIC_VECTOR(3 downto 0);
+      Port ( 
+             IP:  in STD_LOGIC_VECTOR(7 downto 0);
+             atA: in STD_LOGIC_VECTOR(3 downto 0);
              atB: in STD_LOGIC_VECTOR(3 downto 0);
              atW: in STD_LOGIC_VECTOR(3 downto 0);
              W: in STD_LOGIC;
@@ -185,20 +188,22 @@ component sync is  Port (
     signal CTRL_ALU: sTD_LOGIC_VECTOR (2 downto 0);
     signal RW_MEM: STD_LOGIC;
     signal ADR_MEM,OUT_DATA,OUT_MEM: STD_LOGIc_VECTOR (7 downto 0 );
-    signal REGS_MEM: STD_LOGIC_VECTOR(15 downto 0);
     signal EN_FLAG,REGS_BLOCKED: STD_LOGIC;
     
     --signal Clock: STD_LOGIC := '0';
    
 begin
-
+    Compt <= IP;
+    --Clock <= not clock after 1000ns;
     PROCESSING: PRE_PROCESS port map (
         OP => OP_LI,
         ZERO_FLAG => ZERO_FLAG,
         FLUSH => FLUSH
     );
 
-    REGS: registers port map (atA => B_DI(3 downto 0),
+    REGS: registers port map (
+                IP => IP, 
+                atA => B_DI(3 downto 0),
                 atB => C_DI(3 downto 0),
                 atW => A_RE(3 downto 0),
                 W => WB, 

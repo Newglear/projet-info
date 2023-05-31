@@ -4,29 +4,4 @@ Running: /usr/local/insa/Xilinx.VIVADO/Vivado/2018.2/bin/unwrapped/lnx64.o/xelab
 Using 8 slave threads.
 Starting static elaboration
 Completed static elaboration
-Starting simulation data flow analysis
-Completed simulation data flow analysis
-Time Resolution for simulation is 1ps
-Compiling package std.standard
-Compiling package std.textio
-Compiling package ieee.std_logic_1164
-Compiling package ieee.std_logic_arith
-Compiling package ieee.std_logic_unsigned
-Compiling architecture behavioral of entity xil_defaultlib.PRE_PROCESS [pre_process_default]
-Compiling architecture behavioral of entity xil_defaultlib.registers [registers_default]
-Compiling architecture behavioral of entity xil_defaultlib.code_bench [code_bench_default]
-Compiling architecture behavioral of entity xil_defaultlib.BLOCKER [blocker_default]
-Compiling architecture behavioral of entity xil_defaultlib.compteur_8bits [compteur_8bits_default]
-Compiling architecture behavioral of entity xil_defaultlib.sync [sync_default]
-Compiling architecture behavioral of entity xil_defaultlib.MUX_DI [mux_di_default]
-Compiling architecture behavioral of entity xil_defaultlib.LC_ALU [lc_alu_default]
-Compiling architecture behavioral of entity xil_defaultlib.ALU [alu_default]
-Compiling architecture behavioral of entity xil_defaultlib.MUX_EX [mux_ex_default]
-Compiling architecture behavioral of entity xil_defaultlib.MUX_MEM [mux_mem_default]
-Compiling architecture behavioral of entity xil_defaultlib.LC_Mem [lc_mem_default]
-Compiling architecture behavioral of entity xil_defaultlib.data_bench [data_bench_default]
-Compiling architecture behavioral of entity xil_defaultlib.MUX_RE [mux_re_default]
-Compiling architecture behavioral of entity xil_defaultlib.LC [lc_default]
-Compiling architecture behavioral of entity xil_defaultlib.CPU [cpu_default]
-Compiling architecture behavioral of entity xil_defaultlib.cpu_sim
-Built simulation snapshot CPU_sim_behav
+INFO: [XSIM 43-4323] No Change in HDL. Linking previously generated obj files to create kernel

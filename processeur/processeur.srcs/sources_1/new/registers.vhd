@@ -34,22 +34,25 @@ use IEEE.STD_LOGIC_UNSIGNED.ALL;
 --use UNISIM.VComponents.all;
 
 entity registers is
-    Port ( atA: in STD_LOGIC_VECTOR(3 downto 0);
-           atB: in STD_LOGIC_VECTOR(3 downto 0);
-           atW: in STD_LOGIC_VECTOR(3 downto 0);
-           W: in STD_LOGIC;
-           DATA: in STD_LOGIC_VECTOR(7 downto 0);
-           RST: in STD_LOGIC;
-           REGS_LOCKED: out STD_LOGIC_VECTOR(15 downto 0);
-           Clock: in STD_LOGIC;
-           QA:  out STD_LOGIC_VECTOR(7 downto 0);
-           QB: out STD_LOGIC_VECTOR(7 downto 0)
+    Port (
+            IP:  in STD_LOGIC_VECTOR(7 downto 0);
+            atA: in STD_LOGIC_VECTOR(3 downto 0);
+            atB: in STD_LOGIC_VECTOR(3 downto 0);
+            atW: in STD_LOGIC_VECTOR(3 downto 0);
+            W: in STD_LOGIC;
+            DATA: in STD_LOGIC_VECTOR(7 downto 0);
+            RST: in STD_LOGIC;
+            REGS_LOCKED: out STD_LOGIC_VECTOR(15 downto 0);
+            Clock: in STD_LOGIC;
+            QA:  out STD_LOGIC_VECTOR(7 downto 0);
+            QB: out STD_LOGIC_VECTOR(7 downto 0)
     );
 end registers;
 
 architecture Behavioral of registers is
     type reg_vector is array(0 to 15) of STD_LOGIC_VECTOR(7 downto 0);
-    signal regs: reg_vector;
+    signal regs: reg_vector := (others => x"00");
+    signal PC: STD_LOGIC_VECTOR(7 downto 0) := x"00"; 
 signal auxA,auxB : STD_LOGIC_VECTOR(7 downto 0) := x"00"; 
 begin
     process begin
@@ -61,8 +64,10 @@ begin
                 regs(conv_integer(atW)) <= DATA;
              end if;
         end if;
-         
+        PC <= IP + x"02"; 
+        regs(15) <= PC; 
     end process;
     QA <= regs(conv_integer(atA)) when atW /= atA else DATA;
-    QB <= regs(conv_integer(atB)) when atW /= atB else DATA;    
+    QB <= regs(conv_integer(atB)) when atW /= atB else DATA;   
+     
 end Behavioral;
