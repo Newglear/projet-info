@@ -28,7 +28,6 @@ $(BIN): $(OBJ)
 	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -o $(OUT)
 
 
-
 # symbol_table.o : symbol_table.c
 # 	gcc $(FLAGS) -c symbol_table.c
 # all: lex.c bison.c symbol_table.o

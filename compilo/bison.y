@@ -146,15 +146,15 @@ function_argument_definition: %empty {
 		$$ = new_ast_node_function_args(args);
 		}
 		| tINT tID tCOMMA function_argument_definition {
-			symbol_table_entry* e = symbol_table_entry_init($2,1,INT,&offset,scope);
+			symbol_table_entry* e = symbol_table_entry_init($2,1,INT,offset,scope);
 			ast_node* symb = new_ast_node_symbol(e);
 			ast_node* after_args = $4;
-			after_args->function_args.args[after_args->function_args.nb_of_args] = symb;
+			after_args->function_args.args[after_args->function_args.nb_of_args] = (struct ast_node *) symb;
 			after_args->function_args.nb_of_args++;
 			$$ = after_args;
 		}
 		| tINT tID {
-			symbol_table_entry* e = symbol_table_entry_init($2,1,INT,&offset,scope);
+			symbol_table_entry* e = symbol_table_entry_init($2,1,INT,offset,scope);
 			ast_node* symb = new_ast_node_symbol(e);
 			ast_node* args[MAX_FUNCTION_ARGS] = {0};
 			args[0] = symb;
@@ -163,7 +163,7 @@ function_argument_definition: %empty {
     ;
 
 function_definition : tINT tID tLPAR function_argument_definition tRPAR tLBRACE function_body tRBRACE {
-	symbol_table_entry* e = symbol_table_entry_init($2,1,INT,&offset,scope);
+	symbol_table_entry* e = symbol_table_entry_init($2,1,INT,offset,scope);
 	symbol_table_push(function_table, e);
 	ast_node* symb = new_ast_node_symbol(e);
 	$$ = new_ast_node_function(symb, $4,$7);
@@ -176,7 +176,7 @@ function_args: %empty {
 	    }
 	    | value tCOMMA function_args {
 	    	ast_node* args = $3;
-	    	args->function_args.args[args->function_args.nb_of_args] = $1;
+	    	args->function_args.args[args->function_args.nb_of_args] = (struct ast_node*) $1;
 	    	args->function_args.nb_of_args++;
 	    	$$ = args;
 	    }
