@@ -135,6 +135,8 @@ ast_node* new_ast_node_function_args(ast_node* args[MAX_FUNCTION_ARGS]);
 ast_node* new_ast_node_return(ast_node* ret);
 ast_node* new_ast_node_function_call(ast_node* entry, ast_node* function_args);
 
+int ast_opti(ast_root* root);
+
 void ast_to_asm(ast_root* root, FILE*);
 void ast_print(ast_root* root);
 #endif //PROJET_INFO_AST_H

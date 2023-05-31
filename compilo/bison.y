@@ -300,6 +300,7 @@ int main (int argc, char* argv[] ) {
 	offset = 0;
 	temp_cnt = 0;
 	yyparse();
+	printf("Optimised: %d\n",ast_opti(root));
 	ast_print(root);
 	ast_to_asm(root, out_file);
 	symbol_table_print(symbolTable);

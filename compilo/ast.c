@@ -249,6 +249,140 @@ struct {
     symbol_table* symbol_table;
 } typedef compiler_args;
 
+enum tree_position {
+    RIGHT,
+    LEFT
+};
+
+void replace_value(ast_node* node, ast_node* new_value, enum tree_position pos) {
+    switch (node->type) {
+        case AST_NODE_EXPRESSION:
+            break;
+        case AST_NODE_VARIABLE_DEFINITION:
+            node->variable_definition.value = (struct ast_node *) new_value;
+            break;
+        case AST_NODE_VARIABLE_DECLARATION:
+            break;
+        case AST_NODE_VALUE:
+            break;
+        case AST_NODE_IF:
+            node->if_block.cond = (struct ast_node *) new_value;
+            break;
+        case AST_NODE_OPERATOR:
+            switch (pos) {
+                case RIGHT:
+                    node->operator.right = (struct ast_node *) new_value;
+                    break;
+                case LEFT:
+                    node->operator.left = (struct ast_node *) new_value;
+                    break;
+            }
+            break;
+        case AST_NODE_SYMBOL:
+            break;
+        case AST_NODE_WHILE:
+            node->while_block.cond = (struct ast_node *) new_value;
+            break;
+        case AST_NODE_FUNCTION_ARGS:
+            break;
+        case AST_NODE_RETURN:
+            node->ret.value = (struct ast_node *) new_value;
+            break;
+        case AST_NODE_FUNCTION:
+            break;
+        case AST_NODE_FUNCTION_CALL:
+            break;
+    }
+}
+
+int ast_node_opti(ast_node* node, ast_node* parent) {
+    int ret = 0;
+    ast_node* temp_node = NULL;
+    int temp1 = 0;
+    int temp2 = 0;
+    switch (node->type) {
+        case AST_NODE_EXPRESSION:
+            ret = ast_node_opti((ast_node *) node->expression.node, node);
+            if (node->expression.next) {
+                ret += ast_node_opti((ast_node *) node->expression.next, node);
+            }
+            return ret;
+        case AST_NODE_VARIABLE_DEFINITION:
+            return ast_node_opti((ast_node *) node->variable_definition.value, node);
+            break;
+        case AST_NODE_VARIABLE_DECLARATION:
+            break;
+        case AST_NODE_VALUE:
+            break;
+        case AST_NODE_IF:
+            break;
+        case AST_NODE_OPERATOR:
+            if(node->operator.op != OP_NOT) {
+                if (((ast_node*)node->operator.right)->type != AST_NODE_VALUE) {
+                    ret += ast_node_opti((ast_node *) node->operator.right, node);
+                }
+                temp1 = ((ast_node*)node->operator.right)->value.value;
+                temp2 = ((ast_node*)node->operator.left)->value.value;
+                switch (node->operator.op) {
+                    case OP_ADD:
+                        temp_node = new_ast_node_value(temp1 + temp2);
+                        replace_value(parent, temp_node, RIGHT);
+                        return 1;
+                        break;
+                    case OP_SUB:
+                        break;
+                    case OP_MUL:
+                        break;
+                    case OP_DIV:
+                        break;
+                    case OP_LE:
+                        break;
+                    case OP_GE:
+                        break;
+                    case OP_GT:
+                        break;
+                    case OP_NE:
+                        break;
+                    case OP_EQ:
+                        break;
+                    case OP_LT:
+                        break;
+                    case OP_AND:
+                        break;
+                    case OP_OR:
+                        break;
+                    case OP_NOT:
+                        break;
+                    case OP_ASSIGN:
+                        break;
+                }
+            }
+            break;
+        case AST_NODE_SYMBOL:
+            break;
+        case AST_NODE_WHILE:
+            break;
+        case AST_NODE_FUNCTION_ARGS:
+            break;
+        case AST_NODE_RETURN:
+            break;
+        case AST_NODE_FUNCTION:
+            break;
+        case AST_NODE_FUNCTION_CALL:
+            break;
+    }
+    return 0;
+}
+
+int ast_opti(ast_root* root) {
+    if(root == NULL) {
+        printf("passed NULL %s\n", __PRETTY_FUNCTION__ );
+        exit(-1);
+    }
+    return ast_node_opti(root->root, NULL);
+}
+
+
 reg_t ast_node_to_asm(ast_node* node, compiler_args* args) {
     static int scope;
     static int temp_var_cnt;
