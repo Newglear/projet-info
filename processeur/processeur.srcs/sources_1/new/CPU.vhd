@@ -158,9 +158,10 @@ component sync is  Port (
    
    component PRE_PROCESS is
      Port ( 
-     OP: in STD_LOGIC_VECTOR( 7 downto 0);
-     ZERO_FLAG: in STD_LOGIC;
-     FLUSH: out STD_LOGIC
+        OP: in STD_LOGIC_VECTOR( 7 downto 0);
+        ZERO_FLAG: in STD_LOGIC;
+        FLUSH: out STD_LOGIC;
+        Clock: in STD_LOGIC
      );
    end component;
    
@@ -175,7 +176,7 @@ component sync is  Port (
      );
    end component;
   
-    signal IP: STD_LOGIC_VECTOR (7 downto 0);
+    signal IP,ZERO: STD_LOGIC_VECTOR (7 downto 0) := x"00";
     signal ASM_OUT,ASM_TMP: STD_LOGIC_VECTOR (31 downto 0);
     signal ZERO_FLAG,FLUSH,NF: STD_LOGIC;
     signal A_LI, OP_LI, B_LI, C_LI: STD_LOGIC_VECTOR (7 downto 0); 
@@ -199,8 +200,9 @@ begin
     --Clock <= not clock after 1000ns;
     PROCESSING: PRE_PROCESS port map (
         OP => OP_RE,
-        ZERO_FLAG => ZERO_FLAG,
-        FLUSH => FLUSH
+        ZERO_FLAG => C_RE(0),
+        FLUSH => FLUSH,
+        Clock => Clock
     );
 
     REGS: registers port map (
@@ -249,7 +251,7 @@ begin
         LOAD => FLUSH,
         SENS => '1',
         EN => EN_FLAG, -- A bloquer
-        DIN => A_LI,
+        DIN => A_RE,
         DOUT => IP
     );
 
@@ -313,7 +315,7 @@ begin
         A_IN => A_EX,
         OP_IN => OP_EX,
         B_IN => OUT_EX,
-        C_IN => C_EX,
+        C_IN => ZERO,
         A_OUT => A_MEM,
         OP_OUT => OP_MEM,
         B_OUT => B_MEM,
@@ -341,12 +343,12 @@ begin
              Clock => Clock,
              OUTPUT => OUT_DATA
              );
-             
+     ZERO(0) <= ZERO_FLAG; 
      DELAY: sync port map(
          A_IN => A_MEM,
          OP_IN => OP_MEM,
          B_IN => B_MEM,
-         C_IN => OUT_DATA ,
+         C_IN => C_MEM ,
          A_OUT => A_DELAY,
          OP_OUT => OP_DELAY,
          B_OUT => B_DELAY,
@@ -374,6 +376,7 @@ begin
         FLUSH => FLUSH,
         Clock => Clock 
     );
+
     writeback: LC port map (
         OP => OP_RE, 
         W => WB

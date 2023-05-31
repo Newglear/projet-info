@@ -10,15 +10,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="925630000fs"></ZoomStartTime>
-      <ZoomEndTime time="999730001fs"></ZoomEndTime>
-      <Cursor1Time time="507837000fs"></Cursor1Time>
+      <ZoomStartTime time="628050000fs"></ZoomStartTime>
+      <ZoomEndTime time="843871093fs"></ZoomEndTime>
+      <Cursor1Time time="698032000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="139"></NameColumnWidth>
+      <NameColumnWidth column_width="127"></NameColumnWidth>
       <ValueColumnWidth column_width="66"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="21" />
+   <WVObjectSize size="31" />
    <wvobject type="logic" fp_name="/CPU_sim/Clock">
       <obj_property name="ElementShortName">Clock</obj_property>
       <obj_property name="ObjectShortName">Clock</obj_property>
@@ -87,21 +87,60 @@
       <obj_property name="ElementShortName">ZERO_FLAG</obj_property>
       <obj_property name="ObjectShortName">ZERO_FLAG</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/REGS/PC">
-      <obj_property name="ElementShortName">PC[7:0]</obj_property>
-      <obj_property name="ObjectShortName">PC[7:0]</obj_property>
+   <wvobject type="logic" fp_name="/CPU_sim/proco/PROCESSING/ZERO_FLAG_T1">
+      <obj_property name="ElementShortName">ZERO_FLAG_T1</obj_property>
+      <obj_property name="ObjectShortName">ZERO_FLAG_T1</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/REGS_BLOCKER/blocked">
-      <obj_property name="ElementShortName">blocked[15:0]</obj_property>
-      <obj_property name="ObjectShortName">blocked[15:0]</obj_property>
-      <obj_property name="isExpanded"></obj_property>
+   <wvobject type="array" fp_name="/CPU_sim/proco/PROCESSING/OP">
+      <obj_property name="ElementShortName">OP[7:0]</obj_property>
+      <obj_property name="ObjectShortName">OP[7:0]</obj_property>
    </wvobject>
-   <wvobject type="logic" fp_name="/CPU_sim/proco/REGS_BLOCKER/EN_FLAG">
-      <obj_property name="ElementShortName">EN_FLAG</obj_property>
-      <obj_property name="ObjectShortName">EN_FLAG</obj_property>
+   <wvobject type="array" fp_name="/CPU_sim/proco/UAL/A">
+      <obj_property name="ElementShortName">A[7:0]</obj_property>
+      <obj_property name="ObjectShortName">A[7:0]</obj_property>
    </wvobject>
-   <wvobject type="array" fp_name="/CPU_sim/proco/REGS_BLOCKER/A_RE">
-      <obj_property name="ElementShortName">A_RE[7:0]</obj_property>
-      <obj_property name="ObjectShortName">A_RE[7:0]</obj_property>
+   <wvobject type="array" fp_name="/CPU_sim/proco/UAL/B">
+      <obj_property name="ElementShortName">B[7:0]</obj_property>
+      <obj_property name="ObjectShortName">B[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/CPU_sim/proco/UAL/S">
+      <obj_property name="ElementShortName">S[7:0]</obj_property>
+      <obj_property name="ObjectShortName">S[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="logic" fp_name="/CPU_sim/proco/UAL/Z">
+      <obj_property name="ElementShortName">Z</obj_property>
+      <obj_property name="ObjectShortName">Z</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/CPU_sim/proco/UAL/CTR">
+      <obj_property name="ElementShortName">CTR[2:0]</obj_property>
+      <obj_property name="ObjectShortName">CTR[2:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/CPU_sim/proco/UAL/aux">
+      <obj_property name="ElementShortName">aux[15:0]</obj_property>
+      <obj_property name="ObjectShortName">aux[15:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/CPU_sim/proco/DI_MUX/OUTPUT_B">
+      <obj_property name="ElementShortName">OUTPUT_B[7:0]</obj_property>
+      <obj_property name="ObjectShortName">OUTPUT_B[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/CPU_sim/proco/C_EX">
+      <obj_property name="ElementShortName">C_EX[7:0]</obj_property>
+      <obj_property name="ObjectShortName">C_EX[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/CPU_sim/proco/C_MEM">
+      <obj_property name="ElementShortName">C_MEM[7:0]</obj_property>
+      <obj_property name="ObjectShortName">C_MEM[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/CPU_sim/proco/C_DELAY">
+      <obj_property name="ElementShortName">C_DELAY[7:0]</obj_property>
+      <obj_property name="ObjectShortName">C_DELAY[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/CPU_sim/proco/C_RE">
+      <obj_property name="ElementShortName">C_RE[7:0]</obj_property>
+      <obj_property name="ObjectShortName">C_RE[7:0]</obj_property>
+   </wvobject>
+   <wvobject type="array" fp_name="/CPU_sim/proco/CONT/DIN">
+      <obj_property name="ElementShortName">DIN[7:0]</obj_property>
+      <obj_property name="ObjectShortName">DIN[7:0]</obj_property>
    </wvobject>
 </wave_config>

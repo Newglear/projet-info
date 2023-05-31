@@ -35,12 +35,18 @@ entity PRE_PROCESS is
   Port ( 
   OP: in STD_LOGIC_VECTOR( 7 downto 0);
   ZERO_FLAG: in STD_LOGIC;
-  FLUSH: out STD_LOGIC := '0'
+  FLUSH: out STD_LOGIC := '0';
+  Clock: in STD_LOGIC
   );
 end PRE_PROCESS;
 
 architecture Behavioral of PRE_PROCESS is
-
+signal ZERO_FLAG_T1: STD_LOGIC;
 begin
-    FLUSH <= '1' when OP= x"09" or (OP= x"0A" and ZERO_FLAG = '1') else '0'; -- Jump or JNE
+    process
+    begin
+        wait until Clock'event and Clock = '1';
+        ZERO_FLAG_T1 <= ZERO_FLAG;
+    end process;
+    FLUSH <= '1' when OP= x"09" or (OP= x"0A" and ZERO_FLAG_T1 = '0') else '0'; -- Jump or JNE
 end Behavioral;
