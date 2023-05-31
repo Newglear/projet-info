@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2018.2 (64-bit)
+# SW Build 2258646 on Thu Jun 14 20:02:38 MDT 2018
+# IP Build 2256618 on Thu Jun 14 22:10:49 MDT 2018
+# Start of session at: Wed May 31 11:14:57 2023
+# Process ID: 12815
+# Current directory: /home/g_robert/tmp_PSI/projet-info/processeur/processeur.runs/impl_1
+# Command line: vivado -log CPU.vdi -applog -product Vivado -messageDb vivado.pb -mode batch -source CPU.tcl -notrace
+# Log file: /home/g_robert/tmp_PSI/projet-info/processeur/processeur.runs/impl_1/CPU.vdi
+# Journal file: /home/g_robert/tmp_PSI/projet-info/processeur/processeur.runs/impl_1/vivado.jou
+#-----------------------------------------------------------
+source CPU.tcl -notrace

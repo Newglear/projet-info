@@ -1,0 +1,339 @@
+Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2018.2 (lin64) Build 2258646 Thu Jun 14 20:02:38 MDT 2018
+| Date         : Wed May 31 11:15:51 2023
+| Host         : insa-11283 running 64-bit Ubuntu 20.04.6 LTS
+| Command      : report_control_sets -verbose -file CPU_control_sets_placed.rpt
+| Design       : CPU
+| Device       : xc7a35t
+------------------------------------------------------------------------------------
+
+Control Set Information
+
+Table of Contents
+-----------------
+1. Summary
+2. Histogram
+3. Flip-Flop Distribution
+4. Detailed Control Set Information
+
+1. Summary
+----------
+
++----------------------------------------------------------+-------+
+|                          Status                          | Count |
++----------------------------------------------------------+-------+
+| Number of unique control sets                            |   273 |
+| Unused register locations in slices containing registers |    48 |
++----------------------------------------------------------+-------+
+
+
+2. Histogram
+------------
+
++--------+--------------+
+| Fanout | Control Sets |
++--------+--------------+
+|      2 |            8 |
+|      8 |            2 |
+|    16+ |          263 |
++--------+--------------+
+
+
+3. Flip-Flop Distribution
+-------------------------
+
++--------------+-----------------------+------------------------+-----------------+--------------+
+| Clock Enable | Synchronous Set/Reset | Asynchronous Set/Reset | Total Registers | Total Slices |
++--------------+-----------------------+------------------------+-----------------+--------------+
+| No           | No                    | No                     |              56 |           16 |
+| No           | No                    | Yes                    |               0 |            0 |
+| No           | Yes                   | No                     |             152 |           24 |
+| Yes          | No                    | No                     |            4184 |          740 |
+| Yes          | No                    | Yes                    |               0 |            0 |
+| Yes          | Yes                   | No                     |               8 |            2 |
++--------------+-----------------------+------------------------+-----------------+--------------+
+
+
+4. Detailed Control Set Information
+-----------------------------------
+
++------------------+----------------------------+---------------------+------------------+----------------+
+|   Clock Signal   |        Enable Signal       |   Set/Reset Signal  | Slice Load Count | Bel Load Count |
++------------------+----------------------------+---------------------+------------------+----------------+
+|  CONT/E[1]       |                            |                     |                1 |              2 |
+|  CONT/E[2]       |                            |                     |                1 |              2 |
+|  MEMRE/E[0]      |                            |                     |                1 |              2 |
+|  MEMRE/E[1]      |                            |                     |                1 |              2 |
+|  MEMRE/E[2]      |                            |                     |                1 |              2 |
+|  MEMRE/E[3]      |                            |                     |                1 |              2 |
+|  MEMRE/E[4]      |                            |                     |                1 |              2 |
+|  CONT/E[0]       |                            |                     |                1 |              2 |
+|  Clock_IBUF_BUFG | CONT/aux[6]_i_2_n_0        |                     |                2 |              8 |
+|  Clock_IBUF_BUFG | CONT/aux[6]_i_2_n_0        | CONT/aux[6]_i_1_n_0 |                2 |              8 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[253][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[29][0]    |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[254][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[255][0]_3 |                     |                5 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[25][0]    |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[26][0]    |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[27][0]    |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[28][0]    |                     |                5 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[246][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[252][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[251][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[250][0]   |                     |                6 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[24][0]    |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[249][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[248][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[247][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[43][0]    |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[2][0]     |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[30][0]    |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[31][0]    |                     |                7 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[32][0]    |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[33][0]    |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[34][0]    |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[35][0]    |                     |                5 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[36][0]    |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[37][0]    |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[38][0]    |                     |                5 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[39][0]    |                     |                7 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[3][0]     |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[40][0]    |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[41][0]    |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[42][0]    |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[216][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[222][0]   |                     |                5 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[22][0]    |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[229][0]   |                     |                5 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[228][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[227][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[226][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[225][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[224][0]   |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[223][0]   |                     |                6 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[230][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[221][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[220][0]   |                     |                5 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[21][0]    |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[219][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[218][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[217][0]   |                     |                5 |             16 |
+|  Clock_IBUF_BUFG | MEMRE/regs_reg[0][7]       |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[245][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[231][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[232][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[233][0]   |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[234][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[235][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[236][0]   |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[237][0]   |                     |                5 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[238][0]   |                     |                5 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[239][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[23][0]    |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[240][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[241][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[242][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[243][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[244][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[80][0]    |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[88][0]    |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[87][0]    |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[86][0]    |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[85][0]    |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[84][0]    |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[83][0]    |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[82][0]    |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[81][0]    |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[89][0]    |                     |                5 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[7][0]     |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[79][0]    |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[78][0]    |                     |                5 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[77][0]    |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[76][0]    |                     |                6 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[75][0]    |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[74][0]    |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[73][0]    |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[8][0]     |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[90][0]    |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[91][0]    |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[92][0]    |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[93][0]    |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[94][0]    |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[95][0]    |                     |                5 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[96][0]    |                     |                5 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[97][0]    |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[98][0]    |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[99][0]    |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[9][0]     |                     |                7 |             16 |
+|  Clock_IBUF_BUFG | MEMRE/regs[1]_2            |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | MEMRE/regs[2]_1            |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | MEMRE/regs[3]_0            |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[59][0]    |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[45][0]    |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[46][0]    |                     |                5 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[47][0]    |                     |                6 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[48][0]    |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[49][0]    |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[4][0]     |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[50][0]    |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[51][0]    |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[52][0]    |                     |                5 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[53][0]    |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[54][0]    |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[55][0]    |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[56][0]    |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[57][0]    |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[58][0]    |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[44][0]    |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[5][0]     |                     |                5 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[60][0]    |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[61][0]    |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[62][0]    |                     |                6 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[63][0]    |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[64][0]    |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[65][0]    |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[66][0]    |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[67][0]    |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[68][0]    |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[69][0]    |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[6][0]     |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[70][0]    |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[71][0]    |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[72][0]    |                     |                5 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[134][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[141][0]   |                     |                6 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[140][0]   |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[13][0]    |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[139][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[138][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[137][0]   |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[136][0]   |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[135][0]   |                     |                6 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[142][0]   |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[133][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[132][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[131][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[130][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[12][0]    |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[129][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[128][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[127][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[143][0]   |                     |                6 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[144][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[145][0]   |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[146][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[147][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[148][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[149][0]   |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[14][0]    |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[150][0]   |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[151][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[152][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[153][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[154][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[155][0]   |                     |                6 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[156][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[112][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/aux_reg[7]           |                     |                8 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[0][0]     |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[100][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[101][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[102][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[103][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[104][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[105][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[106][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[107][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[108][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[109][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[10][0]    |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[110][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[111][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[214][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[113][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[114][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[115][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[116][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[117][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[118][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[119][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[11][0]    |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[120][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[121][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[122][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[123][0]   |                     |                6 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[124][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[125][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[126][0]   |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[193][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[1][0]     |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[19][0]    |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[199][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[198][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[197][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[196][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[195][0]   |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[194][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[200][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[192][0]   |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[191][0]   |                     |                6 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[190][0]   |                     |                5 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[18][0]    |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[189][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[188][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[187][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[158][0]   |                     |                6 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[201][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[202][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[203][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[204][0]   |                     |                5 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[205][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[206][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[207][0]   |                     |                5 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[208][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[209][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[20][0]    |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[210][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[211][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[212][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[213][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[215][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[185][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[157][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[159][0]   |                     |                6 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[15][0]    |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[160][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[161][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[162][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[163][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[164][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[165][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[166][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[167][0]   |                     |                5 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[168][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[169][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[16][0]    |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[170][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[172][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[186][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[184][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[183][0]   |                     |                3 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[182][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[181][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[180][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[17][0]    |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[179][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[178][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[177][0]   |                     |                2 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[176][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[175][0]   |                     |                5 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[174][0]   |                     |                4 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[173][0]   |                     |                6 |             16 |
+|  Clock_IBUF_BUFG | EXMEM/memory_reg[171][0]   |                     |                1 |             16 |
+|  Clock_IBUF_BUFG |                            |                     |                8 |             40 |
+|  Clock_IBUF_BUFG |                            | CONT/FLUSH          |               24 |            152 |
++------------------+----------------------------+---------------------+------------------+----------------+
+
+
