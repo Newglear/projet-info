@@ -299,20 +299,20 @@ reg_t ast_node_to_asm(ast_node* node, compiler_args* args) {
             FWRITE("# IF COND");
             ast_node_to_asm((ast_node *) node->if_block.cond, args);
             open_scope(&scope);
-            sprintf(str,"JMPNE ENDIF_%d", scope);
+            sprintf(str,"JMPNE __ENDIF_%d__", scope);
             FWRITE(str);
             ast_node_to_asm((ast_node *) node->if_block.then_block, args);
             if (node->if_block.else_block != NULL) {
-                sprintf(str,"JMP ENDELSE_%d", scope);
+                sprintf(str,"JMP __ENDELSE_%d__", scope);
                 FWRITE(str);
-                sprintf(str,": ENDIF_%d", scope);
+                sprintf(str,"__ENDIF_%d__", scope);
                 FWRITE(str);
                 FWRITE("expr_else");
                 ast_node_to_asm((ast_node *) node->if_block.else_block, args);
-                sprintf(str,": ENDELSE_%d", scope);
+                sprintf(str,"__ENDELSE_%d__", scope);
                 FWRITE(str);
             } else {
-                sprintf(str,": ENDIF_%d", scope);
+                sprintf(str,"__ENDIF_%d__", scope);
                 FWRITE(str);
             }
 //            free_regs(scope);
@@ -340,16 +340,16 @@ reg_t ast_node_to_asm(ast_node* node, compiler_args* args) {
         case AST_NODE_WHILE:
             open_scope(&scope);
             FWRITE("# WHILE COND");
-            sprintf(str, ": WHILE_LOOP_%d", scope);
+            sprintf(str, "__WHILE_LOOP_%d__", scope);
             FWRITE(str);
             ast_node_to_asm((ast_node *) node->while_block.cond, args);
             sprintf(str, "JMPNE WHILE_END_%d", scope);
             FWRITE(str);
 
             ast_node_to_asm((ast_node *) node->while_block.loop, args);
-            sprintf(str, "JMP WHILE_LOOP_%d", scope);
+            sprintf(str, "JMP __WHILE_LOOP_%d__", scope);
             FWRITE(str);
-            sprintf(str, ": WHILE_END_%d", scope);
+            sprintf(str, "__WHILE_END_%d__", scope);
             FWRITE(str);
             close_scope(&scope, f);
             break;
@@ -370,25 +370,38 @@ reg_t ast_node_to_asm(ast_node* node, compiler_args* args) {
             break;
         case AST_NODE_RETURN:
             reg_push(R0,f);
+            open_scope(&scope);
             sprintf(str,"MOV r%d r%d;", R0, ast_node_to_asm((ast_node *) node->ret.value, args));
             FWRITE(str);
             close_scope(&scope, f);
+            touch_reg(R0, symbol_table_entry_init("temp_ret", 1, INT, 0, scope+1));
             break;
         case AST_NODE_FUNCTION:
             sprintf(str, "# FUNCTION %s", ((ast_node*) node->function.name)->symbol.entry->symbol);
             FWRITE(str);
-            sprintf(str, ": FUNCTION_%s", ((ast_node*) node->function.name)->symbol.entry->symbol);
+            sprintf(str, "__FUNCTION_%s__", ((ast_node*) node->function.name)->symbol.entry->symbol);
             FWRITE(str);
             ast_node_to_asm((ast_node *) node->function.args, args);
             if(node->function.expr != NULL)
                 ast_node_to_asm((ast_node *) node->function.expr, args);
-            sprintf(str, "JMP LR;");
+            sprintf(str, "temp_lr");
+            open_scope(&scope);
+            r = var_store(
+                    symbol_table_entry_init(str, 1, INT, 0, scope),
+                    &scope,
+                    f);
+            sprintf(str, "LOAD r%d SP;",r);
             FWRITE(str);
-            sprintf(str, "# END_FUNCTION %s", ((ast_node*) node->function.name)->symbol.entry->symbol);
+            close_scope(&scope, f);
+            sprintf(str, "JMP r%d;",r);
             FWRITE(str);
+            sprintf(str, "# __END_FUNCTION_%s__", ((ast_node*) node->function.name)->symbol.entry->symbol);
+            FWRITE(str);
+
             break;
         case AST_NODE_FUNCTION_CALL:
-            sprintf(str, "JMP FUNCTION_%s", ((ast_node*) node->function_call.entry)->symbol.entry->symbol);
+            FWRITE("STR LR");
+            sprintf(str, "JMP __FUNCTION_%s__", ((ast_node*) node->function_call.entry)->symbol.entry->symbol);
             FWRITE(str);
             break;
     }

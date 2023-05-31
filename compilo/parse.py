@@ -12,15 +12,16 @@ def main():
             for index, line in enumerate(f.readlines()):
                 if label_pattern.match(line):
                     labels[label_pattern.search(line)[0]] = index
-
+        print(labels,labels["__FUNCTION_f__"])
         with open(infile, "r") as f:
             for line in f.readlines():
                 if jmp_pattern.match(line):
                     label = label_pattern.search(line)[0]
                     index = labels[label]
+                    print(labels["__FUNCTION_f__"], index)
                     line = line.replace(label, str(index))
                 elif label_pattern.match(line):
-                    labels[label_pattern.search(line)[0]] = index
+                    # labels[label_pattern.search(line)[0]] = index
                     line = "PASS\n"
                 out_f.write(line)
 

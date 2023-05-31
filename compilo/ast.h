@@ -96,6 +96,7 @@ struct {
 struct {
     struct ast_node* value;
 } typedef ast_node_return;
+
 struct {
     ast_node_type type;
     union {

@@ -38,7 +38,7 @@ void free_reg(reg_t reg);
 void free_regs(int scope);
 
 reg_t find_reg(symbol_table_entry* entry);
-
+reg_t touch_reg(reg_t reg, symbol_table_entry* entry);
 int stack_alloc(symbol_table_entry* entry, FILE* f);
 symbol_table_entry* stack_pop();
 int stack_find(symbol_table_entry* entry);
